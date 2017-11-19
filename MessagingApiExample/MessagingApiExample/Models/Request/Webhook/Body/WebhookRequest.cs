@@ -1,4 +1,4 @@
-﻿using MessagingApiExample.Models.Webhook.Event;
+﻿using MessagingApiExample.Models.Webhook.Body.Event;
 
 namespace MessagingApiExample.Models.Request.Webhook.Body {
 

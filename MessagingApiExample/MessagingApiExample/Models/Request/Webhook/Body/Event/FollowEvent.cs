@@ -1,4 +1,4 @@
-﻿namespace MessagingApiExample.Models.Webhook.Event {
+﻿namespace MessagingApiExample.Models.Webhook.Body.Event {
 
 	/// <summary>
 	/// 友達追加またはブロック解除時イベント

@@ -5,7 +5,7 @@ namespace MessagingApiExample.Models.Response.Error {
 	/// <summary>
 	/// エラーレスポンス
 	/// </summary>
-	public class MessagingApiErrorResponse {
+	public class ErrorResponse {
 
 		/// <summary>
 		/// エラーの概要

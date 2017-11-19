@@ -48,6 +48,7 @@
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Net.Http" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -85,10 +86,41 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Controllers\WebhookController.cs" />
+    <Compile Include="Controllers\WebhookControllerBase.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Request\Webhook\Header\WebhookRequestHeader.cs" />
+    <Compile Include="Models\Response\Error\Detail\ErrorDetail.cs" />
+    <Compile Include="Models\Response\Error\ErrorResponse.cs" />
+    <Compile Include="Models\Response\Header\ResponseHeader.cs" />
+    <Compile Include="Models\Request\Webhook\Body\Event\BeaconEvent.cs" />
+    <Compile Include="Models\Request\Webhook\Body\Event\Beacon\BannerBeacon.cs" />
+    <Compile Include="Models\Request\Webhook\Body\Event\Beacon\BeaconBase.cs" />
+    <Compile Include="Models\Request\Webhook\Body\Event\Beacon\EnterBeacon.cs" />
+    <Compile Include="Models\Request\Webhook\Body\Event\Beacon\LeaveBeacon.cs" />
+    <Compile Include="Models\Request\Webhook\Body\Event\EventBase.cs" />
+    <Compile Include="Models\Request\Webhook\Body\Event\FollowEvent.cs" />
+    <Compile Include="Models\Request\Webhook\Body\Event\JoinEvent.cs" />
+    <Compile Include="Models\Request\Webhook\Body\Event\LeaveEvent.cs" />
+    <Compile Include="Models\Request\Webhook\Body\Event\MessageEvent.cs" />
+    <Compile Include="Models\Request\Webhook\Body\Event\Message\AudioMessage.cs" />
+    <Compile Include="Models\Request\Webhook\Body\Event\Message\FileMessage.cs" />
+    <Compile Include="Models\Request\Webhook\Body\Event\Message\ImageMessage.cs" />
+    <Compile Include="Models\Request\Webhook\Body\Event\Message\LocationMessage.cs" />
+    <Compile Include="Models\Request\Webhook\Body\Event\Message\MessageBase.cs" />
+    <Compile Include="Models\Request\Webhook\Body\Event\Message\StickerMessage.cs" />
+    <Compile Include="Models\Request\Webhook\Body\Event\Message\TextMessage.cs" />
+    <Compile Include="Models\Request\Webhook\Body\Event\Message\VideoMessage.cs" />
+    <Compile Include="Models\Request\Webhook\Body\Event\PostbackEvent.cs" />
+    <Compile Include="Models\Request\Webhook\Body\Event\Postback\Parameter\PostbackParameter.cs" />
+    <Compile Include="Models\Request\Webhook\Body\Event\Postback\PostbackData.cs" />
+    <Compile Include="Models\Request\Webhook\Body\Event\Source\GroupSource.cs" />
+    <Compile Include="Models\Request\Webhook\Body\Event\Source\RoomSource.cs" />
+    <Compile Include="Models\Request\Webhook\Body\Event\Source\SourceBase.cs" />
+    <Compile Include="Models\Request\Webhook\Body\Event\Source\UserSource.cs" />
+    <Compile Include="Models\Request\Webhook\Body\Event\UnfollowEvent.cs" />
+    <Compile Include="Models\Request\Webhook\Body\WebhookRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -102,7 +134,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
+    <Folder Include="Services\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

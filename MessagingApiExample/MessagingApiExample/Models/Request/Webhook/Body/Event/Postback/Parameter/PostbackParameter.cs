@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MessagingApiExample.Models.Webhook.Event.Postback.Parameter {
+namespace MessagingApiExample.Models.Webhook.Body.Event.Postback.Parameter {
 
 	/// <summary>
 	/// 日付選択時ポストバックで返されるデータ

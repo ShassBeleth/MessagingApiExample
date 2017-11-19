@@ -1,6 +1,6 @@
-﻿using MessagingApiExample.Models.Webhook.Event.Beacon;
+﻿using MessagingApiExample.Models.Webhook.Body.Event.Beacon;
 
-namespace MessagingApiExample.Models.Webhook.Event {
+namespace MessagingApiExample.Models.Webhook.Body.Event {
 
 	/// <summary>
 	/// ビーコンイベント

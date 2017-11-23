@@ -22,9 +22,7 @@ namespace MessagingApiExample.Services {
 		/// <param name="token">リクエストより送られたJToken</param>
 		/// <returns>WebhookRequest</returns>
 		public WebhookRequest ConvertJTokenToWebhookRequest( JToken token ) {
-
-			Trace.TraceInformation( "Start Convert JToken To Webhook Request" );
-
+			
 			WebhookRequest webhookRequest = new WebhookRequest();
 
 			// Event数を取得
@@ -44,6 +42,7 @@ namespace MessagingApiExample.Services {
 							beacon = this.ConvertBeacon( (JObject)events[ i ][ "beacon" ] ) ,
 							replyToken = events[ i ][ "replyToken" ].Value<string>()
 						};
+						Trace.TraceInformation( "Reply Token is : " + ( webhookRequest.events[ i ] as BeaconEvent ).replyToken );
 						break;
 
 					// 友達追加またはブロック解除時
@@ -51,6 +50,7 @@ namespace MessagingApiExample.Services {
 						webhookRequest.events[ i ] = new FollowEvent() {
 							replyToken = events[ i ][ "replyToken" ].Value<string>()
 						};
+						Trace.TraceInformation( "Reply Token is : " + ( webhookRequest.events[ i ] as FollowEvent ).replyToken );
 						break;
 
 					// グループ参加時
@@ -71,6 +71,7 @@ namespace MessagingApiExample.Services {
 							message = this.ConvertMessage( (JObject)events[ i ][ "message" ] ) ,
 							replyToken = events[ i ][ "replyToken" ].Value<string>()
 						};
+						Trace.TraceInformation( "Reply Token is : " + ( webhookRequest.events[ i ] as MessageEvent ).replyToken );
 						break;
 
 					// ポストバック
@@ -79,6 +80,7 @@ namespace MessagingApiExample.Services {
 							postback = this.ConvertPostback( (JObject)events[ i ][ "postback" ] ) ,
 							replyToken = events[ i ][ "replyToken" ].Value<string>()
 						};
+						Trace.TraceInformation( "Reply Token is : " + ( webhookRequest.events[ i ] as PostbackEvent ).replyToken );
 						break;
 
 					// ブロック時
@@ -94,9 +96,8 @@ namespace MessagingApiExample.Services {
 				
 				// 共通情報設定
 				webhookRequest.events[ i ].source = this.ConvertSource( (JObject)events[ i ][ "source" ] );
-				Trace.TraceInformation( events[ i ][ "timestamp" ].ToString() );
 				webhookRequest.events[ i ].timestamp = events[ i ][ "timestamp" ].Value<long>();
-				Trace.TraceInformation( "b" );
+				Trace.TraceInformation( "Timestamp is : " + webhookRequest.events[ i ].timestamp );
 
 			}
 
@@ -139,66 +140,91 @@ namespace MessagingApiExample.Services {
 		/// <param name="message">JValueのmessage</param>
 		/// <returns>MessageBaseのmessage</returns>
 		private MessageBase ConvertMessage( JObject message ) {
-
-			Trace.TraceInformation( "Convert Message Start" );
-
+			
 			// typeで分岐
 			Trace.TraceInformation( "Message Type is : " + message["type"].Value<string>() );
 			switch( message[ "type" ].Value<string>() ) {
 
 				// 音声
 				case "audio":
-					return new AudioMessage() {
+					AudioMessage audioMessage = new AudioMessage() {
 						id = message[ "id" ].Value<string>()
 					};
+					Trace.TraceInformation( "Id is : " + audioMessage.id );
+					return audioMessage;
 
 				// ファイル
 				case "file":
-					return new FileMessage() {
+					// TODO 動作未確認
+					FileMessage fileMessage = new FileMessage() {
 						id = message[ "id" ].Value<string>() ,
 						fileSize = message[ "fileSize" ].Value<string>() ,
 						fileName = message[ "fileName" ].Value<string>()
 					};
+					Trace.TraceInformation( "Id is : " + fileMessage.id );
+					Trace.TraceInformation( "File Size is : " + fileMessage.fileSize );
+					Trace.TraceInformation( "File Name is : " + fileMessage.fileName );
+					return fileMessage;
 
 				// 画像
 				case "image":
-					return new ImageMessage() {
+					ImageMessage imageMessage = new ImageMessage() {
 						id = message[ "id" ].Value<string>()
 					};
+					Trace.TraceInformation( "Id is : " + imageMessage.id );
+					return imageMessage;
 
 				// 位置情報
 				case "location":
-					return new LocationMessage() {
+					LocationMessage locationMessage = new LocationMessage() {
 						id = message[ "id" ].Value<string>() ,
 						address = message[ "address" ].Value<string>() ,
 						title = message[ "title" ].Value<string>() ,
 						latitude = message[ "latitude" ].Value<string>() ,
 						longitude = message[ "longitude" ].Value<string>()
 					};
-
+					Trace.TraceInformation( "Id is : " + locationMessage.id );
+					Trace.TraceInformation( "Address is : " + locationMessage.address );
+					Trace.TraceInformation( "Title is :" + locationMessage.title );
+					Trace.TraceInformation( "Latitude is : " + locationMessage.latitude );
+					Trace.TraceInformation( "Longitude is : " + locationMessage.longitude );
+					return locationMessage;
+					
 				// スタンプ
 				case "sticker":
-					return new StickerMessage() {
+					StickerMessage stickerMessage = new StickerMessage() {
 						id = message[ "id" ].Value<string>() ,
 						stickerId = message[ "stickerId" ].Value<string>() ,
 						packageId = message[ "packageId" ].Value<string>()
 					};
+					Trace.TraceInformation( "Id is : " + stickerMessage.id );
+					Trace.TraceInformation( "Sticker Id is : " + stickerMessage.stickerId );
+					Trace.TraceInformation( "Package Id is :" + stickerMessage.packageId );
+					return stickerMessage;
+
 
 				// テキスト
 				case "text":
-					return new TextMessage() {
+					TextMessage textMessage = new TextMessage() {
 						id = message[ "id" ].Value<string>() ,
 						text = message[ "text" ].Value<string>()
 					};
+					Trace.TraceInformation( "Id is : " + textMessage.id );
+					Trace.TraceInformation( "Textis : " + textMessage.text );
+					return textMessage;
 
 				// 動画
 				case "video":
-					return new VideoMessage() {
+					VideoMessage videoMessage = new VideoMessage() {
 						id = message[ "id" ].Value<string>()
 					};
+					Trace.TraceInformation( "Id is : " + videoMessage.id );
+					return videoMessage;
 
 				// その他
 				default:
+					// TODO 動作未確認
+					Trace.TraceWarning( "Don't Convert Message" );
 					return null;
 
 			}
@@ -226,9 +252,7 @@ namespace MessagingApiExample.Services {
 		/// <param name="source">JValueのsource</param>
 		/// <returns>SourceBaseのsource</returns>
 		private SourceBase ConvertSource( JObject source ) {
-
-			Trace.TraceInformation( "Start Convert Source" );
-
+			
 			switch( source[ "type" ].Value<string>() ) {
 				case "group":
 					return new GroupSource() {

@@ -9,12 +9,12 @@ using MessagingApiExample.Models.Webhook.Body.Event.Postback.Parameter;
 using MessagingApiExample.Models.Webhook.Body.Event.Source;
 using Newtonsoft.Json.Linq;
 
-namespace MessagingApiExample.Services {
+namespace MessagingApiExample.Services.JTokenConverter {
 
 	/// <summary>
-	/// Messaging API用サービス
+	/// JToken変換サービス
 	/// </summary>
-	public class MessagingApiService {
+	public class ConvertJTokenService {
 
 		/// <summary>
 		/// JTokenからWebhookRequestデータモデルに変換する
@@ -38,6 +38,7 @@ namespace MessagingApiExample.Services {
 
 					// ビーコン
 					case "beacon":
+						// TODO 未確認
 						webhookRequest.events[ i ] = new BeaconEvent() {
 							beacon = this.ConvertBeacon( (JObject)events[ i ][ "beacon" ] ) ,
 							replyToken = events[ i ][ "replyToken" ].Value<string>()
@@ -47,6 +48,7 @@ namespace MessagingApiExample.Services {
 
 					// 友達追加またはブロック解除時
 					case "follow":
+						// TODO 未確認
 						webhookRequest.events[ i ] = new FollowEvent() {
 							replyToken = events[ i ][ "replyToken" ].Value<string>()
 						};
@@ -55,6 +57,7 @@ namespace MessagingApiExample.Services {
 
 					// グループ参加時
 					case "join":
+						// TODO 未確認
 						webhookRequest.events[ i ] = new JoinEvent() {
 							replyToken = events[ i ][ "replyToken" ].Value<string>()
 						};
@@ -62,6 +65,7 @@ namespace MessagingApiExample.Services {
 
 					// グループ退出時
 					case "leave":
+						// TODO 未確認
 						webhookRequest.events[ i ] = new LeaveEvent();
 						break;
 
@@ -76,6 +80,7 @@ namespace MessagingApiExample.Services {
 
 					// ポストバック
 					case "postback":
+						// TODO 未確認
 						webhookRequest.events[ i ] = new PostbackEvent() {
 							postback = this.ConvertPostback( (JObject)events[ i ][ "postback" ] ) ,
 							replyToken = events[ i ][ "replyToken" ].Value<string>()
@@ -85,11 +90,14 @@ namespace MessagingApiExample.Services {
 
 					// ブロック時
 					case "unfollow":
+						// TODO 未確認
 						webhookRequest.events[ i ] = new UnfollowEvent();
 						break;
 
 					// その他
 					default:
+						// TODO 未確認
+						Trace.TraceInformation( "Event Type Couldn't Be Identified" );
 						return null;
 
 				}
@@ -111,24 +119,35 @@ namespace MessagingApiExample.Services {
 		/// <param name="beacon">JValueのbeacon</param>
 		/// <returns>BeaconBaseのbeacon</returns>
 		private BeaconBase ConvertBeacon( JObject beacon ) {
-
+			
 			BeaconBase beaconBase;
 
-			// typeがenterならビーコン受信圏内に入った
-			if( "enter".Equals( beacon[ "type" ].Value<string>() ) )
-				beaconBase = new EnterBeacon();
+			Trace.TraceInformation( "Beacon Type is : " + beacon[ "type" ].Value<string>() );
+			switch( beacon[ "type" ].Value<string>() ) {
 
-			// typeがleaveならビーコン受信県外に出た
-			else if( "leave".Equals( beacon[ "type" ].Value<string>() ) )
-				beaconBase = new LeaveBeacon();
+				case "enter":
+					beaconBase = new EnterBeacon();
+					break;
 
-			// typeがenterでもleaveでもなければbannerタップ時
-			else
-				beaconBase = new BannerBeacon();
+				case "leave":
+					beaconBase = new LeaveBeacon();
+					break;
+
+				case "banner":
+					beaconBase = new BannerBeacon();
+					break;
+
+				default:
+					Trace.TraceInformation( "Don't Convert Beacon" );
+					return null;
+
+			}
 
 			// 共通情報設定
 			beaconBase.hwid = beacon[ "hwid" ].Value<string>();
+			Trace.TraceInformation( "Hard Were Id is : " + beaconBase.hwid );
 			beaconBase.dm = beacon[ "dm" ].Value<string>();
+			Trace.TraceInformation( "DM is : " + beaconBase.dm );
 
 			return beaconBase;
 
@@ -155,7 +174,7 @@ namespace MessagingApiExample.Services {
 
 				// ファイル
 				case "file":
-					// TODO 動作未確認
+					// TODO 未確認
 					FileMessage fileMessage = new FileMessage() {
 						id = message[ "id" ].Value<string>() ,
 						fileSize = message[ "fileSize" ].Value<string>() ,
@@ -223,7 +242,7 @@ namespace MessagingApiExample.Services {
 
 				// その他
 				default:
-					// TODO 動作未確認
+					// TODO 未確認
 					Trace.TraceWarning( "Don't Convert Message" );
 					return null;
 
@@ -236,8 +255,8 @@ namespace MessagingApiExample.Services {
 		/// </summary>
 		/// <param name="postback">JValueのpostback</param>
 		/// <returns>PostbackDataのpostback</returns>
-		private PostbackData ConvertPostback( JObject postback ) =>
-			new PostbackData() {
+		private PostbackData ConvertPostback( JObject postback ) {
+			PostbackData postbackData = new PostbackData() {
 				data = postback[ "data" ].Value<string>() ,
 				parameters = new PostbackParameter() {
 					date = postback[ "param" ][ "date" ].Value<DateTime>() ,
@@ -245,6 +264,12 @@ namespace MessagingApiExample.Services {
 					time = postback[ "param" ][ "time" ].Value<TimeSpan>()
 				}
 			};
+			Trace.TraceInformation( "Postback Data is :" + postbackData.data );
+			Trace.TraceInformation( "Postback Parameter Date is : " + postbackData.parameters.date );
+			Trace.TraceInformation( "Postback Parameter Date Time is : " + postbackData.parameters.datetime );
+			Trace.TraceInformation( "Postback Parameter Time is : " + postbackData.parameters.time );
+			return postbackData;
+		}
 
 		/// <summary>
 		/// Sourveの変換
@@ -253,24 +278,42 @@ namespace MessagingApiExample.Services {
 		/// <returns>SourceBaseのsource</returns>
 		private SourceBase ConvertSource( JObject source ) {
 			
+			Trace.TraceInformation( "Source Type is : " + source[ "type" ].Value<string>() );
 			switch( source[ "type" ].Value<string>() ) {
+
+				// グループ
 				case "group":
-					return new GroupSource() {
+					// TODO 未確認
+					GroupSource groupSource = new GroupSource() {
 						groupId = source[ "groupId" ].Value<string>() ,
 						userId = source[ "userId" ].Value<string>()
 					};
+					Trace.TraceInformation( "Group Id is : " + groupSource.groupId );
+					Trace.TraceInformation( "User Id is : " + groupSource.userId );
+					return groupSource;
 
+				// トークルーム
 				case "room":
-					return new RoomSource() {
+					// TODO 未確認
+					RoomSource roomSource = new RoomSource() {
 						roomId = source[ "roomId" ].Value<string>() ,
 						userId = source[ "userId" ].Value<string>()
 					};
-
+					Trace.TraceInformation( "Room Id is : " + roomSource.roomId );
+					Trace.TraceInformation( "User Id is : " + roomSource.userId );
+					return roomSource;
+					
+				// ユーザ
 				case "user":
-					return new UserSource() {
+					UserSource userSource = new UserSource() {
 						userId = source[ "userId" ].Value<string>()
 					};
+					Trace.TraceInformation( "User Id is : " + userSource.userId );
+					return userSource;
+
 				default:
+					// TODO 未確認
+					Trace.TraceWarning( "Don't Convert Source" );
 					return null;
 			}
 

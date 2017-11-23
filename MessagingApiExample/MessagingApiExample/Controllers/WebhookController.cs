@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Web.Http;
 using MessagingApiExample.Models.Request.Webhook.Body;
 using MessagingApiExample.Services;
+using MessagingApiExample.Services.JTokenConverter;
 using Newtonsoft.Json.Linq;
 
 namespace MessagingApiExample.Controllers {
@@ -22,10 +23,14 @@ namespace MessagingApiExample.Controllers {
 
 			Trace.TraceInformation( "Webhook API Start" );
 
-			MessagingApiService messagingApiService = new MessagingApiService();
-			WebhookRequest webhookRequest = messagingApiService.ConvertJTokenToWebhookRequest( requestToken );
+			// リクエストトークンをデータモデルに変換
+			ConvertJTokenService convertJTokenService = new ConvertJTokenService();
+			WebhookRequest webhookRequest = convertJTokenService.ConvertJTokenToWebhookRequest( requestToken );
 
+			// TODO 署名の検証
 
+			
+			
 
 
 			/*

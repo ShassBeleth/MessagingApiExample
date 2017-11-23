@@ -1,8 +1,9 @@
 ﻿using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
-using System.Threading.Tasks;
 using System.Web.Http;
+using MessagingApiExample.Models.Request.Webhook.Body;
+using MessagingApiExample.Services;
 using Newtonsoft.Json.Linq;
 
 namespace MessagingApiExample.Controllers {
@@ -10,16 +11,22 @@ namespace MessagingApiExample.Controllers {
 	/// <summary>
 	/// Messaging APIよりコールされるWebhook API
 	/// </summary>
-	public abstract class WebhookControllerBase : ApiController {
+	public class WebhookController : ApiController {
 
 		/// <summary>
 		/// POSTメソッド
 		/// </summary>
 		/// <param name="requestToken">リクエストトークン</param>
 		/// <returns>常にステータス200のみを返す</returns>
-		public async Task<HttpResponseMessage> Post( JToken requestToken ) {
+		public HttpResponseMessage Post( JToken requestToken ) {
 
 			Trace.TraceInformation( "Webhook API Start" );
+
+			MessagingApiService messagingApiService = new MessagingApiService();
+			WebhookRequest webhookRequest = messagingApiService.ConvertJTokenToWebhookRequest( requestToken );
+
+
+
 
 			/*
 
@@ -219,7 +226,7 @@ namespace MessagingApiExample.Controllers {
 
 			}
 			*/
-				
+
 			Trace.TraceInformation( "Webhook API End" );
 			return new HttpResponseMessage( HttpStatusCode.OK );
 

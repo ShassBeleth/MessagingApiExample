@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using MessagingApiExample.Models.Request.Webhook.Body;
 using MessagingApiExample.Models.Webhook.Body.Event;
 using MessagingApiExample.Models.Webhook.Body.Event.Beacon;
@@ -22,15 +23,19 @@ namespace MessagingApiExample.Services {
 		/// <returns>WebhookRequest</returns>
 		public WebhookRequest ConvertJTokenToWebhookRequest( JToken token ) {
 
+			Trace.TraceInformation( "Start Convert JToken To Webhook Request" );
+
 			WebhookRequest webhookRequest = new WebhookRequest();
 
 			// Event数を取得
 			JArray events = (JArray)token[ "events" ];
 			webhookRequest.events = new EventBase[ events.Count ];
-
+			Trace.TraceInformation( "Events Count is : " + events.Count );
+			
 			// TypeからEventを割り出す
 			for( int i = 0 ; i < webhookRequest.events.Length ; i++ ) {
-				
+
+				Trace.TraceInformation( "Event Type is : " + events[ i ][ "type" ] );
 				switch( events[ i ][ "type" ].Value<string>() ) {
 
 					// ビーコン

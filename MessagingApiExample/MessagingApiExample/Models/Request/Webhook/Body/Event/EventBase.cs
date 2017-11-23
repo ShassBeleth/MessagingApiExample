@@ -11,7 +11,7 @@ namespace MessagingApiExample.Models.Webhook.Body.Event {
 		/// <summary>
 		/// イベント発生時刻
 		/// </summary>
-		public DateTime timestamp;
+		public long timestamp;
 
 		/// <summary>
 		/// 送信元

@@ -41,7 +41,7 @@ namespace MessagingApiExample.Services {
 					// ビーコン
 					case "beacon":
 						webhookRequest.events[ i ] = new BeaconEvent() {
-							beacon = this.ConvertBeacon( (JValue)events[ i ][ "beacon" ] ) ,
+							beacon = this.ConvertBeacon( (JObject)events[ i ][ "beacon" ] ) ,
 							replyToken = events[ i ][ "replyToken" ].Value<string>()
 						};
 						break;
@@ -68,7 +68,7 @@ namespace MessagingApiExample.Services {
 					// メッセージ
 					case "message":
 						webhookRequest.events[ i ] = new MessageEvent() {
-							message = this.ConvertMessage( (JValue)events[ i ][ "message" ] ) ,
+							message = this.ConvertMessage( (JObject)events[ i ][ "message" ] ) ,
 							replyToken = events[ i ][ "replyToken" ].Value<string>()
 						};
 						break;
@@ -76,7 +76,7 @@ namespace MessagingApiExample.Services {
 					// ポストバック
 					case "postback":
 						webhookRequest.events[ i ] = new PostbackEvent() {
-							postback = this.ConvertPostback( (JValue)events[ i ][ "postback" ] ) ,
+							postback = this.ConvertPostback( (JObject)events[ i ][ "postback" ] ) ,
 							replyToken = events[ i ][ "replyToken" ].Value<string>()
 						};
 						break;
@@ -93,11 +93,13 @@ namespace MessagingApiExample.Services {
 				}
 				
 				// 共通情報設定
-				webhookRequest.events[ i ].source = this.ConvertSource( (JValue)events[ i ][ "source" ] );
-				webhookRequest.events[ i ].timestamp = events[ i ][ "timestamp" ].Value<DateTime>();
+				webhookRequest.events[ i ].source = this.ConvertSource( (JObject)events[ i ][ "source" ] );
+				Trace.TraceInformation( events[ i ][ "timestamp" ].ToString() );
+				webhookRequest.events[ i ].timestamp = events[ i ][ "timestamp" ].Value<long>();
+				Trace.TraceInformation( "b" );
 
 			}
-			
+
 			return webhookRequest;
 
 		}
@@ -107,7 +109,7 @@ namespace MessagingApiExample.Services {
 		/// </summary>
 		/// <param name="beacon">JValueのbeacon</param>
 		/// <returns>BeaconBaseのbeacon</returns>
-		private BeaconBase ConvertBeacon( JValue beacon ) {
+		private BeaconBase ConvertBeacon( JObject beacon ) {
 
 			BeaconBase beaconBase;
 
@@ -136,9 +138,12 @@ namespace MessagingApiExample.Services {
 		/// </summary>
 		/// <param name="message">JValueのmessage</param>
 		/// <returns>MessageBaseのmessage</returns>
-		private MessageBase ConvertMessage( JValue message ) {
+		private MessageBase ConvertMessage( JObject message ) {
+
+			Trace.TraceInformation( "Convert Message Start" );
 
 			// typeで分岐
+			Trace.TraceInformation( "Message Type is : " + message["type"].Value<string>() );
 			switch( message[ "type" ].Value<string>() ) {
 
 				// 音声
@@ -205,7 +210,7 @@ namespace MessagingApiExample.Services {
 		/// </summary>
 		/// <param name="postback">JValueのpostback</param>
 		/// <returns>PostbackDataのpostback</returns>
-		private PostbackData ConvertPostback( JValue postback ) =>
+		private PostbackData ConvertPostback( JObject postback ) =>
 			new PostbackData() {
 				data = postback[ "data" ].Value<string>() ,
 				parameters = new PostbackParameter() {
@@ -220,27 +225,30 @@ namespace MessagingApiExample.Services {
 		/// </summary>
 		/// <param name="source">JValueのsource</param>
 		/// <returns>SourceBaseのsource</returns>
-		private SourceBase ConvertSource( JValue source ) {
+		private SourceBase ConvertSource( JObject source ) {
 
-			// groupIdがあればグループからの送信
-			if( source[ "groupId" ].HasValues )
-				return new GroupSource() {
-					groupId = source[ "groupId" ].Value<string>() ,
-					userId = source[ "userId" ].Value<string>()
-				};
+			Trace.TraceInformation( "Start Convert Source" );
 
-			// roomIdがあればトークルームからの送信
-			else if( source[ "roomId" ].HasValues )
-				return new RoomSource() {
-					roomId = source[ "roomId" ].Value<string>() ,
-					userId = source[ "userId" ].Value<string>()
-				};
+			switch( source[ "type" ].Value<string>() ) {
+				case "group":
+					return new GroupSource() {
+						groupId = source[ "groupId" ].Value<string>() ,
+						userId = source[ "userId" ].Value<string>()
+					};
 
-			// groupIdもroomIdもなければユーザからの送信
-			else
-				return new UserSource() {
-					userId = source[ "userId" ].Value<string>()
-				};
+				case "room":
+					return new RoomSource() {
+						roomId = source[ "roomId" ].Value<string>() ,
+						userId = source[ "userId" ].Value<string>()
+					};
+
+				case "user":
+					return new UserSource() {
+						userId = source[ "userId" ].Value<string>()
+					};
+				default:
+					return null;
+			}
 
 		}
 

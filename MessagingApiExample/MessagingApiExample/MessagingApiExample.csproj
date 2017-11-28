@@ -121,6 +121,7 @@
     <Compile Include="Models\Request\Webhook\Body\Event\Source\UserSource.cs" />
     <Compile Include="Models\Request\Webhook\Body\Event\UnfollowEvent.cs" />
     <Compile Include="Models\Request\Webhook\Body\WebhookRequest.cs" />
+    <Compile Include="Services\Authentication\AuthenticationService.cs" />
     <Compile Include="Services\JTokenConverter\ConvertJTokenService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -135,7 +136,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Services\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

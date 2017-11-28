@@ -1,9 +1,11 @@
 ﻿using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using MessagingApiExample.Models.Request.Webhook.Body;
-using MessagingApiExample.Services;
+using MessagingApiExample.Models.Webhook.Body.Event;
+using MessagingApiExample.Models.Webhook.Body.Event.Message;
 using MessagingApiExample.Services.JTokenConverter;
 using Newtonsoft.Json.Linq;
 
@@ -19,7 +21,7 @@ namespace MessagingApiExample.Controllers {
 		/// </summary>
 		/// <param name="requestToken">リクエストトークン</param>
 		/// <returns>常にステータス200のみを返す</returns>
-		public HttpResponseMessage Post( JToken requestToken ) {
+		public async Task<HttpResponseMessage> Post( JToken requestToken ) {
 
 			Trace.TraceInformation( "Webhook API Start" );
 
@@ -29,208 +31,88 @@ namespace MessagingApiExample.Controllers {
 
 			// TODO 署名の検証
 
-			
-			
-
-
-			/*
-
-			// リクエストトークンをオブジェクトに詰める
-			Trace.TraceInformation( "Request Token is : " + requestToken );
-			WebhookRequest request = requestToken.ToObject<WebhookRequest>();
-
 			// TODO チャンネルアクセストークンの取得
-			string channelAccessToken = this.GetChannelAccessToken();
+			// AuthenticationService authenticationService = new AuthenticationService();
+			// ChannelAccessTokenResponse channelAccessToken = await authenticationService.IssueChannelAccessToken();
 
-			foreach( WebhookRequest.Event eventObj in request.events ) {
+			foreach( EventBase webhookEvent in webhookRequest.events ) {
 
-				// 送信元IDの取得
-				string sourceId
-					= eventObj.source.type == WebhookRequest.Event.Source.SourceType.User ? eventObj.source.userId
-					: eventObj.source.type == WebhookRequest.Event.Source.SourceType.Group ? eventObj.source.groupId
-					: eventObj.source.type == WebhookRequest.Event.Source.SourceType.Room ? eventObj.source.roomId
-					: null;
-				if( sourceId == null ) {
-					Trace.TraceError( "Source Id Not Found" );
-					break;
-				}
+				switch( webhookEvent ) {
 
-				switch( eventObj.type ) {
-
-					// 友達追加またはブロック解除
-					case WebhookRequest.Event.EventType.Follow:
-
-					// グループまたはトークルームに追加
-					case WebhookRequest.Event.EventType.Join:
-						await this.ExecuteJoinEvent(
-							channelAccessToken ,
-							eventObj.replyToken ,
-							eventObj.timestamp ,
-							eventObj.source.type ,
-							sourceId
-						);
+					// 友達追加時イベント
+					case FollowEvent followEvent:
 						break;
 
-					// ブロック
-					case WebhookRequest.Event.EventType.Unfollow:
-
-					// グループから退出させられる
-					case WebhookRequest.Event.EventType.Leave:
-						this.ExecuteLeaveEvent(
-							channelAccessToken ,
-							eventObj.timestamp ,
-							eventObj.source.type ,
-							eventObj.source.groupId
-						);
+					// ブロック時イベント
+					case UnfollowEvent unfollowEvent:
 						break;
 
-					// メッセージ
-					case WebhookRequest.Event.EventType.Message:
+					// グループ追加時イベント
+					case JoinEvent joinEvent:
+						break;
 
-						switch( eventObj.message.type ) {
+					// グループ退会時イベント
+					case LeaveEvent leaveEvent:
+						break;
 
-							// テキスト
-							case WebhookRequest.Event.Message.MessageType.Text:
-								await this.ExecuteTextMessageEvent(
-									channelAccessToken ,
-									eventObj.replyToken ,
-									eventObj.timestamp ,
-									eventObj.source.type ,
-									sourceId ,
-									eventObj.message.text
-								);
-								break;
-
-							// 画像
-							case WebhookRequest.Event.Message.MessageType.Image:
-								await this.ExecuteImageMessageEvent(
-									channelAccessToken ,
-									eventObj.replyToken ,
-									eventObj.timestamp ,
-									eventObj.source.type ,
-									sourceId ,
-									await new ContentService().GetContent( eventObj.message.id , channelAccessToken )
-								);
-								break;
-
-							// 動画
-							case WebhookRequest.Event.Message.MessageType.Video:
-								await this.ExecuteVideoMessageEvent(
-									channelAccessToken ,
-									eventObj.replyToken ,
-									eventObj.timestamp ,
-									eventObj.source.type ,
-									sourceId ,
-									await new ContentService().GetContent( eventObj.message.id , channelAccessToken )
-								);
-								break;
+					// メッセージイベント
+					case MessageEvent messageEvent:
+						
+						switch( messageEvent.message ) {
 
 							// 音声
-							case WebhookRequest.Event.Message.MessageType.Audio:
-								await this.ExecuteAudioMessageEvent(
-									channelAccessToken ,
-									eventObj.replyToken ,
-									eventObj.timestamp ,
-									eventObj.source.type ,
-									sourceId ,
-									await new ContentService().GetContent( eventObj.message.id , channelAccessToken )
-								);
-
+							case AudioMessage audioMessage:
 								break;
 
 							// ファイル
-							case WebhookRequest.Event.Message.MessageType.File:
-								await this.ExecuteFileMessageEvent(
-									channelAccessToken ,
-									eventObj.replyToken ,
-									eventObj.timestamp ,
-									eventObj.source.type ,
-									sourceId ,
-									eventObj.message.fileName ,
-									eventObj.message.fileSize ,
-									await new ContentService().GetContent( eventObj.message.id , channelAccessToken )
-								);
+							case FileMessage fileMessage:
+								break;
+
+							// 画像
+							case ImageMessage imageMessage:
 								break;
 
 							// 位置情報
-							case WebhookRequest.Event.Message.MessageType.Location:
-
-								if( eventObj.message.latitude == null || eventObj.message.longitude == null ) {
-									Trace.TraceError( "Not Found Latitude Or Longitude" );
-									break;
-								}
-
-								await this.ExecuteLocationMessageEvent(
-									channelAccessToken ,
-									eventObj.replyToken ,
-									eventObj.timestamp ,
-									eventObj.source.type ,
-									sourceId ,
-									eventObj.message.title ,
-									eventObj.message.address ,
-									eventObj.message.latitude ,
-									eventObj.message.longitude
-								);
+							case LocationMessage locationMessage:
 								break;
 
-							// Sticker
-							case WebhookRequest.Event.Message.MessageType.Sticker:
-								await this.ExecuteStickerMessageEvent(
-									channelAccessToken ,
-									eventObj.replyToken ,
-									eventObj.timestamp ,
-									eventObj.source.type ,
-									sourceId ,
-									eventObj.message.packageId ,
-									eventObj.message.stickerId
-								);
+							// スタンプ
+							case StickerMessage stickerMessage:
 								break;
 
-							// 想定外のメッセージ種別の場合は何もしない
+							// テキスト
+							case TextMessage textMessage:
+								break;
+
+							// 動画
+							case VideoMessage videoMessage:
+								break;
+
+								// 想定外のイベントの時は何もしない
 							default:
-								Trace.TraceError( "Unexpected Message Type" );
+								Trace.TraceError( "Unexpected Type" );
 								break;
 
 						}
 
 						break;
 
-					// ポストバック
-					case WebhookRequest.Event.EventType.Postback:
-						await this.ExecutePostbackEvent(
-							channelAccessToken ,
-							eventObj.replyToken ,
-							eventObj.timestamp ,
-							eventObj.source.type ,
-							sourceId ,
-							eventObj.postback.data
-						);
+					// ポストバックイベント
+					case PostbackEvent postbackEvent:
 						break;
 
-					// ビーコン
-					case WebhookRequest.Event.EventType.Beacon:
-						await this.ExecuteBeaconEvent(
-							channelAccessToken ,
-							eventObj.replyToken ,
-							eventObj.timestamp ,
-							eventObj.source.type ,
-							sourceId ,
-							eventObj.beacon.hwid ,
-							eventObj.beacon.type ,
-							eventObj.beacon.dm
-						);
-
+					// ビーコンイベント
+					case BeaconEvent beaconEvent:
 						break;
 
-					// 想定外のイベント種別の場合は何もしない
+					// 想定外のイベントの時は何もしない
 					default:
-						Trace.TraceError( "Unexpected Type" );
+						Trace.TraceError( "Unexpected Message Type" );
 						break;
 
 				}
 
 			}
-			*/
 
 			Trace.TraceInformation( "Webhook API End" );
 			return new HttpResponseMessage( HttpStatusCode.OK );
@@ -238,22 +120,7 @@ namespace MessagingApiExample.Controllers {
 		}
 
 		/*
-
-		/// <summary>
-		/// チャンネルアクセストークンの取得
-		/// </summary>
-		/// <returns>チャンネルアクセストークン</returns>
-		private string GetChannelAccessToken() {
-
-			string token = "FMEYNCzDFwMSzMErx5VMh6xeePaZR7n+zQ3NJckfElYFsoULEytM6DFqrVyIbtUXrrVaFYOZVkm0PCZ7ENeyq2ai7wt7nIfcIFmiEXHF+5UrLyrm10McfYYFf30bknRV1I0uIpKPhxj9RRYHG1Y2AgdB04t89/1O/w1cDnyilFU=";
-
-			// TODO ここに実装方法を記述
-			// 例：app.configから取得　定数クラスから取得等
-
-			return token;
-
-		}
-
+		
 		/// <summary>
 		/// 追加時イベント
 		/// 友達登録、ブロック解除時、グループ追加時、トークルーム追加時

@@ -1,7 +1,7 @@
 ﻿using System;
-using MessagingApiExample.Models.Webhook.Body.Event.Source;
+using MessagingApiExample.Models.Request.Webhook.Body.Event.Source;
 
-namespace MessagingApiExample.Models.Webhook.Body.Event {
+namespace MessagingApiExample.Models.Request.Webhook.Body.Event {
 
 	/// <summary>
 	/// イベント

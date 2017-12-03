@@ -1,6 +1,6 @@
-﻿using MessagingApiExample.Models.Webhook.Body.Event.Postback.Parameter;
+﻿using MessagingApiExample.Models.Request.Webhook.Body.Event.Postback.Parameter;
 
-namespace MessagingApiExample.Models.Webhook.Body.Event.Postback {
+namespace MessagingApiExample.Models.Request.Webhook.Body.Event.Postback {
 
 	/// <summary>
 	/// ポストバック

@@ -1,4 +1,4 @@
-﻿namespace MessagingApiExample.Models.Webhook.Body.Event.Source {
+﻿namespace MessagingApiExample.Models.Request.Webhook.Body.Event.Source {
 
 	/// <summary>
 	/// 送信元がユーザ

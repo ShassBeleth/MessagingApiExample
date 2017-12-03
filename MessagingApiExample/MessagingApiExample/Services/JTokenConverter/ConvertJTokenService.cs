@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
 using MessagingApiExample.Models.Request.Webhook.Body;
-using MessagingApiExample.Models.Webhook.Body.Event;
-using MessagingApiExample.Models.Webhook.Body.Event.Beacon;
-using MessagingApiExample.Models.Webhook.Body.Event.Message;
-using MessagingApiExample.Models.Webhook.Body.Event.Postback;
-using MessagingApiExample.Models.Webhook.Body.Event.Postback.Parameter;
-using MessagingApiExample.Models.Webhook.Body.Event.Source;
+using MessagingApiExample.Models.Request.Webhook.Body.Event;
+using MessagingApiExample.Models.Request.Webhook.Body.Event.Beacon;
+using MessagingApiExample.Models.Request.Webhook.Body.Event.Message;
+using MessagingApiExample.Models.Request.Webhook.Body.Event.Postback;
+using MessagingApiExample.Models.Request.Webhook.Body.Event.Postback.Parameter;
+using MessagingApiExample.Models.Request.Webhook.Body.Event.Source;
 using Newtonsoft.Json.Linq;
 
 namespace MessagingApiExample.Services.JTokenConverter {

@@ -1,4 +1,4 @@
-﻿namespace MessagingApiExample.Models.Webhook.Body.Event.Message {
+﻿namespace MessagingApiExample.Models.Request.Webhook.Body.Event.Message {
 
 	/// <summary>
 	/// スタンプメッセージ

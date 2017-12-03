@@ -1,4 +1,4 @@
-﻿namespace MessagingApiExample.Models.Webhook.Body.Event.Beacon {
+﻿namespace MessagingApiExample.Models.Request.Webhook.Body.Event.Beacon {
 
 	/// <summary>
 	/// ユーザがビーコンの受信圏内に入った

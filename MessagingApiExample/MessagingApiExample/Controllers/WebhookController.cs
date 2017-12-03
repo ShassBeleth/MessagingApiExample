@@ -1,12 +1,11 @@
 ﻿using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
-using System.Threading.Tasks;
 using System.Web.Http;
 using MessagingApiExample.Models.Request.Webhook.Body;
-using MessagingApiExample.Models.Webhook.Body.Event;
-using MessagingApiExample.Models.Webhook.Body.Event.Beacon;
-using MessagingApiExample.Models.Webhook.Body.Event.Message;
+using MessagingApiExample.Models.Request.Webhook.Body.Event;
+using MessagingApiExample.Models.Request.Webhook.Body.Event.Beacon;
+using MessagingApiExample.Models.Request.Webhook.Body.Event.Message;
 using MessagingApiExample.Services.Authentication;
 using MessagingApiExample.Services.JTokenConverter;
 using Newtonsoft.Json.Linq;
@@ -111,6 +110,7 @@ namespace MessagingApiExample.Controllers {
 			
 		}
 
+		// TODO 未確認
 		/// <summary>
 		/// ビーコンイベント
 		/// </summary>
@@ -195,7 +195,8 @@ namespace MessagingApiExample.Controllers {
 		/// </summary>
 		/// <param name="videoMessage">VideoMessage</param>
 		private void ExecuteVideoMessageEvent( VideoMessage videoMessage ) => Trace.TraceInformation( "Execute Video Message Event" );
-		
+
+		// TODO 未確認
 		/// <summary>
 		/// ポストバックイベント
 		/// </summary>
@@ -207,19 +208,22 @@ namespace MessagingApiExample.Controllers {
 		/// </summary>
 		/// <param name="unfollowEvent">UnfollowEvent</param>
 		private void ExecuteUnfollowEvent( UnfollowEvent unfollowEvent ) => Trace.TraceInformation( "Execute Unfollow Message Event" );
-		
+
+		// TODO 未確認
 		/// <summary>
 		/// バナータップ時イベント
 		/// </summary>
 		/// <param name="bannerBeacon">BannerBeacon</param>
 		private void ExecuteBannerBeaconEvent( BannerBeacon bannerBeacon ) => Trace.TraceInformation( "Execute Banner Beacon Message Event" );
-		
+
+		// TODO 未確認
 		/// <summary>
 		/// ビーコン受信圏内に入った時のイベント
 		/// </summary>
 		/// <param name="enterBeacon">EnterBeacon</param>
 		private void ExecuteEnterBeaconEvent( EnterBeacon enterBeacon ) => Trace.TraceInformation( "Execute Enter Beacon Message Event" );
 
+		// TODO 未確認
 		/// <summary>
 		/// ビーコン受信圏外に出た時のイベント
 		/// </summary>

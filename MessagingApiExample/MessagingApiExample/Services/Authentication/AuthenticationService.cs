@@ -19,7 +19,7 @@ namespace MessagingApiExample.Services.Authentication {
 		/// </summary>
 		/// <returns></returns>
 		public string GetLongTermAccessToken()
-			=> "";
+			=> "N2m51pI1iWtf2kPc+6QfDPMWnSPDevD3O1qbelrRXyAZnTNuCeZw+533rh2/om6pBkDQp2Z/VmeLehoqGBZirPm1zg/7mPGUUraGyWcRiFqKkWaY9CBx3MdI2gAf+JjqTJG/8WU3yTnouopT435dWgdB04t89/1O/w1cDnyilFU=";
 		
 		// TODO 未確認
 		public async Task<ChannelAccessTokenResponse> IssueChannelAccessToken() {

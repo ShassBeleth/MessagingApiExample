@@ -1,4 +1,4 @@
-﻿namespace MessagingApiExample.Models.Webhook.Body.Event {
+﻿namespace MessagingApiExample.Models.Request.Webhook.Body.Event {
 
 	/// <summary>
 	/// トークルームまたはグループ退出時イベント

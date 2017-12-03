@@ -1,6 +1,6 @@
-﻿using MessagingApiExample.Models.Webhook.Body.Event.Message;
+﻿using MessagingApiExample.Models.Request.Webhook.Body.Event.Message;
 
-namespace MessagingApiExample.Models.Webhook.Body.Event {
+namespace MessagingApiExample.Models.Request.Webhook.Body.Event {
 
 	/// <summary>
 	/// メッセージイベント

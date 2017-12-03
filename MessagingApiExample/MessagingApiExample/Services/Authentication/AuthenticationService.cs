@@ -31,7 +31,7 @@ namespace MessagingApiExample.Services.Authentication {
 					client_secret = ""
 				}
 			);
-			Trace.TraceInformation( "Request is : " + jsonRequest );
+			Trace.TraceInformation( "Issue Channel Access Token Request is : " + jsonRequest );
 
 			StringContent content = new StringContent( jsonRequest );
 			content.Headers.ContentType = new MediaTypeHeaderValue( "application/x-www-form-urlencoded" );
@@ -46,21 +46,24 @@ namespace MessagingApiExample.Services.Authentication {
 				response.Dispose();
 				content.Dispose();
 				client.Dispose();
-				Trace.TraceInformation( "Response is : " +resultAsString );
+				Trace.TraceInformation( "Issue Channel Access Token Response is : " +resultAsString );
 				return JsonConvert.DeserializeObject<ChannelAccessTokenResponse>( resultAsString );
 
 			}
 			catch( ArgumentNullException ) {
+				Trace.TraceError( "Issue Channel Access Token is Argument Null Exception" );
 				content.Dispose();
 				client.Dispose();
 				return null;
 			}
 			catch( HttpRequestException ) {
+				Trace.TraceError( "Issue Channel Access Token is Http Request Exception" );
 				content.Dispose();
 				client.Dispose();
 				return null;
 			}
 			catch( Exception ) {
+				Trace.TraceError( "Issue Channel Access Token is Unexpected Exception" );
 				content.Dispose();
 				client.Dispose();
 				return null;

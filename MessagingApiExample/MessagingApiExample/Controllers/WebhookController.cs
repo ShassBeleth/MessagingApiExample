@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using MessagingApiExample.Models.Request.Webhook.Body;
 using MessagingApiExample.Models.Request.Webhook.Body.Event;
@@ -8,6 +9,7 @@ using MessagingApiExample.Models.Request.Webhook.Body.Event.Beacon;
 using MessagingApiExample.Models.Request.Webhook.Body.Event.Message;
 using MessagingApiExample.Services.Authentication;
 using MessagingApiExample.Services.JTokenConverter;
+using MessagingApiExample.Services.ReplyMessage;
 using Newtonsoft.Json.Linq;
 
 namespace MessagingApiExample.Controllers {
@@ -22,7 +24,7 @@ namespace MessagingApiExample.Controllers {
 		/// </summary>
 		/// <param name="requestToken">リクエストトークン</param>
 		/// <returns>常にステータス200のみを返す</returns>
-		public HttpResponseMessage Post( JToken requestToken ) {
+		public async Task<HttpResponseMessage> Post( JToken requestToken ) {
 
 			Trace.TraceInformation( "Webhook API Start" );
 
@@ -60,7 +62,7 @@ namespace MessagingApiExample.Controllers {
 					this.ExecuteLeaveEvent( (LeaveEvent)webhookEvent );
 				// メッセージイベント
 				else if( webhookEvent is MessageEvent )
-					this.ExecuteMessageEvent( (MessageEvent)webhookEvent );
+					await this.ExecuteMessageEvent( (MessageEvent)webhookEvent , channelAccessToken );
 				// ポストバックイベント
 				else if( webhookEvent is PostbackEvent )
 					this.ExecutePostbackEvent( (PostbackEvent)webhookEvent );
@@ -81,7 +83,8 @@ namespace MessagingApiExample.Controllers {
 		/// メッセージイベント
 		/// </summary>
 		/// <param name="messageEvent">MessageEvent</param>
-		private void ExecuteMessageEvent( MessageEvent messageEvent ) {
+		/// <param name="channelAccessToken">ChannelAccessToken</param>
+		private async Task ExecuteMessageEvent( MessageEvent messageEvent , string channelAccessToken ) {
 
 			// 音声
 			if( messageEvent.message is AudioMessage )
@@ -100,7 +103,11 @@ namespace MessagingApiExample.Controllers {
 				this.ExecuteStickerMessageEvent( (StickerMessage)messageEvent.message );
 			// テキスト
 			else if( messageEvent.message is TextMessage )
-				this.ExecuteTextMessageEvent( (TextMessage)messageEvent.message );
+				await this.ExecuteTextMessageEvent( 
+					messageEvent.replyToken ,
+					(TextMessage)messageEvent.message , 
+					channelAccessToken 
+				);
 			// 動画
 			else if( messageEvent.message is VideoMessage )
 				this.ExecuteVideoMessageEvent( (VideoMessage)messageEvent.message );
@@ -183,12 +190,26 @@ namespace MessagingApiExample.Controllers {
 		/// </summary>
 		/// <param name="stickerMessage">StickerMessage</param>
 		private void ExecuteStickerMessageEvent( StickerMessage stickerMessage ) => Trace.TraceInformation( "Execute Sticker Message Event" );
-		
+
 		/// <summary>
 		/// テキストメッセージイベント
 		/// </summary>
 		/// <param name="textMessage">TextMessage</param>
-		private void ExecuteTextMessageEvent( TextMessage textMessage ) => Trace.TraceInformation( "Execute Text Message Event" );
+		/// <param name="channelAccessToken">ChannelAccessToken</param>
+		private async Task ExecuteTextMessageEvent( 
+			string replyToken ,
+			TextMessage textMessage , 
+			string channelAccessToken 
+		) {
+
+			Trace.TraceInformation( "Execute Text Message Event" );
+			await new ReplyMessageService( channelAccessToken , replyToken )
+				.AddTextMessage( "茜ちゃんやでー" )
+				.AddLocationMessage( "茜ちゃんち" , "茜ちゃんちの住所" , 14 , 14 )
+				.AddStickerMessage( "1322123" , "12993507" )
+				.SendReplyMessage();
+
+		}
 
 		/// <summary>
 		/// 動画メッセージイベント

@@ -13,6 +13,13 @@ namespace MessagingApiExample.Services.Authentication {
 	/// 認証用Service
 	/// </summary>
 	public class AuthenticationService {
+
+		/// <summary>
+		/// ロングタームのチャンネルアクセストークンを取得する
+		/// </summary>
+		/// <returns></returns>
+		public string GetLongTermAccessToken()
+			=> "";
 		
 		// TODO 未確認
 		public async Task<ChannelAccessTokenResponse> IssueChannelAccessToken() {
@@ -43,17 +50,17 @@ namespace MessagingApiExample.Services.Authentication {
 				return JsonConvert.DeserializeObject<ChannelAccessTokenResponse>( resultAsString );
 
 			}
-			catch( ArgumentNullException e ) {
+			catch( ArgumentNullException ) {
 				content.Dispose();
 				client.Dispose();
 				return null;
 			}
-			catch( HttpRequestException e ) {
+			catch( HttpRequestException ) {
 				content.Dispose();
 				client.Dispose();
 				return null;
 			}
-			catch( Exception e ) {
+			catch( Exception ) {
 				content.Dispose();
 				client.Dispose();
 				return null;

@@ -272,7 +272,7 @@ namespace MessagingApiExample.Services.JTokenConverter {
 		}
 
 		/// <summary>
-		/// Sourveの変換
+		/// Sourceの変換
 		/// </summary>
 		/// <param name="source">JValueのsource</param>
 		/// <returns>SourceBaseのsource</returns>
@@ -285,8 +285,8 @@ namespace MessagingApiExample.Services.JTokenConverter {
 				case "group":
 					// TODO 未確認
 					GroupSource groupSource = new GroupSource() {
-						groupId = source[ "groupId" ].Value<string>() ,
-						userId = source[ "userId" ].Value<string>()
+						groupId = source[ "groupId" ]?.Value<string>() ,
+						userId = source[ "userId" ]?.Value<string>()
 					};
 					Trace.TraceInformation( "Group Id is : " + groupSource.groupId );
 					Trace.TraceInformation( "User Id is : " + groupSource.userId );
@@ -296,8 +296,8 @@ namespace MessagingApiExample.Services.JTokenConverter {
 				case "room":
 					// TODO 未確認
 					RoomSource roomSource = new RoomSource() {
-						roomId = source[ "roomId" ].Value<string>() ,
-						userId = source[ "userId" ].Value<string>()
+						roomId = source[ "roomId" ]?.Value<string>() ,
+						userId = source[ "userId" ]?.Value<string>()
 					};
 					Trace.TraceInformation( "Room Id is : " + roomSource.roomId );
 					Trace.TraceInformation( "User Id is : " + roomSource.userId );
@@ -306,7 +306,7 @@ namespace MessagingApiExample.Services.JTokenConverter {
 				// ユーザ
 				case "user":
 					UserSource userSource = new UserSource() {
-						userId = source[ "userId" ].Value<string>()
+						userId = source[ "userId" ]?.Value<string>()
 					};
 					Trace.TraceInformation( "User Id is : " + userSource.userId );
 					return userSource;

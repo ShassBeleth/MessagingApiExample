@@ -90,7 +90,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Request\Authentication\ChannelAccessTokenRequest.cs" />
     <Compile Include="Models\Request\Webhook\Header\WebhookRequestHeader.cs" />
+    <Compile Include="Models\Response\Authentication\ChannelAccessTokenResponse.cs" />
     <Compile Include="Models\Response\Error\Detail\ErrorDetail.cs" />
     <Compile Include="Models\Response\Error\ErrorResponse.cs" />
     <Compile Include="Models\Response\Header\ResponseHeader.cs" />

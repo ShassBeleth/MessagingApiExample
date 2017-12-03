@@ -5,7 +5,9 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using MessagingApiExample.Models.Request.Webhook.Body;
 using MessagingApiExample.Models.Webhook.Body.Event;
+using MessagingApiExample.Models.Webhook.Body.Event.Beacon;
 using MessagingApiExample.Models.Webhook.Body.Event.Message;
+using MessagingApiExample.Services.Authentication;
 using MessagingApiExample.Services.JTokenConverter;
 using Newtonsoft.Json.Linq;
 
@@ -21,7 +23,7 @@ namespace MessagingApiExample.Controllers {
 		/// </summary>
 		/// <param name="requestToken">リクエストトークン</param>
 		/// <returns>常にステータス200のみを返す</returns>
-		public async Task<HttpResponseMessage> Post( JToken requestToken ) {
+		public HttpResponseMessage Post( JToken requestToken ) {
 
 			Trace.TraceInformation( "Webhook API Start" );
 
@@ -31,86 +33,43 @@ namespace MessagingApiExample.Controllers {
 
 			// TODO 署名の検証
 
-			// TODO チャンネルアクセストークンの取得
-			// AuthenticationService authenticationService = new AuthenticationService();
-			// ChannelAccessTokenResponse channelAccessToken = await authenticationService.IssueChannelAccessToken();
+			// チャンネルアクセストークン取得
+			AuthenticationService authenticationService = new AuthenticationService();
+
+			#region リクエスト毎にチャンネルアクセストークンを発行する
+			// ChannelAccessTokenResponse channelAccessTokenResponse = await authenticationService.IssueChannelAccessToken();
+			// string channelAccessToken = channelAccessTokenResponse.access_token;
+			#endregion
+
+			#region ロングタームのチャンネルアクセストークンを取得
+			string channelAccessToken = authenticationService.GetLongTermAccessToken();
+			#endregion
 
 			foreach( EventBase webhookEvent in webhookRequest.events ) {
 
-				switch( webhookEvent ) {
-
-					// 友達追加時イベント
-					case FollowEvent followEvent:
-						break;
-
-					// ブロック時イベント
-					case UnfollowEvent unfollowEvent:
-						break;
-
-					// グループ追加時イベント
-					case JoinEvent joinEvent:
-						break;
-
-					// グループ退会時イベント
-					case LeaveEvent leaveEvent:
-						break;
-
-					// メッセージイベント
-					case MessageEvent messageEvent:
-						
-						switch( messageEvent.message ) {
-
-							// 音声
-							case AudioMessage audioMessage:
-								break;
-
-							// ファイル
-							case FileMessage fileMessage:
-								break;
-
-							// 画像
-							case ImageMessage imageMessage:
-								break;
-
-							// 位置情報
-							case LocationMessage locationMessage:
-								break;
-
-							// スタンプ
-							case StickerMessage stickerMessage:
-								break;
-
-							// テキスト
-							case TextMessage textMessage:
-								break;
-
-							// 動画
-							case VideoMessage videoMessage:
-								break;
-
-								// 想定外のイベントの時は何もしない
-							default:
-								Trace.TraceError( "Unexpected Type" );
-								break;
-
-						}
-
-						break;
-
-					// ポストバックイベント
-					case PostbackEvent postbackEvent:
-						break;
-
-					// ビーコンイベント
-					case BeaconEvent beaconEvent:
-						break;
-
-					// 想定外のイベントの時は何もしない
-					default:
-						Trace.TraceError( "Unexpected Message Type" );
-						break;
-
-				}
+				// 友達追加時イベント
+				if( webhookEvent is FollowEvent )
+					this.ExecuteFollowEvent( (FollowEvent)webhookEvent );
+				// ブロック時イベント
+				else if( webhookEvent is UnfollowEvent )
+					this.ExecuteUnfollowEvent( (UnfollowEvent)webhookEvent );
+				// グループ追加時イベント
+				else if( webhookEvent is JoinEvent )
+					this.ExecuteJoinEvent( (JoinEvent)webhookEvent );
+				// グループ退会時イベント
+				else if( webhookEvent is LeaveEvent )
+					this.ExecuteLeaveEvent( (LeaveEvent)webhookEvent );
+				// メッセージイベント
+				else if( webhookEvent is MessageEvent )
+					this.ExecuteMessageEvent( (MessageEvent)webhookEvent );
+				// ポストバックイベント
+				else if( webhookEvent is PostbackEvent )
+					this.ExecutePostbackEvent( (PostbackEvent)webhookEvent );
+				// ビーコンイベント
+				else if( webhookEvent is BeaconEvent )
+					this.ExecuteBeaconEvent( (BeaconEvent)webhookEvent );
+				else
+					Trace.TraceError( "Unexpected Message Type" );
 
 			}
 
@@ -119,573 +78,154 @@ namespace MessagingApiExample.Controllers {
 
 		}
 
-		/*
-		
 		/// <summary>
-		/// 追加時イベント
-		/// 友達登録、ブロック解除時、グループ追加時、トークルーム追加時
+		/// メッセージイベント
 		/// </summary>
-		/// <param name="channelAccessToken">チャンネルアクセストークン</param>
-		/// <param name="replyToken">リプライトークン</param>
-		/// <param name="timestamp">Webhook受信日時</param>
-		/// <param name="sourceType">イベント送信元種別</param>
-		/// <param name="sourceId">イベント送信元ID</param>
-		private async Task ExecuteJoinEvent(
-			string channelAccessToken ,
-			string replyToken ,
-			string timestamp ,
-			WebhookRequest.Event.Source.SourceType sourceType ,
-			string sourceId
-		) {
+		/// <param name="messageEvent">MessageEvent</param>
+		private void ExecuteMessageEvent( MessageEvent messageEvent ) {
 
-			Trace.TraceInformation( "Join Event Start" );
-			Trace.TraceInformation( "Channel Access Token is : " + channelAccessToken );
-			Trace.TraceInformation( "Reply Token is : " + replyToken );
-			Trace.TraceInformation( "Timestamp is : " + timestamp );
-			Trace.TraceInformation( "Source Type is : " + sourceType );
-			Trace.TraceInformation( "Source Id is : " + sourceId );
-
-			// TODO ここにイベント内容を記載
-			// 以下サンプル
-			await this.ReplyTextMessageSampleEvent( channelAccessToken , replyToken , "追加されました" );
-
-			Trace.TraceInformation( "Join Event End" );
-
+			// 音声
+			if( messageEvent.message is AudioMessage )
+				this.ExecuteAudioMessageEvent( (AudioMessage)messageEvent.message );
+			// ファイル
+			else if( messageEvent.message is FileMessage )
+				this.ExecuteFileMessageEvent( (FileMessage)messageEvent.message );
+			// 画像
+			else if( messageEvent.message is ImageMessage )
+				this.ExecuteImageMessageEvent( (ImageMessage)messageEvent.message );
+			// 位置情報
+			else if( messageEvent.message is LocationMessage )
+				this.ExecuteLocationMessageEvent( (LocationMessage)messageEvent.message );
+			// スタンプ
+			else if( messageEvent.message is StickerMessage )
+				this.ExecuteStickerMessageEvent( (StickerMessage)messageEvent.message );
+			// テキスト
+			else if( messageEvent.message is TextMessage )
+				this.ExecuteTextMessageEvent( (TextMessage)messageEvent.message );
+			// 動画
+			else if( messageEvent.message is VideoMessage )
+				this.ExecuteVideoMessageEvent( (VideoMessage)messageEvent.message );
+			// 想定外のイベントの時は何もしない
+			else
+				Trace.TraceError( "Unexpected Type" );
+			
 		}
 
 		/// <summary>
-		/// 退出時イベント
-		/// ブロック時、グループ退出時
+		/// ビーコンイベント
 		/// </summary>
-		/// <param name="channelAccessToken">チャンネルアクセストークン</param>
-		/// <param name="timestamp">Webhook受信日時</param>
-		/// <param name="sourceType">イベント送信元種別</param>
-		/// <param name="sourceId">ユーザIDまたはグループID</param>
-		private void ExecuteLeaveEvent(
-			string channelAccessToken ,
-			string timestamp ,
-			WebhookRequest.Event.Source.SourceType sourceType ,
-			string sourceId
-		) {
+		/// <param name="beaconEvent">BeaconEvent</param>
+		private void ExecuteBeaconEvent( BeaconEvent beaconEvent ) {
+			
+			// バナータップ時イベント
+			if( beaconEvent.beacon is BannerBeacon )
+				this.ExecuteBannerBeaconEvent( (BannerBeacon)beaconEvent.beacon );
 
-			Trace.TraceInformation( "Leave Event Start" );
-			Trace.TraceInformation( "Channel Access Token is : " + channelAccessToken );
-			Trace.TraceInformation( "Timestamp is : " + timestamp );
-			Trace.TraceInformation( "Source Type is : " + sourceType );
-			Trace.TraceInformation( "Source Id is : " + sourceId );
+			// バナー受信圏内に入った時のイベント
+			else if( beaconEvent.beacon is EnterBeacon )
+				this.ExecuteEnterBeaconEvent( (EnterBeacon)beaconEvent.beacon );
 
-			// TODO ここにイベント内容を記載
+			// バナー受信圏外に出た時のイベント
+			else if( beaconEvent.beacon is LeaveBeacon )
+				this.ExecuteLeaveBeaconEvent( (LeaveBeacon)beaconEvent.beacon );
 
-			Trace.TraceInformation( "Leave Event End" );
-
+			// 想定外のイベントの時は何もしない
+			else
+				Trace.TraceError( "Unexpected Beacon Type" );
+			
 		}
 
 		/// <summary>
-		/// テキストメッセージイベント
+		/// 友達追加、ブロック解除時イベント
 		/// </summary>
-		/// <param name="channelAccessToken">チャンネルアクセストークン</param>
-		/// <param name="replyToken">リプライトークン</param>
-		/// <param name="timestamp">Webhook受信日時</param>
-		/// <param name="sourceType">イベント送信元種別</param>
-		/// <param name="sourceId">イベント送信元ID</param>
-		/// <param name="text">テキスト</param>
-		private async Task ExecuteTextMessageEvent(
-			string channelAccessToken ,
-			string replyToken ,
-			string timestamp ,
-			WebhookRequest.Event.Source.SourceType sourceType ,
-			string sourceId ,
-			string text
-		) {
-
-			Trace.TraceInformation( "Text Message Event Start" );
-			Trace.TraceInformation( "Channel Access Token is : " + channelAccessToken );
-			Trace.TraceInformation( "Reply Token is : " + replyToken );
-			Trace.TraceInformation( "Timestamp is : " + timestamp );
-			Trace.TraceInformation( "Source Type is : " + sourceType );
-			Trace.TraceInformation( "Source Id is : " + sourceId );
-			Trace.TraceInformation( "Text is : " + text );
-
-			// TODO ここにイベント内容を記載
-			// 以下サンプル
-			switch( text ) {
-
-				case "プロフィール":
-					await this.ReplyProfileMessageSampleEvent( replyToken , channelAccessToken , sourceId );
-					break;
-
-				case "カンファーム":
-					await this.ReplyConfirmMessageSampleEvent( replyToken , channelAccessToken );
-					break;
-
-				case "ボタン":
-					await this.ReplyButtonMessageSampleEvent( replyToken , channelAccessToken );
-					break;
-
-				case "カルーセル":
-					await this.ReplyCarouselMessageSampleEvent( replyToken , channelAccessToken );
-					break;
-
-				default:
-					await this.ReplyTextMessageSampleEvent( replyToken , channelAccessToken , "テキスト\n" + text );
-					break;
-
-			}
-
-			Trace.TraceInformation( "Text Message Event End" );
-
-		}
+		/// <param name="followEvent">FollowEvent</param>
+		private void ExecuteFollowEvent( FollowEvent followEvent ) => Trace.TraceInformation( "Execute Follow Event" );
 
 		/// <summary>
-		/// 画像メッセージイベント
+		/// グループ参加時イベント
 		/// </summary>
-		/// <param name="channelAccessToken">チャンネルアクセストークン</param>
-		/// <param name="replyToken">リプライトークン</param>
-		/// <param name="timestamp">Webhook受信日時</param>
-		/// <param name="sourceType">イベント送信元種別</param>
-		/// <param name="sourceId">イベント送信元ID</param>
-		/// <param name="binaryImage">バイナリ画像</param>
-		private async Task ExecuteImageMessageEvent(
-			string channelAccessToken ,
-			string replyToken ,
-			string timestamp ,
-			WebhookRequest.Event.Source.SourceType sourceType ,
-			string sourceId ,
-			byte[] binaryImage
-		) {
-
-			Trace.TraceInformation( "Image Message Event Start" );
-			Trace.TraceInformation( "Channel Access Token is : " + channelAccessToken );
-			Trace.TraceInformation( "Reply Token is : " + replyToken );
-			Trace.TraceInformation( "Timestamp is : " + timestamp );
-			Trace.TraceInformation( "Source Type is : " + sourceType );
-			Trace.TraceInformation( "Source Id is : " + sourceId );
-			Trace.TraceInformation( "Binary Image Length is : " + binaryImage.Length );
-
-			// TODO ここにイベント内容を記載
-			// 以下サンプル
-			await this.ReplyTextMessageSampleEvent( replyToken , channelAccessToken , "画像" );
-
-			Trace.TraceInformation( "Image Message Event End" );
-
-		}
+		/// <param name="joinEvent">JoinEvent</param>
+		private void ExecuteJoinEvent( JoinEvent joinEvent ) => Trace.TraceInformation( "Execute Join Event" );
 
 		/// <summary>
-		/// 動画メッセージイベント
+		/// グループ退出時イベント
 		/// </summary>
-		/// <param name="channelAccessToken">チャンネルアクセストークン</param>
-		/// <param name="replyToken">リプライトークン</param>
-		/// <param name="timestamp">Webhook受信日時</param>
-		/// <param name="sourceType">イベント送信元種別</param>
-		/// <param name="sourceId">イベント送信元ID</param>
-		/// <param name="binaryVideo">バイナリ動画</param>
-		private async Task ExecuteVideoMessageEvent(
-			string channelAccessToken ,
-			string replyToken ,
-			string timestamp ,
-			WebhookRequest.Event.Source.SourceType sourceType ,
-			string sourceId ,
-			byte[] binaryVideo
-		) {
-
-			Trace.TraceInformation( "Video Message Event Start" );
-			Trace.TraceInformation( "Channel Access Token is : " + channelAccessToken );
-			Trace.TraceInformation( "Reply Token is : " + replyToken );
-			Trace.TraceInformation( "Timestamp is : " + timestamp );
-			Trace.TraceInformation( "Source Type is : " + sourceType );
-			Trace.TraceInformation( "Source Id is : " + sourceId );
-			Trace.TraceInformation( "Binary Video Length is : " + binaryVideo.Length );
-
-			// TODO ここにイベント内容を記載
-			// 以下サンプル
-			await this.ReplyTextMessageSampleEvent( replyToken , channelAccessToken , "動画" );
-
-			Trace.TraceInformation( "Video Message Event End" );
-
-		}
+		/// <param name="leaveEvent">LeaveEvent</param>
+		private void ExecuteLeaveEvent( LeaveEvent leaveEvent ) => Trace.TraceInformation( "Execute Leave Event" );
 
 		/// <summary>
 		/// 音声メッセージイベント
 		/// </summary>
-		/// <param name="channelAccessToken">チャンネルアクセストークン</param>
-		/// <param name="replyToken">リプライトークン</param>
-		/// <param name="timestamp">Webhook受信日時</param>
-		/// <param name="sourceType">イベント送信元種別</param>
-		/// <param name="sourceId">イベント送信元ID</param>
-		/// <param name="binaryAudio">バイナリ音声</param>
-		private async Task ExecuteAudioMessageEvent(
-			string channelAccessToken ,
-			string replyToken ,
-			string timestamp ,
-			WebhookRequest.Event.Source.SourceType sourceType ,
-			string sourceId ,
-			byte[] binaryAudio
-		) {
+		/// <param name="audioMessage">AudioMessage</param>
+		private void ExecuteAudioMessageEvent( AudioMessage audioMessage ) => Trace.TraceInformation( "Execute Audio Message Event" );
 
-			Trace.TraceInformation( "Audio Message Event Start" );
-			Trace.TraceInformation( "Channel Access Token is : " + channelAccessToken );
-			Trace.TraceInformation( "Reply Token is : " + replyToken );
-			Trace.TraceInformation( "Timestamp is : " + timestamp );
-			Trace.TraceInformation( "Source Type is : " + sourceType );
-			Trace.TraceInformation( "Source Id is : " + sourceId );
-			Trace.TraceInformation( "Binary Audio Length is : " + binaryAudio.Length );
-
-			// TODO ここにイベント内容を記載
-			// 以下サンプル
-			await this.ReplyTextMessageSampleEvent( replyToken , channelAccessToken , "音声" );
-
-			Trace.TraceInformation( "Audio Message Event End" );
-
-		}
-
+		// TODO 未確認
 		/// <summary>
 		/// ファイルメッセージイベント
 		/// </summary>
-		/// <param name="channelAccessToken">チャンネルアクセストークン</param>
-		/// <param name="replyToken">リプライトークン</param>
-		/// <param name="timestamp">Webhook受信日時</param>
-		/// <param name="sourceType">イベント送信元種別</param>
-		/// <param name="sourceId">イベント送信元ID</param>
-		/// <param name="fileName">ファイル名</param>
-		/// <param name="fileSize">ファイルのバイト数</param>
-		/// <param name="binaryFile">バイナリファイル</param>
-		private async Task ExecuteFileMessageEvent(
-			string channelAccessToken ,
-			string replyToken ,
-			string timestamp ,
-			WebhookRequest.Event.Source.SourceType sourceType ,
-			string sourceId ,
-			string fileName ,
-			string fileSize ,
-			byte[] binaryFile
-		) {
+		/// <param name="fileMessage">FileMessage</param>
+		private void ExecuteFileMessageEvent( FileMessage fileMessage ) => Trace.TraceInformation( "Execute File Message Event" );
 
-			Trace.TraceInformation( "File Message Event Start" );
-			Trace.TraceInformation( "Channel Access Token is : " + channelAccessToken );
-			Trace.TraceInformation( "Reply Token is : " + replyToken );
-			Trace.TraceInformation( "Timestamp is : " + timestamp );
-			Trace.TraceInformation( "Source Type is : " + sourceType );
-			Trace.TraceInformation( "Source Id is : " + sourceId );
-			Trace.TraceInformation( "File Name Id is : " + fileName );
-			Trace.TraceInformation( "File Size Id is : " + fileSize );
-			Trace.TraceInformation( "Binary File Length is : " + binaryFile.Length );
-
-			// TODO ここにイベント内容を記載
-			// 以下サンプル
-			await this.ReplyTextMessageSampleEvent(
-				replyToken ,
-				channelAccessToken ,
-				"ファイル\n" +
-				"ファイル名:" + fileName + "\n" +
-				"ファイルサイズ:" + fileSize
-			);
-
-			Trace.TraceInformation( "File Message Event End" );
-
-		}
+		/// <summary>
+		/// 画像メッセージイベント
+		/// </summary>
+		/// <param name="imageMessage">ImageMessage</param>
+		private void ExecuteImageMessageEvent( ImageMessage imageMessage ) => Trace.TraceInformation( "Execute Image Message Event" );
 
 		/// <summary>
 		/// 位置情報メッセージイベント
 		/// </summary>
-		/// <param name="channelAccessToken">チャンネルアクセストークン</param>
-		/// <param name="replyToken">リプライトークン</param>
-		/// <param name="timestamp">Webhook受信日時</param>
-		/// <param name="sourceType">イベント送信元種別</param>
-		/// <param name="sourceId">イベント送信元ID</param>
-		/// <param name="title">タイトル</param>
-		/// <param name="address">住所</param>
-		/// <param name="latitude">緯度</param>
-		/// <param name="longitude">経度</param>
-		private async Task ExecuteLocationMessageEvent(
-			string channelAccessToken ,
-			string replyToken ,
-			string timestamp ,
-			WebhookRequest.Event.Source.SourceType sourceType ,
-			string sourceId ,
-			string title ,
-			string address ,
-			string latitude ,
-			string longitude
-		) {
-
-			Trace.TraceInformation( "Location Message Event Start" );
-			Trace.TraceInformation( "Channel Access Token is : " + channelAccessToken );
-			Trace.TraceInformation( "Reply Token is : " + replyToken );
-			Trace.TraceInformation( "Timestamp is : " + timestamp );
-			Trace.TraceInformation( "Source Type is : " + sourceType );
-			Trace.TraceInformation( "Source Id is : " + sourceId );
-			Trace.TraceInformation( "Title is : " + title );
-			Trace.TraceInformation( "Address is : " + address );
-			Trace.TraceInformation( "Latitude is : " + latitude );
-			Trace.TraceInformation( "Longitude is : " + longitude );
-
-			// TODO ここにイベント内容を記載
-			// 以下サンプル
-			await this.ReplyTextMessageSampleEvent(
-				replyToken ,
-				channelAccessToken ,
-				"位置情報\n" +
-				"タイトル:" + title +
-				"住所:" + address +
-				"緯度:" + latitude +
-				"経度:" + longitude
-			);
-
-			Trace.TraceInformation( "Location Message Event End" );
-
-		}
+		/// <param name="locationMessage">LocationMessage</param>
+		private void ExecuteLocationMessageEvent( LocationMessage locationMessage ) => Trace.TraceInformation( "Execute Location Message Event" );
+		
+		/// <summary>
+		/// スタンプメッセージイベント
+		/// </summary>
+		/// <param name="stickerMessage">StickerMessage</param>
+		private void ExecuteStickerMessageEvent( StickerMessage stickerMessage ) => Trace.TraceInformation( "Execute Sticker Message Event" );
+		
+		/// <summary>
+		/// テキストメッセージイベント
+		/// </summary>
+		/// <param name="textMessage">TextMessage</param>
+		private void ExecuteTextMessageEvent( TextMessage textMessage ) => Trace.TraceInformation( "Execute Text Message Event" );
 
 		/// <summary>
-		/// Stickerメッセージイベント
+		/// 動画メッセージイベント
 		/// </summary>
-		/// <param name="channelAccessToken">チャンネルアクセストークン</param>
-		/// <param name="replyToken">リプライトークン</param>
-		/// <param name="timestamp">Webhook受信日時</param>
-		/// <param name="sourceType">イベント送信元種別</param>
-		/// <param name="sourceId">イベント送信元ID</param>
-		/// <param name="packageId">パッケージ識別子</param>
-		/// <param name="stickerId">Sticker識別子</param>
-		private async Task ExecuteStickerMessageEvent(
-			string channelAccessToken ,
-			string replyToken ,
-			string timestamp ,
-			WebhookRequest.Event.Source.SourceType sourceType ,
-			string sourceId ,
-			string packageId ,
-			string stickerId
-		) {
-
-			Trace.TraceInformation( "Sticker Message Event Start" );
-			Trace.TraceInformation( "Channel Access Token is : " + channelAccessToken );
-			Trace.TraceInformation( "Reply Token is : " + replyToken );
-			Trace.TraceInformation( "Timestamp is : " + timestamp );
-			Trace.TraceInformation( "Source Type is : " + sourceType );
-			Trace.TraceInformation( "Source Id is : " + sourceId );
-			Trace.TraceInformation( "Package Id is : " + packageId );
-			Trace.TraceInformation( "Sticker Id is : " + stickerId );
-
-			// TODO ここにイベント内容を記載
-			// 以下サンプル
-			await this.ReplyTextMessageSampleEvent(
-				replyToken ,
-				channelAccessToken ,
-				"Sticker\n" +
-				"パッケージ:" + packageId +
-				"Sticker:" + stickerId
-			);
-
-			Trace.TraceInformation( "Sticker Message Event End" );
-
-		}
+		/// <param name="videoMessage">VideoMessage</param>
+		private void ExecuteVideoMessageEvent( VideoMessage videoMessage ) => Trace.TraceInformation( "Execute Video Message Event" );
+		
+		/// <summary>
+		/// ポストバックイベント
+		/// </summary>
+		/// <param name="postbackEvent">PostbackEvent</param>
+		private void ExecutePostbackEvent( PostbackEvent postbackEvent ) => Trace.TraceInformation( "Execute Postback Message Event" );
+		
+		/// <summary>
+		/// ブロック時イベント
+		/// </summary>
+		/// <param name="unfollowEvent">UnfollowEvent</param>
+		private void ExecuteUnfollowEvent( UnfollowEvent unfollowEvent ) => Trace.TraceInformation( "Execute Unfollow Message Event" );
+		
+		/// <summary>
+		/// バナータップ時イベント
+		/// </summary>
+		/// <param name="bannerBeacon">BannerBeacon</param>
+		private void ExecuteBannerBeaconEvent( BannerBeacon bannerBeacon ) => Trace.TraceInformation( "Execute Banner Beacon Message Event" );
+		
+		/// <summary>
+		/// ビーコン受信圏内に入った時のイベント
+		/// </summary>
+		/// <param name="enterBeacon">EnterBeacon</param>
+		private void ExecuteEnterBeaconEvent( EnterBeacon enterBeacon ) => Trace.TraceInformation( "Execute Enter Beacon Message Event" );
 
 		/// <summary>
-		/// ポストバック送信時イベント
+		/// ビーコン受信圏外に出た時のイベント
 		/// </summary>
-		/// <param name="channelAccessToken">チャンネルアクセストークン</param>
-		/// <param name="replyToken">リプライトークン</param>
-		/// <param name="timestamp">Webhook受信日時</param>
-		/// <param name="sourceI">イベント送信元種別</param>
-		/// <param name="sourceId">ユーザIDまたはグループIDまたはトークルームID</param>
-		/// <param name="data">ポストバックデータ</param>
-		private async Task ExecutePostbackEvent(
-			string channelAccessToken ,
-			string replyToken ,
-			string timestamp ,
-			WebhookRequest.Event.Source.SourceType sourceType ,
-			string sourceId ,
-			string data
-		) {
+		/// <param name="leaveBeacon">LeaveBeacon</param>
+		private void ExecuteLeaveBeaconEvent( LeaveBeacon leaveBeacon ) => Trace.TraceInformation( "Execute Leave Beacon Message Event" );
 
-			Trace.TraceInformation( "Postback Event Start" );
-			Trace.TraceInformation( "Channel Access Token is : " + channelAccessToken );
-			Trace.TraceInformation( "Reply Token is : " + replyToken );
-			Trace.TraceInformation( "Timestamp is : " + timestamp );
-			Trace.TraceInformation( "Source Type is : " + sourceType );
-			Trace.TraceInformation( "Source Id is : " + sourceId );
-			Trace.TraceInformation( "Data is : " + data );
-
-			// TODO ここにイベント内容を記載
-			// 以下サンプル
-			await this.ReplyTextMessageSampleEvent( replyToken , channelAccessToken , "ポストバック\n" + data );
-
-			Trace.TraceInformation( "Postback Event End" );
-
-		}
-
-		/// <summary>
-		/// ビーコンデバイスの受信圏内出入り時イベント
-		/// </summary>
-		/// <param name="channelAccessToken">チャンネルアクセストークン</param>
-		/// <param name="replyToken">リプライトークン</param>
-		/// <param name="timestamp">Webhook受信日時</param>
-		/// <param name="sourceType">イベント送信元種別</param>
-		/// <param name="sourceId">ユーザIDまたはグループIDまたはトークルームID</param>
-		/// <param name="hardWareId">ハードウェア識別子</param>
-		/// <param name="beaconType">ビーコン種別</param>
-		/// <param name="deviceMessage">デバイスメッセージ</param>
-		private async Task ExecuteBeaconEvent(
-			string channelAccessToken ,
-			string replyToken ,
-			string timestamp ,
-			WebhookRequest.Event.Source.SourceType sourceType ,
-			string sourceId ,
-			string hardWareId ,
-			WebhookRequest.Event.Beacon.BeaconType beaconType ,
-			string deviceMessage
-		) {
-
-			Trace.TraceInformation( "Beacon Event Start" );
-			Trace.TraceInformation( "Channel Access Token is : " + channelAccessToken );
-			Trace.TraceInformation( "Reply Token is : " + replyToken );
-			Trace.TraceInformation( "Timestamp is : " + timestamp );
-			Trace.TraceInformation( "Source Type is : " + sourceType );
-			Trace.TraceInformation( "Source Id is : " + sourceId );
-			Trace.TraceInformation( "Hard Ware Id is : " + hardWareId );
-			Trace.TraceInformation( "Beacon Type is : " + beaconType );
-			Trace.TraceInformation( "Device Message is : " + deviceMessage );
-
-
-			// TODO ここにイベント内容を記載
-			// 以下サンプル
-			await this.ReplyTextMessageSampleEvent(
-				replyToken ,
-				channelAccessToken ,
-				"ビーコン\n" +
-				"ハードウェア:" + hardWareId + "\n" +
-				"種別:" + beaconType + "\n" +
-				"デバイスメッセージ" + deviceMessage
-			);
-
-			Trace.TraceInformation( "Beacon Event End" );
-
-		}
-
-		/// <summary>
-		/// テキストサンプル
-		/// </summary>
-		/// <param name="replyToken">リプライトークン</param>
-		/// <param name="channelAccessToken">チャンネルアクセストークン</param>
-		/// <param name="text">テキスト</param>
-		/// <returns></returns>
-		private async Task ReplyTextMessageSampleEvent(
-			string replyToken ,
-			string channelAccessToken ,
-			string text
-		) => await new ReplyMessageService( replyToken , channelAccessToken )
-				.AddTextMessage( text )
-				.Send();
-
-		/// <summary>
-		/// プロフィールを表示するサンプル
-		/// </summary>
-		/// <param name="replyToken">リプライトークン</param>
-		/// <param name="channelAccessToken">チャンネルアクセストークン</param>
-		/// <param name="userId">ユーザID</param>
-		/// <returns></returns>
-		private async Task ReplyProfileMessageSampleEvent(
-			string replyToken ,
-			string channelAccessToken ,
-			string userId
-		) {
-
-			ResponseOfProfile profile = await new ProfileService().GetProfile( userId , channelAccessToken );
-
-			await new ReplyMessageService( replyToken , channelAccessToken )
-				.AddTextMessage(
-					"プロフィール\n" +
-					"表示名：" + profile.displayName + "\n" +
-					"ステータスメッセージ：" + profile.statusMessage
-				)
-				.Send();
-
-		}
-
-		/// <summary>
-		/// Confirmを表示するサンプル
-		/// </summary>
-		/// <param name="replyToken">リプライトークン</param>
-		/// <param name="channelAccessToken">チャンネルアクセストークン</param>
-		/// <returns></returns>
-		private async Task ReplyConfirmMessageSampleEvent(
-			string replyToken ,
-			string channelAccessToken
-		) => await new ReplyMessageService( replyToken , channelAccessToken )
-				.AddConfirmMessage(
-					"代替テキスト" ,
-					"メッセージ" ,
-					new ReplyMessageService.ActionCreator()
-						.CreateAction( Models.ReplyMessage.RequestOfReplyMessage.Message.Template.TemplateType.Confirm )
-						.AddMessageAction( "メッセージ" , "ただメッセージ送るだけ" )
-						.AddPostbackAction( "ポストバック" , "データ" , "ポストバック送信" )
-						.GetActions()
-				)
-				.Send();
-
-		/// <summary>
-		/// Buttonを表示するサンプル
-		/// </summary>
-		/// <param name="replyToken">リプライトークン</param>
-		/// <param name="channelAccessToken">チャンネルアクセストークン</param>
-		/// <returns></returns>
-		private async Task ReplyButtonMessageSampleEvent(
-			string replyToken ,
-			string channelAccessToken
-		) => await new ReplyMessageService( replyToken , channelAccessToken )
-				.AddButtonsMessage(
-					"代替テキスト" ,
-					"https://www.j-cast.com/assets_c/2016/09/news_20160926195911-thumb-autox380-94951.png" ,
-					"タイトル" ,
-					"メッセージ" ,
-					new ReplyMessageService.ActionCreator()
-						.CreateAction( Models.ReplyMessage.RequestOfReplyMessage.Message.Template.TemplateType.Buttons )
-						.AddMessageAction( "メッセージ１" , "メッセージ！" )
-						.AddMessageAction( "メッセージ２" , "メッセージ！！" )
-						.AddMessageAction( "メッセージ３" , "メッセージ！！！" )
-						.GetActions()
-				)
-				.Send();
-
-		/// <summary>
-		/// カルーセルを表示するサンプル
-		/// </summary>
-		/// <param name="replyToken">リプライトークン</param>
-		/// <param name="channelAccessToken">チャンネルアクセストークン</param>
-		/// <returns></returns>
-		private async Task ReplyCarouselMessageSampleEvent(
-			string replyToken ,
-			string channelAccessToken
-		) => await new ReplyMessageService( replyToken , channelAccessToken )
-				.AddCarouselMessage(
-					"代替テキスト" ,
-					new ReplyMessageService.ColumnCreator()
-						.CreateColumn()
-						.AddColumn(
-							"https://cdn-ak.f.st-hatena.com/images/fotolife/k/konayuki358/20160903/20160903081936.png" ,
-							"タイトル１" ,
-							"テキスト１" ,
-							new ReplyMessageService.ActionCreator()
-								.CreateAction( Models.ReplyMessage.RequestOfReplyMessage.Message.Template.TemplateType.Carousel )
-								.AddMessageAction( "テキスト" , "テキスト！" )
-								.AddPostbackAction( "ポストバック" , "データ" , "テキスト！" )
-								.GetActions()
-						)
-						.AddColumn(
-							"https://static.curazy.com/wp-content/uploads/2016/09/29111206_hidoi_reply.png" ,
-							"タイトル２" ,
-							"テキスト２" ,
-							new ReplyMessageService.ActionCreator()
-								.CreateAction( Models.ReplyMessage.RequestOfReplyMessage.Message.Template.TemplateType.Carousel )
-								.AddMessageAction( "テキスト２" , "テキスト！！" )
-								.AddPostbackAction( "ポストバック２" , "データ２" , "テキスト！！！" )
-								.GetActions()
-						)
-						.GetColumns()
-				)
-				.Send();
-
-		}
-
-	*/
 	}
 
 }

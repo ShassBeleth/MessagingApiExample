@@ -7,8 +7,11 @@ using MessagingApiExample.Models.Request.Webhook.Body;
 using MessagingApiExample.Models.Request.Webhook.Body.Event;
 using MessagingApiExample.Models.Request.Webhook.Body.Event.Beacon;
 using MessagingApiExample.Models.Request.Webhook.Body.Event.Message;
+using MessagingApiExample.Models.Request.Webhook.Body.Event.Source;
+using MessagingApiExample.Models.Response.Profile;
 using MessagingApiExample.Services.Authentication;
 using MessagingApiExample.Services.JTokenConverter;
+using MessagingApiExample.Services.Profile;
 using MessagingApiExample.Services.ReplyMessage;
 using Newtonsoft.Json.Linq;
 
@@ -102,12 +105,13 @@ namespace MessagingApiExample.Controllers {
 			else if( messageEvent.message is StickerMessage )
 				this.ExecuteStickerMessageEvent( (StickerMessage)messageEvent.message );
 			// テキスト
-			else if( messageEvent.message is TextMessage )
-				await this.ExecuteTextMessageEvent( 
+			else if( messageEvent.message is TextMessage ) {
+				await this.ExecuteTextMessageEvent(
 					messageEvent.replyToken ,
-					(TextMessage)messageEvent.message , 
-					channelAccessToken 
-				);
+					(TextMessage)messageEvent.message ,
+					channelAccessToken ,
+					( (UserSource)( messageEvent.source ) ).userId );
+			}
 			// 動画
 			else if( messageEvent.message is VideoMessage )
 				this.ExecuteVideoMessageEvent( (VideoMessage)messageEvent.message );
@@ -199,14 +203,22 @@ namespace MessagingApiExample.Controllers {
 		private async Task ExecuteTextMessageEvent( 
 			string replyToken ,
 			TextMessage textMessage , 
-			string channelAccessToken 
+			string channelAccessToken ,
+			string userId
 		) {
 
 			Trace.TraceInformation( "Execute Text Message Event" );
+			ProfileService profileService = new ProfileService();
+			ProfileResponse profileResponse = await profileService.GetProfile( channelAccessToken , userId );
 			await new ReplyMessageService( channelAccessToken , replyToken )
 				.AddTextMessage( "茜ちゃんやでー" )
 				.AddLocationMessage( "茜ちゃんち" , "茜ちゃんちの住所" , 14 , 14 )
-				.AddStickerMessage( "1322123" , "12993507" )
+				.AddTextMessage( 
+					"ユーザID：" + profileResponse.userId + "\n" +
+					"表示名：" + profileResponse.displayName + "\n" +
+					"画像URL" + profileResponse.pictureUrl + "\n" +
+					"ステータスメッセージ" + profileResponse.statusMessage
+				)
 				.SendReplyMessage();
 
 		}

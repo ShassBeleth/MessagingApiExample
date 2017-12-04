@@ -132,9 +132,11 @@
     <Compile Include="Models\Request\Webhook\Body\Event\Source\UserSource.cs" />
     <Compile Include="Models\Request\Webhook\Body\Event\UnfollowEvent.cs" />
     <Compile Include="Models\Request\Webhook\Body\WebhookRequest.cs" />
+    <Compile Include="Models\Response\Profile\ProfileResponse.cs" />
     <Compile Include="Services\Authentication\AuthenticationService.cs" />
     <Compile Include="Services\JTokenConverter\ConvertJTokenService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\Profile\ProfileService.cs" />
     <Compile Include="Services\ReplyMessage\ReplyMessageService.cs" />
   </ItemGroup>
   <ItemGroup>

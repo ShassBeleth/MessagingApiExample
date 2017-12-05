@@ -3,15 +3,15 @@ using System.Diagnostics;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using MessagingApiExample.Models.Response.Profile;
+using MessagingApiExample.Models.Response.Group;
 using Newtonsoft.Json;
 
-namespace MessagingApiExample.Services.Profile {
+namespace MessagingApiExample.Services.Group {
 
 	/// <summary>
-	/// プロフィール用Service
+	/// グループに関するService
 	/// </summary>
-	public class ProfileService {
+	public class GroupService {
 
 		/// <summary>
 		/// ChannelAccessToken
@@ -22,15 +22,17 @@ namespace MessagingApiExample.Services.Profile {
 		/// コンストラクタ
 		/// </summary>
 		/// <param name="channelAccessToken">ChannelAccessToken</param>
-		public ProfileService( string channelAccessToken )
+		public GroupService( string channelAccessToken )
 			=> this.channelAccessToken = channelAccessToken;
-		
+
+		// TODO 未確認
 		/// <summary>
-		/// プロフィール情報取得
+		/// グループメンバーのプロフィールを取得する
 		/// </summary>
+		/// <param name="groupId">グループID</param>
 		/// <param name="userId">ユーザID</param>
-		/// <returns>プロフィール情報</returns>
-		public async Task<ProfileResponse> GetProfile( string userId ) {
+		/// <returns></returns>
+		public async Task<UserProfileInGroupMemberResponse> GetUserProfileInGroupMember( string groupId , string userId ) {
 
 			HttpClient client = new HttpClient();
 			client.DefaultRequestHeaders.Accept.Add( new MediaTypeWithQualityHeaderValue( "application/json" ) );
@@ -40,26 +42,26 @@ namespace MessagingApiExample.Services.Profile {
 
 			try {
 
-				HttpResponseMessage response = await client.GetAsync( "https://api.line.me/v2/bot/profile/" + userId );
+				HttpResponseMessage response = await client.GetAsync( "https://api.line.me/v2/bot/group/" + groupId + "/member/" + userId );
 				resultAsString = await response.Content.ReadAsStringAsync();
 				response.Dispose();
 				client.Dispose();
-				Trace.TraceInformation( "Get Profile Response is : " + resultAsString );
-				return JsonConvert.DeserializeObject<ProfileResponse>( resultAsString );
+				Trace.TraceInformation( "Get User Profile In Group Member Response is : " + resultAsString );
+				return JsonConvert.DeserializeObject<UserProfileInGroupMemberResponse>( resultAsString );
 
 			}
 			catch( ArgumentNullException ) {
-				Trace.TraceError( "Get Profile is Argument Null Exception" );
+				Trace.TraceError( "Get User Profile In Group Member is Argument Null Exception" );
 				client.Dispose();
 				return null;
 			}
 			catch( HttpRequestException ) {
-				Trace.TraceError( "Get Profile is Http Request Exception" );
+				Trace.TraceError( "Get User Profile In Group Member is Http Request Exception" );
 				client.Dispose();
 				return null;
 			}
 			catch( Exception ) {
-				Trace.TraceError( "Get Profile is Unexpected Exception" );
+				Trace.TraceError( "Get User Profile In Group Member is Unexpected Exception" );
 				client.Dispose();
 				return null;
 			}

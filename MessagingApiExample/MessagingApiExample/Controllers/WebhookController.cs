@@ -10,6 +10,7 @@ using MessagingApiExample.Models.Request.Webhook.Body.Event.Message;
 using MessagingApiExample.Models.Request.Webhook.Body.Event.Source;
 using MessagingApiExample.Models.Response.Profile;
 using MessagingApiExample.Services.Authentication;
+using MessagingApiExample.Services.Group;
 using MessagingApiExample.Services.JTokenConverter;
 using MessagingApiExample.Services.Profile;
 using MessagingApiExample.Services.ReplyMessage;
@@ -208,8 +209,9 @@ namespace MessagingApiExample.Controllers {
 		) {
 
 			Trace.TraceInformation( "Execute Text Message Event" );
-			ProfileService profileService = new ProfileService();
-			ProfileResponse profileResponse = await profileService.GetProfile( channelAccessToken , userId );
+
+			ProfileService profileService = new ProfileService( channelAccessToken );
+			ProfileResponse profileResponse = await profileService.GetProfile( userId );
 			await new ReplyMessageService( channelAccessToken , replyToken )
 				.AddTextMessage( "茜ちゃんやでー" )
 				.AddLocationMessage( "茜ちゃんち" , "茜ちゃんちの住所" , 14 , 14 )

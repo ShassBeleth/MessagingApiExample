@@ -2,6 +2,8 @@
 using System.Diagnostics;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using MessagingApiExample.Models.Request.Authentication;
 using MessagingApiExample.Models.Response.Authentication;
@@ -15,12 +17,58 @@ namespace MessagingApiExample.Services.Authentication {
 	public class AuthenticationService {
 
 		/// <summary>
+		/// チャンネルシークレット
+		/// </summary>
+		/// <returns></returns>
+		public string GetChannelSecret()
+			=> "fbaa1452535d03f7bfc0596f0749834b";
+
+		/// <summary>
 		/// ロングタームのチャンネルアクセストークンを取得する
 		/// </summary>
 		/// <returns></returns>
 		public string GetLongTermAccessToken()
 			=> "N2m51pI1iWtf2kPc+6QfDPMWnSPDevD3O1qbelrRXyAZnTNuCeZw+533rh2/om6pBkDQp2Z/VmeLehoqGBZirPm1zg/7mPGUUraGyWcRiFqKkWaY9CBx3MdI2gAf+JjqTJG/8WU3yTnouopT435dWgdB04t89/1O/w1cDnyilFU=";
 		
+		/// <summary>
+		/// 署名の検証
+		/// </summary>
+		/// <param name="xLineSignature">署名</param>
+		/// <returns>検証の合否</returns>
+		public bool VerifySign( string xLineSignature , object obj ) {
+
+			Trace.TraceInformation( "Start Verify Sign" );
+
+			try {
+
+				byte[] channelSecretBytes = Encoding.UTF8.GetBytes( this.GetChannelSecret() );
+				Trace.TraceInformation( "Encoding Secret Key" );
+
+				HMACSHA256 hmacsha256 = new HMACSHA256( channelSecretBytes );
+				Trace.TraceInformation( "Create HMAC-SHA256" );
+
+				byte[] requestBodyBytes = null;
+				Trace.TraceInformation( "Get Request Body Byte" );
+
+				byte[] requestBodyDigest = hmacsha256.ComputeHash( requestBodyBytes );
+				Trace.TraceInformation( "Get Request Body Digest" );
+
+				string encodedRequestBodyDigest = Convert.ToBase64String( requestBodyDigest );
+				Trace.TraceInformation( "Encoded Request Body Digest is :" + encodedRequestBodyDigest );
+
+				Trace.TraceInformation( "X-Line Signature is :" + xLineSignature );
+				
+				return true;
+
+			}
+			catch( ArgumentNullException ) {
+
+				return false;
+
+			}
+			
+		}
+
 		// TODO 未確認
 		public async Task<ChannelAccessTokenResponse> IssueChannelAccessToken() {
 

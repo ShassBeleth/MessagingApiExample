@@ -22,8 +22,10 @@ namespace MessagingApiExample.Services.Profile {
 		/// コンストラクタ
 		/// </summary>
 		/// <param name="channelAccessToken">ChannelAccessToken</param>
-		public ProfileService( string channelAccessToken )
-			=> this.channelAccessToken = channelAccessToken;
+		public ProfileService( string channelAccessToken ) {
+			Trace.TraceInformation( "constructor" );
+			this.channelAccessToken = channelAccessToken;
+		}
 		
 		/// <summary>
 		/// プロフィール情報取得

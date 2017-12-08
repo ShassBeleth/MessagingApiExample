@@ -22,8 +22,10 @@ namespace MessagingApiExample.Services.Group {
 		/// コンストラクタ
 		/// </summary>
 		/// <param name="channelAccessToken">ChannelAccessToken</param>
-		public GroupService( string channelAccessToken )
-			=> this.channelAccessToken = channelAccessToken;
+		public GroupService( string channelAccessToken ) {
+			Trace.TraceInformation( "constructor" );
+			this.channelAccessToken = channelAccessToken;
+		}
 
 		// TODO 未確認
 		/// <summary>

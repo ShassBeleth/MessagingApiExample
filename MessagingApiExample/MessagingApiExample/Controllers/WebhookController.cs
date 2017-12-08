@@ -1,7 +1,10 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Http;
 using MessagingApiExample.Models.Request.Webhook.Body;
 using MessagingApiExample.Models.Request.Webhook.Body.Event;
@@ -10,10 +13,10 @@ using MessagingApiExample.Models.Request.Webhook.Body.Event.Message;
 using MessagingApiExample.Models.Request.Webhook.Body.Event.Source;
 using MessagingApiExample.Models.Response.Profile;
 using MessagingApiExample.Services.Authentication;
-using MessagingApiExample.Services.Group;
 using MessagingApiExample.Services.JTokenConverter;
 using MessagingApiExample.Services.Profile;
 using MessagingApiExample.Services.ReplyMessage;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace MessagingApiExample.Controllers {
@@ -29,17 +32,29 @@ namespace MessagingApiExample.Controllers {
 		/// <param name="requestToken">リクエストトークン</param>
 		/// <returns>常にステータス200のみを返す</returns>
 		public async Task<HttpResponseMessage> Post( JToken requestToken ) {
-
+			
 			Trace.TraceInformation( "Webhook API Start" );
 
+			IEnumerable<string> signatures = this.Request.Headers.GetValues( "X-Line-Signature" );
+			string signature = "";
+			foreach( string item in signatures ) {
+				signature = item;
+				Trace.TraceInformation( "signature : " + item );
+			}
+			
 			// リクエストトークンをデータモデルに変換
 			ConvertJTokenService convertJTokenService = new ConvertJTokenService();
 			WebhookRequest webhookRequest = convertJTokenService.ConvertJTokenToWebhookRequest( requestToken );
 
+
+			AuthenticationService authenticationService = new AuthenticationService();
+
+
 			// TODO 署名の検証
+			Trace.TraceInformation( "JsonConvert \n" + JsonConvert.SerializeObject( this.Request.Content.ReadAsStringAsync() ) );
+			authenticationService.VerifySign( signature , this.Request.Content );
 
 			// チャンネルアクセストークン取得
-			AuthenticationService authenticationService = new AuthenticationService();
 
 			#region リクエスト毎にチャンネルアクセストークンを発行する
 			// ChannelAccessTokenResponse channelAccessTokenResponse = await authenticationService.IssueChannelAccessToken();

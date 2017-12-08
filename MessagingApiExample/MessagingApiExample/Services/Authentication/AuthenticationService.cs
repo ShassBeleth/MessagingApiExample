@@ -35,36 +35,25 @@ namespace MessagingApiExample.Services.Authentication {
 		/// </summary>
 		/// <param name="xLineSignature">署名</param>
 		/// <returns>検証の合否</returns>
-		public bool VerifySign( string xLineSignature , object obj ) {
-
-			Trace.TraceInformation( "Start Verify Sign" );
+		public async Task<bool> VerifySign( string xLineSignature , HttpContent content ) {
 
 			try {
 
-				byte[] channelSecretBytes = Encoding.UTF8.GetBytes( this.GetChannelSecret() );
-				Trace.TraceInformation( "Encoding Secret Key" );
-
-				HMACSHA256 hmacsha256 = new HMACSHA256( channelSecretBytes );
-				Trace.TraceInformation( "Create HMAC-SHA256" );
-
-				byte[] requestBodyBytes = null;
-				Trace.TraceInformation( "Get Request Body Byte" );
-
-				byte[] requestBodyDigest = hmacsha256.ComputeHash( requestBodyBytes );
-				Trace.TraceInformation( "Get Request Body Digest" );
-
-				string encodedRequestBodyDigest = Convert.ToBase64String( requestBodyDigest );
-				Trace.TraceInformation( "Encoded Request Body Digest is :" + encodedRequestBodyDigest );
-
-				Trace.TraceInformation( "X-Line Signature is :" + xLineSignature );
-				
-				return true;
+				HMACSHA256 hmacSha256 = new HMACSHA256( Encoding.UTF8.GetBytes( this.GetChannelSecret() ) );
+				byte[] computeHash = hmacSha256.ComputeHash( Encoding.UTF8.GetBytes( await content.ReadAsStringAsync() ) );
+				string base64Content = Convert.ToBase64String( computeHash );
+				if( xLineSignature.Equals( base64Content ) ) {
+					Trace.TraceInformation( "Verify Sign is OK" );
+					return true;
+				}
+				else {
+					Trace.TraceInformation( "Verify Sign is NG" );
+					return false;
+				}
 
 			}
 			catch( ArgumentNullException ) {
-
 				return false;
-
 			}
 			
 		}

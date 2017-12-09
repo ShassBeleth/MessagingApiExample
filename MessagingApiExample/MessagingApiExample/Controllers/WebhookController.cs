@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics;
-using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Http;
 using MessagingApiExample.Models.Request.Webhook.Body;
 using MessagingApiExample.Models.Request.Webhook.Body.Event;
@@ -16,7 +15,6 @@ using MessagingApiExample.Services.Authentication;
 using MessagingApiExample.Services.JTokenConverter;
 using MessagingApiExample.Services.Profile;
 using MessagingApiExample.Services.ReplyMessage;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace MessagingApiExample.Controllers {
@@ -35,35 +33,28 @@ namespace MessagingApiExample.Controllers {
 			
 			Trace.TraceInformation( "Webhook API Start" );
 
-			IEnumerable<string> signatures = this.Request.Headers.GetValues( "X-Line-Signature" );
-			string signature = "";
-			foreach( string item in signatures ) {
-				signature = item;
-				Trace.TraceInformation( "signature : " + item );
-			}
+			// シグネチャ取得
+			string signature = this.GetSignature();
+			Trace.TraceInformation( "Signature is :" + signature );
 			
 			// リクエストトークンをデータモデルに変換
 			ConvertJTokenService convertJTokenService = new ConvertJTokenService();
 			WebhookRequest webhookRequest = convertJTokenService.ConvertJTokenToWebhookRequest( requestToken );
-
+			
 
 			AuthenticationService authenticationService = new AuthenticationService();
 
-
-			// TODO 署名の検証
-			Trace.TraceInformation( "JsonConvert \n" + JsonConvert.SerializeObject( this.Request.Content.ReadAsStringAsync() ) );
-			authenticationService.VerifySign( signature , this.Request.Content );
+			// 署名の検証
+			if( !( await authenticationService.VerifySign( signature , this.Request.Content ) ) ) {
+				Trace.TraceWarning( "Verify Sign is NG" );
+				Trace.TraceInformation( "Webhook API End" );
+				// return new HttpResponseMessage( HttpStatusCode.OK );
+			}
 
 			// チャンネルアクセストークン取得
-
-			#region リクエスト毎にチャンネルアクセストークンを発行する
 			// ChannelAccessTokenResponse channelAccessTokenResponse = await authenticationService.IssueChannelAccessToken();
 			// string channelAccessToken = channelAccessTokenResponse.access_token;
-			#endregion
-
-			#region ロングタームのチャンネルアクセストークンを取得
-			string channelAccessToken = authenticationService.GetLongTermAccessToken();
-			#endregion
+			string channelAccessToken = ConfigurationManager.AppSettings[ "LongTermChannelAccessToken" ];
 
 			foreach( EventBase webhookEvent in webhookRequest.events ) {
 
@@ -96,6 +87,20 @@ namespace MessagingApiExample.Controllers {
 			Trace.TraceInformation( "Webhook API End" );
 			return new HttpResponseMessage( HttpStatusCode.OK );
 
+		}
+
+		/// <summary>
+		/// シグネチャ取得
+		/// </summary>
+		/// <returns>シグネチャ</returns>
+		private string GetSignature() {
+			IEnumerable<string> signatures = this.Request.Headers.GetValues( "X-Line-Signature" );
+			string signature = "";
+			foreach( string item in signatures ) {
+				signature = item;
+				Trace.TraceInformation( "signature : " + item );
+			}
+			return signature;
 		}
 
 		/// <summary>
@@ -224,10 +229,11 @@ namespace MessagingApiExample.Controllers {
 		) {
 
 			Trace.TraceInformation( "Execute Text Message Event" );
-
-			ProfileService profileService = new ProfileService( channelAccessToken );
-			ProfileResponse profileResponse = await profileService.GetProfile( userId );
-			await new ReplyMessageService( channelAccessToken , replyToken )
+			
+			ProfileResponse profileResponse = 
+				await new ProfileService()
+					.GetProfile( channelAccessToken , userId );
+			await new ReplyMessageService()
 				.AddTextMessage( "茜ちゃんやでー" )
 				.AddLocationMessage( "茜ちゃんち" , "茜ちゃんちの住所" , 14 , 14 )
 				.AddTextMessage( 
@@ -236,7 +242,7 @@ namespace MessagingApiExample.Controllers {
 					"画像URL" + profileResponse.pictureUrl + "\n" +
 					"ステータスメッセージ" + profileResponse.statusMessage
 				)
-				.SendReplyMessage();
+				.SendReplyMessage( channelAccessToken , replyToken );
 
 		}
 

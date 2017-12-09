@@ -1,5 +1,4 @@
-﻿using System;
-using MessagingApiExample.Models.Request.Webhook.Body.Event.Source;
+﻿using MessagingApiExample.Models.Request.Webhook.Body.Event.Source;
 
 namespace MessagingApiExample.Models.Request.Webhook.Body.Event {
 

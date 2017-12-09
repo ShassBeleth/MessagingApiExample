@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Diagnostics;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -13,17 +14,7 @@ namespace MessagingApiExample.Services.ReplyMessage {
 	/// リクエスト送信用サービス
 	/// </summary>
 	public class ReplyMessageService {
-
-		/// <summary>
-		/// チャンネルアクセストークン
-		/// </summary>
-		private string channelAccessToken;
-
-		/// <summary>
-		/// リプライトークン
-		/// </summary>
-		private string replyToken;
-
+				
 		/// <summary>
 		/// リクエスト
 		/// </summary>
@@ -35,7 +26,10 @@ namespace MessagingApiExample.Services.ReplyMessage {
 		/// <returns>配列が既に5つたまっていた場合は何もしない</returns>
 		private bool RegulateMessageArray() {
 
+			Trace.TraceInformation( "Start Regulate Message Array" );
+
 			if( this.replyMessageRequest.messages == null ) {
+				Trace.TraceInformation( "Messages is Null" );
 				this.replyMessageRequest.messages = new MessageBase[ 1 ];
 				return true;
 			}
@@ -45,6 +39,7 @@ namespace MessagingApiExample.Services.ReplyMessage {
 					return false;
 				}
 				else {
+					Trace.TraceInformation( "Messages Length is not Max" );
 					Array.Resize<MessageBase>(
 						ref this.replyMessageRequest.messages ,
 						this.replyMessageRequest.messages.Length + 1
@@ -57,24 +52,17 @@ namespace MessagingApiExample.Services.ReplyMessage {
 		}
 		
 		/// <summary>
-		/// コンストラクタ
-		/// </summary>
-		/// <param name="channelAccessToken">ChannelAccessToken</param>
-		/// <param name="replyToken">ReplyToken</param>
-		public ReplyMessageService( string channelAccessToken , string replyToken ) {
-			this.channelAccessToken = channelAccessToken;
-			this.replyToken = replyToken;
-			this.replyMessageRequest.messages = null;
-		}
-
-		/// <summary>
 		/// テキストメッセージ追加
 		/// </summary>
 		/// <param name="text">テキスト</param>
 		public ReplyMessageService AddTextMessage( string text ) {
 
-			if( !this.RegulateMessageArray() )
+			Trace.TraceInformation( "Start Add Text Message" );
+
+			if( !this.RegulateMessageArray() ) {
+				Trace.TraceWarning( "Regulate Message Array is False" );
 				return this;
+			}
 			
 			TextMessage textMessage = new TextMessage() {
 				text = text
@@ -92,8 +80,12 @@ namespace MessagingApiExample.Services.ReplyMessage {
 		/// <param name="stickerId">スタンプID</param>
 		public ReplyMessageService AddStickerMessage( string packageId , string stickerId ) {
 
-			if( !this.RegulateMessageArray() )
+			Trace.TraceInformation( "Start Add Sticker Message" );
+
+			if( !this.RegulateMessageArray() ) {
+				Trace.TraceWarning( "Regulate Message Array is False" );
 				return this;
+			}
 
 			StickerMessage stickerMessage = new StickerMessage() {
 				packageId = packageId ,
@@ -112,8 +104,12 @@ namespace MessagingApiExample.Services.ReplyMessage {
 		/// <param name="previewImageUrl">プレビュー画像URL</param>
 		public ReplyMessageService AddImageMessage( string originalContentUrl , string previewImageUrl ) {
 
-			if( !this.RegulateMessageArray() )
+			Trace.TraceInformation( "Start Add Image Message" );
+
+			if( !this.RegulateMessageArray() ) {
+				Trace.TraceWarning( "Regulate Message Array is False" );
 				return this;
+			}
 
 			ImageMessage imageMessage = new ImageMessage() {
 				originalContentUrl = originalContentUrl ,
@@ -132,8 +128,12 @@ namespace MessagingApiExample.Services.ReplyMessage {
 		/// <param name="previewImageUrl">プレビュー画像URL</param>
 		public ReplyMessageService AddVideoMessage( string originalContentUrl , string previewImageUrl ) {
 
-			if( !this.RegulateMessageArray() )
+			Trace.TraceInformation( "Start Add Video Message" );
+
+			if( !this.RegulateMessageArray() ) {
+				Trace.TraceWarning( "Regulate Message Array is False" );
 				return this;
+			}
 
 			VideoMessage videoMessage = new VideoMessage() {
 				originalContentUrl = originalContentUrl ,
@@ -152,8 +152,12 @@ namespace MessagingApiExample.Services.ReplyMessage {
 		/// <param name="duration">音声ファイルの長さ</param>
 		public ReplyMessageService AddAudioMessage( string originalContentUrl , int duration ) {
 
-			if( !this.RegulateMessageArray() )
+			Trace.TraceInformation( "Start Add Audio Message" );
+
+			if( !this.RegulateMessageArray() ) {
+				Trace.TraceWarning( "Regulate Message Array is False" );
 				return this;
+			}
 
 			AudioMessage audioMessage = new AudioMessage() {
 				originalContentUrl = originalContentUrl ,
@@ -179,8 +183,12 @@ namespace MessagingApiExample.Services.ReplyMessage {
 			decimal longitude
 		) {
 
-			if( !this.RegulateMessageArray() )
+			Trace.TraceInformation( "Start Add Location Message" );
+
+			if( !this.RegulateMessageArray() ) {
+				Trace.TraceWarning( "Regulate Message Array is False" );
 				return this;
+			}
 
 			LocationMessage locationMessage = new LocationMessage() {
 				title = title ,
@@ -197,23 +205,30 @@ namespace MessagingApiExample.Services.ReplyMessage {
 		/// <summary>
 		/// メッセージの返信
 		/// </summary>
-		public async Task SendReplyMessage() {
+		/// <param name="channelAccessToken">ChannelAccessToken</param>
+		/// <param name="replyToken">ReplyToken</param>
+		public async Task SendReplyMessage( string channelAccessToken , string replyToken ) {
 
-			this.replyMessageRequest.replyToken = this.replyToken;
+			Trace.TraceInformation( "Start Add Location Message" );
+
+			this.replyMessageRequest.replyToken = replyToken;
 
 			string jsonRequest = JsonConvert.SerializeObject( this.replyMessageRequest );
 			Trace.TraceInformation( "Reply Message Request is : " + jsonRequest );
+			this.replyMessageRequest = new ReplyMessageRequest();
 
 			StringContent content = new StringContent( jsonRequest );
 			content.Headers.ContentType = new MediaTypeHeaderValue( "application/json" );
 			
 			HttpClient client = new HttpClient();
 			client.DefaultRequestHeaders.Accept.Add( new MediaTypeWithQualityHeaderValue( "application/json" ) );
-			client.DefaultRequestHeaders.Add( "Authorization" , "Bearer {" + this.channelAccessToken + "}" );
+			client.DefaultRequestHeaders.Add( "Authorization" , "Bearer {" + channelAccessToken + "}" );
+			
+			string requestUrl = ConfigurationManager.AppSettings[ "BaseUrl" ] + ConfigurationManager.AppSettings[ "ReplyUrl" ];
 
 			try {
 
-				HttpResponseMessage response = await client.PostAsync( "https://api.line.me/v2/bot/message/reply" , content );
+				HttpResponseMessage response = await client.PostAsync( requestUrl , content );
 				string resultAsString = await response.Content.ReadAsStringAsync();
 				response.Dispose();
 				content.Dispose();

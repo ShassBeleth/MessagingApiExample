@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Diagnostics;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -12,37 +13,30 @@ namespace MessagingApiExample.Services.Profile {
 	/// プロフィール用Service
 	/// </summary>
 	public class ProfileService {
-
-		/// <summary>
-		/// ChannelAccessToken
-		/// </summary>
-		private string channelAccessToken;
-
-		/// <summary>
-		/// コンストラクタ
-		/// </summary>
-		/// <param name="channelAccessToken">ChannelAccessToken</param>
-		public ProfileService( string channelAccessToken ) {
-			Trace.TraceInformation( "constructor" );
-			this.channelAccessToken = channelAccessToken;
-		}
 		
 		/// <summary>
 		/// プロフィール情報取得
 		/// </summary>
+		/// <param name="channelAccessToken">ChannelAccessToken</param>
 		/// <param name="userId">ユーザID</param>
 		/// <returns>プロフィール情報</returns>
-		public async Task<ProfileResponse> GetProfile( string userId ) {
+		public async Task<ProfileResponse> GetProfile( string channelAccessToken , string userId ) {
+
+			Trace.TraceInformation( "Start Get Profile" );
 
 			HttpClient client = new HttpClient();
 			client.DefaultRequestHeaders.Accept.Add( new MediaTypeWithQualityHeaderValue( "application/json" ) );
-			client.DefaultRequestHeaders.Add( "Authorization" , "Bearer {" + this.channelAccessToken + "}" );
+			client.DefaultRequestHeaders.Add( "Authorization" , "Bearer {" + channelAccessToken + "}" );
 
 			string resultAsString = null;
+			string requestUrl =
+				ConfigurationManager.AppSettings[ "BaseUrl" ] +
+				ConfigurationManager.AppSettings[ "ProfileUrl" ] +
+				userId;
 
 			try {
 
-				HttpResponseMessage response = await client.GetAsync( "https://api.line.me/v2/bot/profile/" + userId );
+				HttpResponseMessage response = await client.GetAsync( requestUrl );
 				resultAsString = await response.Content.ReadAsStringAsync();
 				response.Dispose();
 				client.Dispose();

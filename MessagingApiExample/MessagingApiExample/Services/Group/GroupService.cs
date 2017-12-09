@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Diagnostics;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -13,38 +14,38 @@ namespace MessagingApiExample.Services.Group {
 	/// </summary>
 	public class GroupService {
 
-		/// <summary>
-		/// ChannelAccessToken
-		/// </summary>
-		private string channelAccessToken;
-
-		/// <summary>
-		/// コンストラクタ
-		/// </summary>
-		/// <param name="channelAccessToken">ChannelAccessToken</param>
-		public GroupService( string channelAccessToken ) {
-			Trace.TraceInformation( "constructor" );
-			this.channelAccessToken = channelAccessToken;
-		}
-
 		// TODO 未確認
 		/// <summary>
 		/// グループメンバーのプロフィールを取得する
 		/// </summary>
+		/// <param name="channelAccessToken">ChannelAccessToken</param>
 		/// <param name="groupId">グループID</param>
 		/// <param name="userId">ユーザID</param>
 		/// <returns></returns>
-		public async Task<UserProfileInGroupMemberResponse> GetUserProfileInGroupMember( string groupId , string userId ) {
+		public async Task<UserProfileInGroupMemberResponse> GetUserProfileInGroupMember( 
+			string channelAccessToken ,
+			string groupId , 
+			string userId 
+		) {
+
+			Trace.TraceInformation( "Start Get User Profile In Group Member" );
 
 			HttpClient client = new HttpClient();
 			client.DefaultRequestHeaders.Accept.Add( new MediaTypeWithQualityHeaderValue( "application/json" ) );
-			client.DefaultRequestHeaders.Add( "Authorization" , "Bearer {" + this.channelAccessToken + "}" );
+			client.DefaultRequestHeaders.Add( "Authorization" , "Bearer {" + channelAccessToken + "}" );
+
+			string requestUrl = 
+				ConfigurationManager.AppSettings[ "BaseUrl" ] + 
+				ConfigurationManager.AppSettings[ "GroupUrlBefore" ] + 
+				groupId + 
+				ConfigurationManager.AppSettings[ "GroupUrlAfter" ] + 
+				userId;
 
 			string resultAsString = null;
 
 			try {
 
-				HttpResponseMessage response = await client.GetAsync( "https://api.line.me/v2/bot/group/" + groupId + "/member/" + userId );
+				HttpResponseMessage response = await client.GetAsync( requestUrl );
 				resultAsString = await response.Content.ReadAsStringAsync();
 				response.Dispose();
 				client.Dispose();

@@ -40,7 +40,7 @@ namespace MessagingApiExample.Services.JTokenConverter {
 					case "beacon":
 						// TODO 未確認
 						webhookRequest.events[ i ] = new BeaconEvent() {
-							beacon = this.ConvertBeacon( (JObject)events[ i ][ "beacon" ] ) ,
+							beacon = ConvertBeacon( (JObject)events[ i ][ "beacon" ] ) ,
 							replyToken = events[ i ][ "replyToken" ].Value<string>()
 						};
 						Trace.TraceInformation( "Reply Token is : " + ( webhookRequest.events[ i ] as BeaconEvent ).replyToken );
@@ -72,7 +72,7 @@ namespace MessagingApiExample.Services.JTokenConverter {
 					// メッセージ
 					case "message":
 						webhookRequest.events[ i ] = new MessageEvent() {
-							message = this.ConvertMessage( (JObject)events[ i ][ "message" ] ) ,
+							message = ConvertMessage( (JObject)events[ i ][ "message" ] ) ,
 							replyToken = events[ i ][ "replyToken" ].Value<string>()
 						};
 						Trace.TraceInformation( "Reply Token is : " + ( webhookRequest.events[ i ] as MessageEvent ).replyToken );
@@ -82,7 +82,7 @@ namespace MessagingApiExample.Services.JTokenConverter {
 					case "postback":
 						// TODO 未確認
 						webhookRequest.events[ i ] = new PostbackEvent() {
-							postback = this.ConvertPostback( (JObject)events[ i ][ "postback" ] ) ,
+							postback = ConvertPostback( (JObject)events[ i ][ "postback" ] ) ,
 							replyToken = events[ i ][ "replyToken" ].Value<string>()
 						};
 						Trace.TraceInformation( "Reply Token is : " + ( webhookRequest.events[ i ] as PostbackEvent ).replyToken );
@@ -103,7 +103,7 @@ namespace MessagingApiExample.Services.JTokenConverter {
 				}
 				
 				// 共通情報設定
-				webhookRequest.events[ i ].source = this.ConvertSource( (JObject)events[ i ][ "source" ] );
+				webhookRequest.events[ i ].source = ConvertSource( (JObject)events[ i ][ "source" ] );
 				webhookRequest.events[ i ].timestamp = events[ i ][ "timestamp" ].Value<long>();
 				Trace.TraceInformation( "Timestamp is : " + webhookRequest.events[ i ].timestamp );
 
@@ -118,7 +118,7 @@ namespace MessagingApiExample.Services.JTokenConverter {
 		/// </summary>
 		/// <param name="beacon">JValueのbeacon</param>
 		/// <returns>BeaconBaseのbeacon</returns>
-		private BeaconBase ConvertBeacon( JObject beacon ) {
+		private static BeaconBase ConvertBeacon( JObject beacon ) {
 			
 			BeaconBase beaconBase;
 
@@ -158,7 +158,7 @@ namespace MessagingApiExample.Services.JTokenConverter {
 		/// </summary>
 		/// <param name="message">JValueのmessage</param>
 		/// <returns>MessageBaseのmessage</returns>
-		private MessageBase ConvertMessage( JObject message ) {
+		private static MessageBase ConvertMessage( JObject message ) {
 			
 			// typeで分岐
 			Trace.TraceInformation( "Message Type is : " + message["type"].Value<string>() );
@@ -255,7 +255,7 @@ namespace MessagingApiExample.Services.JTokenConverter {
 		/// </summary>
 		/// <param name="postback">JValueのpostback</param>
 		/// <returns>PostbackDataのpostback</returns>
-		private PostbackData ConvertPostback( JObject postback ) {
+		private static PostbackData ConvertPostback( JObject postback ) {
 			PostbackData postbackData = new PostbackData() {
 				data = postback[ "data" ].Value<string>() ,
 				parameters = new PostbackParameter() {
@@ -276,7 +276,7 @@ namespace MessagingApiExample.Services.JTokenConverter {
 		/// </summary>
 		/// <param name="source">JValueのsource</param>
 		/// <returns>SourceBaseのsource</returns>
-		private SourceBase ConvertSource( JObject source ) {
+		private static SourceBase ConvertSource( JObject source ) {
 			
 			Trace.TraceInformation( "Source Type is : " + source[ "type" ].Value<string>() );
 			switch( source[ "type" ].Value<string>() ) {

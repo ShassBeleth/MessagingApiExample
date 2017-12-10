@@ -27,7 +27,7 @@ namespace MessagingApiExample.Services.ReplyMessage {
 
 			ReplyMessageRequest request = new ReplyMessageRequest() {
 				replyToken = replyToken ,
-				messages = messageFactoryService.messages
+				messages = messageFactoryService.Messages
 			};
 
 			string jsonRequest = JsonConvert.SerializeObject( request );

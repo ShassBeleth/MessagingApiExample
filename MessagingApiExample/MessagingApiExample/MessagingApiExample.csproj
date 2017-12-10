@@ -91,6 +91,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Request\Authentication\ChannelAccessTokenRequest.cs" />
+    <Compile Include="Models\Request\PushMessage\PushMessageRequest.cs" />
     <Compile Include="Models\Request\ReplyMessage\Message\AudioMessage.cs" />
     <Compile Include="Models\Request\ReplyMessage\Message\ImageMapMessage.cs" />
     <Compile Include="Models\Request\ReplyMessage\Message\ImageMessage.cs" />
@@ -138,7 +139,9 @@
     <Compile Include="Services\Group\GroupService.cs" />
     <Compile Include="Services\JTokenConverter\ConvertJTokenService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\MessageFactory\MessageFactoryService.cs" />
     <Compile Include="Services\Profile\ProfileService.cs" />
+    <Compile Include="Services\PushMessage\PushMessageService.cs" />
     <Compile Include="Services\ReplyMessage\ReplyMessageService.cs" />
   </ItemGroup>
   <ItemGroup>

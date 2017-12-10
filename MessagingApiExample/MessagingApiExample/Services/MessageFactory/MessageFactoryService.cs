@@ -12,7 +12,7 @@ namespace MessagingApiExample.Services.MessageFactory {
 		/// <summary>
 		/// メッセージ
 		/// </summary>
-		public MessageBase[] messages { private set; get; }
+		public MessageBase[] Messages { private set; get; }
 
 		/// <summary>
 		/// コンストラクタは隠す
@@ -35,24 +35,24 @@ namespace MessagingApiExample.Services.MessageFactory {
 
 			Trace.TraceInformation( "Start Regulate Message Array" );
 
-			if( this.messages == null ) {
+			if( this.Messages == null ) {
 				Trace.TraceInformation( "Messages is Null" );
-				this.messages = new MessageBase[ 1 ];
+				this.Messages = new MessageBase[ 1 ];
 				return true;
 			}
 			else {
-				if( this.messages.Length == 5 ) {
+				if( this.Messages.Length == 5 ) {
 					Trace.TraceWarning( "Messages Length is Max" );
 					return false;
 				}
 				else {
 					Trace.TraceInformation( "Messages Length is not Max" );
-					MessageBase[] messages = this.messages;
+					MessageBase[] messages = this.Messages;
 					Array.Resize(
 						ref messages ,
-						this.messages.Length + 1
+						this.Messages.Length + 1
 					);
-					this.messages = messages;
+					this.Messages = messages;
 					return true;
 				}
 
@@ -76,7 +76,7 @@ namespace MessagingApiExample.Services.MessageFactory {
 			TextMessage textMessage = new TextMessage() {
 				text = text
 			};
-			this.messages[ this.messages.Length - 1 ] = textMessage;
+			this.Messages[ this.Messages.Length - 1 ] = textMessage;
 
 			return this;
 
@@ -100,7 +100,7 @@ namespace MessagingApiExample.Services.MessageFactory {
 				packageId = packageId ,
 				stickerId = stickerId
 			};
-			this.messages[ this.messages.Length - 1 ] = stickerMessage;
+			this.Messages[ this.Messages.Length - 1 ] = stickerMessage;
 
 			return this;
 
@@ -124,7 +124,7 @@ namespace MessagingApiExample.Services.MessageFactory {
 				originalContentUrl = originalContentUrl ,
 				previewImageUrl = previewImageUrl
 			};
-			this.messages[ this.messages.Length - 1 ] = imageMessage;
+			this.Messages[ this.Messages.Length - 1 ] = imageMessage;
 
 			return this;
 
@@ -148,7 +148,7 @@ namespace MessagingApiExample.Services.MessageFactory {
 				originalContentUrl = originalContentUrl ,
 				previewImageUrl = previewImageUrl
 			};
-			this.messages[ this.messages.Length - 1 ] = videoMessage;
+			this.Messages[ this.Messages.Length - 1 ] = videoMessage;
 
 			return this;
 
@@ -172,7 +172,7 @@ namespace MessagingApiExample.Services.MessageFactory {
 				originalContentUrl = originalContentUrl ,
 				duration = duration
 			};
-			this.messages[ this.messages.Length - 1 ] = audioMessage;
+			this.Messages[ this.Messages.Length - 1 ] = audioMessage;
 
 			return this;
 
@@ -205,7 +205,7 @@ namespace MessagingApiExample.Services.MessageFactory {
 				latitude = latitude ,
 				longitude = longitude
 			};
-			this.messages[ this.messages.Length - 1 ] = locationMessage;
+			this.Messages[ this.Messages.Length - 1 ] = locationMessage;
 
 			return this;
 

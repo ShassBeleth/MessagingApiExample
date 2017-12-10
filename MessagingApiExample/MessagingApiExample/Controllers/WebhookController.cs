@@ -244,13 +244,6 @@ namespace MessagingApiExample.Controllers {
 				MessageFactoryService
 					.CreateMessage()
 					.AddTextMessage( "茜ちゃんやでー" )
-					.AddLocationMessage( "茜ちゃんち" , "茜ちゃんちの住所" , 14 , 14 )
-					.AddTextMessage(
-						"ユーザID：" + profileResponse.userId + "\n" +
-						"表示名：" + profileResponse.displayName + "\n" +
-						"画像URL" + profileResponse.pictureUrl + "\n" +
-						"ステータスメッセージ" + profileResponse.statusMessage
-					)
 			);
 
 		}

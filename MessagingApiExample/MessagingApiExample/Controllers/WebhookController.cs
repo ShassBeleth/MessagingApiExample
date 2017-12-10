@@ -13,6 +13,7 @@ using MessagingApiExample.Models.Request.Webhook.Body.Event.Source;
 using MessagingApiExample.Models.Response.Profile;
 using MessagingApiExample.Services.Authentication;
 using MessagingApiExample.Services.JTokenConverter;
+using MessagingApiExample.Services.MessageFactory;
 using MessagingApiExample.Services.Profile;
 using MessagingApiExample.Services.ReplyMessage;
 using Newtonsoft.Json.Linq;
@@ -23,6 +24,16 @@ namespace MessagingApiExample.Controllers {
 	/// Messaging APIよりコールされるWebhook API
 	/// </summary>
 	public class WebhookController : ApiController {
+
+		/// <summary>
+		/// リクエストトークン変換サービス
+		/// </summary>
+		private ConvertJTokenService ConvertJTokenService { set; get; } = new ConvertJTokenService();
+
+		/// <summary>
+		/// 認証サービス
+		/// </summary>
+		private AuthenticationService AuthenticationService { set; get; } = new AuthenticationService();
 
 		/// <summary>
 		/// POSTメソッド
@@ -38,14 +49,10 @@ namespace MessagingApiExample.Controllers {
 			Trace.TraceInformation( "Signature is :" + signature );
 			
 			// リクエストトークンをデータモデルに変換
-			ConvertJTokenService convertJTokenService = new ConvertJTokenService();
-			WebhookRequest webhookRequest = convertJTokenService.ConvertJTokenToWebhookRequest( requestToken );
-			
-
-			AuthenticationService authenticationService = new AuthenticationService();
+			WebhookRequest webhookRequest = ConvertJTokenService.ConvertJTokenToWebhookRequest( requestToken );
 
 			// 署名の検証
-			if( !( await authenticationService.VerifySign( signature , this.Request.Content ) ) ) {
+			if( !( await AuthenticationService.VerifySign( signature , this.Request.Content ) ) ) {
 				Trace.TraceWarning( "Verify Sign is NG" );
 				Trace.TraceInformation( "Webhook API End" );
 				// return new HttpResponseMessage( HttpStatusCode.OK );
@@ -230,19 +237,21 @@ namespace MessagingApiExample.Controllers {
 
 			Trace.TraceInformation( "Execute Text Message Event" );
 			
-			ProfileResponse profileResponse = 
-				await new ProfileService()
-					.GetProfile( channelAccessToken , userId );
-			await new ReplyMessageService()
-				.AddTextMessage( "茜ちゃんやでー" )
-				.AddLocationMessage( "茜ちゃんち" , "茜ちゃんちの住所" , 14 , 14 )
-				.AddTextMessage( 
-					"ユーザID：" + profileResponse.userId + "\n" +
-					"表示名：" + profileResponse.displayName + "\n" +
-					"画像URL" + profileResponse.pictureUrl + "\n" +
-					"ステータスメッセージ" + profileResponse.statusMessage
-				)
-				.SendReplyMessage( channelAccessToken , replyToken );
+			ProfileResponse profileResponse = await ProfileService.GetProfile( channelAccessToken , userId );
+			await ReplyMessageService.SendReplyMessage(
+				channelAccessToken ,
+				replyToken ,
+				MessageFactoryService
+					.CreateMessage()
+					.AddTextMessage( "茜ちゃんやでー" )
+					.AddLocationMessage( "茜ちゃんち" , "茜ちゃんちの住所" , 14 , 14 )
+					.AddTextMessage(
+						"ユーザID：" + profileResponse.userId + "\n" +
+						"表示名：" + profileResponse.displayName + "\n" +
+						"画像URL" + profileResponse.pictureUrl + "\n" +
+						"ステータスメッセージ" + profileResponse.statusMessage
+					)
+			);
 
 		}
 

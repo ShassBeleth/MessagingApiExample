@@ -1,16 +1,16 @@
 ﻿using MessagingApiExample.Models.Request.ReplyMessage.Message;
 
-namespace MessagingApiExample.Models.Request.ReplyMessage {
+namespace MessagingApiExample.Models.Request.PushMessage {
 
 	/// <summary>
-	/// リプライメッセージリクエスト
+	/// プッシュRequest
 	/// </summary>
-	public class ReplyMessageRequest {
+	public class PushMessageRequest {
 
 		/// <summary>
-		/// リプライトークン
+		/// 送信先ID
 		/// </summary>
-		public string replyToken;
+		public string to;
 
 		/// <summary>
 		/// メッセージ

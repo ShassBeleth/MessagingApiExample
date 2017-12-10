@@ -21,7 +21,7 @@ namespace MessagingApiExample.Services.JTokenConverter {
 		/// </summary>
 		/// <param name="token">リクエストより送られたJToken</param>
 		/// <returns>WebhookRequest</returns>
-		public WebhookRequest ConvertJTokenToWebhookRequest( JToken token ) {
+		public static WebhookRequest ConvertJTokenToWebhookRequest( JToken token ) {
 			
 			WebhookRequest webhookRequest = new WebhookRequest();
 

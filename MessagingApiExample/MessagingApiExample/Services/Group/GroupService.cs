@@ -22,7 +22,7 @@ namespace MessagingApiExample.Services.Group {
 		/// <param name="groupId">グループID</param>
 		/// <param name="userId">ユーザID</param>
 		/// <returns></returns>
-		public async Task<UserProfileInGroupMemberResponse> GetUserProfileInGroupMember( 
+		public static async Task<UserProfileInGroupMemberResponse> GetUserProfileInGroupMember( 
 			string channelAccessToken ,
 			string groupId , 
 			string userId 

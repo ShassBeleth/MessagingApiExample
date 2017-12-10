@@ -20,7 +20,7 @@ namespace MessagingApiExample.Services.Profile {
 		/// <param name="channelAccessToken">ChannelAccessToken</param>
 		/// <param name="userId">ユーザID</param>
 		/// <returns>プロフィール情報</returns>
-		public async Task<ProfileResponse> GetProfile( string channelAccessToken , string userId ) {
+		public static async Task<ProfileResponse> GetProfile( string channelAccessToken , string userId ) {
 
 			Trace.TraceInformation( "Start Get Profile" );
 

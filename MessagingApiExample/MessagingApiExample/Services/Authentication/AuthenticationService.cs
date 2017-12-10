@@ -24,7 +24,7 @@ namespace MessagingApiExample.Services.Authentication {
 		/// <param name="xLineSignature">署名</param>
 		/// <param name="content">リクエストコンテント</param>
 		/// <returns>検証の合否</returns>
-		public async Task<bool> VerifySign( string xLineSignature , HttpContent content ) {
+		public static async Task<bool> VerifySign( string xLineSignature , HttpContent content ) {
 
 			Trace.TraceInformation( "Start Verify Sign" );
 
@@ -55,7 +55,7 @@ namespace MessagingApiExample.Services.Authentication {
 		/// チャンネルアクセストークンの発行
 		/// </summary>
 		/// <returns>レスポンス</returns>
-		public async Task<ChannelAccessTokenResponse> IssueChannelAccessToken() {
+		public static async Task<ChannelAccessTokenResponse> IssueChannelAccessToken() {
 
 			Trace.TraceInformation( "Start Issue Channel Access Token" );
 
@@ -114,7 +114,7 @@ namespace MessagingApiExample.Services.Authentication {
 		/// </summary>
 		/// <param name="channelAccessToken">ChannelAccessToken</param>
 		/// <returns>レスポンス</returns>
-		public async Task RevokeChannelAccessToken( string channelAccessToken ) {
+		public static async Task RevokeChannelAccessToken( string channelAccessToken ) {
 
 			Trace.TraceInformation( "Start Revoke Channel Access Token" );
 

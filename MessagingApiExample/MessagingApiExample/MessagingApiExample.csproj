@@ -106,6 +106,7 @@
     <Compile Include="Models\Response\Authentication\ChannelAccessTokenResponse.cs" />
     <Compile Include="Models\Response\Error\Detail\ErrorDetail.cs" />
     <Compile Include="Models\Response\Error\ErrorResponse.cs" />
+    <Compile Include="Models\Response\Group\UserIdInGroupMemberResponse.cs" />
     <Compile Include="Models\Response\Group\UserProfileInGroupMemberResponse.cs" />
     <Compile Include="Models\Response\Header\ResponseHeader.cs" />
     <Compile Include="Models\Request\Webhook\Body\Event\BeaconEvent.cs" />

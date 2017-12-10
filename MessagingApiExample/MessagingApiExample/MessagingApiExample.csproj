@@ -91,6 +91,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Request\Authentication\ChannelAccessTokenRequest.cs" />
+    <Compile Include="Models\Request\PushMessage\MultiCastMessageRequest.cs" />
     <Compile Include="Models\Request\PushMessage\PushMessageRequest.cs" />
     <Compile Include="Models\Request\ReplyMessage\Message\AudioMessage.cs" />
     <Compile Include="Models\Request\ReplyMessage\Message\ImageMapMessage.cs" />
@@ -136,6 +137,7 @@
     <Compile Include="Models\Request\Webhook\Body\WebhookRequest.cs" />
     <Compile Include="Models\Response\Profile\ProfileResponse.cs" />
     <Compile Include="Services\Authentication\AuthenticationService.cs" />
+    <Compile Include="Services\Content\ContentService.cs" />
     <Compile Include="Services\Group\GroupService.cs" />
     <Compile Include="Services\JTokenConverter\ConvertJTokenService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

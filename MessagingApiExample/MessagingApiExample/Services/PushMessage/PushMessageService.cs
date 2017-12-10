@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using MessagingApiExample.Models.Request.MultiCastMessage;
 using MessagingApiExample.Models.Request.PushMessage;
 using MessagingApiExample.Services.MessageFactory;
 using Newtonsoft.Json;

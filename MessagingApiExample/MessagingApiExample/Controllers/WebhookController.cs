@@ -12,6 +12,7 @@ using MessagingApiExample.Models.Request.Webhook.Body.Event.Message;
 using MessagingApiExample.Models.Request.Webhook.Body.Event.Source;
 using MessagingApiExample.Models.Response.Profile;
 using MessagingApiExample.Services.Authentication;
+using MessagingApiExample.Services.Content;
 using MessagingApiExample.Services.JTokenConverter;
 using MessagingApiExample.Services.MessageFactory;
 using MessagingApiExample.Services.Profile;
@@ -125,7 +126,11 @@ namespace MessagingApiExample.Controllers {
 				this.ExecuteFileMessageEvent( (FileMessage)messageEvent.message );
 			// 画像
 			else if( messageEvent.message is ImageMessage )
-				this.ExecuteImageMessageEvent( (ImageMessage)messageEvent.message );
+				await this.ExecuteImageMessageEvent( 
+					messageEvent.replyToken , 
+					channelAccessToken , 
+					(ImageMessage)messageEvent.message 
+				);
 			// 位置情報
 			else if( messageEvent.message is LocationMessage )
 				this.ExecuteLocationMessageEvent( (LocationMessage)messageEvent.message );
@@ -133,13 +138,12 @@ namespace MessagingApiExample.Controllers {
 			else if( messageEvent.message is StickerMessage )
 				this.ExecuteStickerMessageEvent( (StickerMessage)messageEvent.message );
 			// テキスト
-			else if( messageEvent.message is TextMessage ) {
+			else if( messageEvent.message is TextMessage )
 				await this.ExecuteTextMessageEvent(
 					messageEvent.replyToken ,
 					(TextMessage)messageEvent.message ,
 					channelAccessToken ,
 					( (UserSource)( messageEvent.source ) ).userId );
-			}
 			// 動画
 			else if( messageEvent.message is VideoMessage )
 				this.ExecuteVideoMessageEvent( (VideoMessage)messageEvent.message );
@@ -208,9 +212,27 @@ namespace MessagingApiExample.Controllers {
 		/// <summary>
 		/// 画像メッセージイベント
 		/// </summary>
+		/// <param name="replyToken">リプライトークン</param>
+		/// <param name="channelAccessToken">ChannelAccessToken</param>
 		/// <param name="imageMessage">ImageMessage</param>
-		private void ExecuteImageMessageEvent( ImageMessage imageMessage ) => Trace.TraceInformation( "Execute Image Message Event" );
+		private async Task ExecuteImageMessageEvent( 
+			string replyToken ,
+			string channelAccessToken , 
+			ImageMessage imageMessage 
+		) {
 
+			Trace.TraceInformation( "Execute Image Message Event" );
+
+			byte[] content = await ContentService.GetContent( channelAccessToken , imageMessage.id );
+			await ReplyMessageService.SendReplyMessage(
+				channelAccessToken ,
+				replyToken ,
+				MessageFactoryService
+					.CreateMessage()
+					.AddTextMessage( content != null && content.Length != 0 ? "成功やで" : "失敗やで" )
+			);
+
+		}
 		/// <summary>
 		/// 位置情報メッセージイベント
 		/// </summary>

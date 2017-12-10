@@ -137,6 +137,8 @@
     <Compile Include="Models\Request\Webhook\Body\Event\UnfollowEvent.cs" />
     <Compile Include="Models\Request\Webhook\Body\WebhookRequest.cs" />
     <Compile Include="Models\Response\Profile\ProfileResponse.cs" />
+    <Compile Include="Models\Response\Room\UserIdInRoomMemberRespoonse.cs" />
+    <Compile Include="Models\Response\Room\UserProfileInRoomMemberResponse.cs" />
     <Compile Include="Services\Authentication\AuthenticationService.cs" />
     <Compile Include="Services\Content\ContentService.cs" />
     <Compile Include="Services\Group\GroupService.cs" />
@@ -146,6 +148,7 @@
     <Compile Include="Services\Profile\ProfileService.cs" />
     <Compile Include="Services\PushMessage\PushMessageService.cs" />
     <Compile Include="Services\ReplyMessage\ReplyMessageService.cs" />
+    <Compile Include="Services\Room\RoomService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

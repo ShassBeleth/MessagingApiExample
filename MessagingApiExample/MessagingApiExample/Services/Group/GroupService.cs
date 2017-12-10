@@ -95,7 +95,7 @@ namespace MessagingApiExample.Services.Group {
 				ConfigurationManager.AppSettings[ "BaseUrl" ] +
 				ConfigurationManager.AppSettings[ "GroupUrl" ] +
 				groupId +
-				ConfigurationManager.AppSettings[ "/members/ids" ] +
+				ConfigurationManager.AppSettings[ "GroupIdUrl" ] +
 				( next == null ? "" : ( "?start=" + next ) );
 			
 			string resultAsString = null;
@@ -128,7 +128,55 @@ namespace MessagingApiExample.Services.Group {
 
 		}
 
+		// TODO 未確認
+		/// <summary>
+		/// グループから退出する
+		/// </summary>
+		/// <param name="channelAccessToken">ChannelAccessToken</param>
+		/// <param name="groupId">グループID</param>
+		public static async Task LeaveGroup(
+			string channelAccessToken ,
+			string groupId
+		) {
 
+			Trace.TraceInformation( "Start Leave Group" );
+
+			HttpClient client = new HttpClient();
+			client.DefaultRequestHeaders.Accept.Add( new MediaTypeWithQualityHeaderValue( "application/json" ) );
+			client.DefaultRequestHeaders.Add( "Authorization" , "Bearer {" + channelAccessToken + "}" );
+
+			string requestUrl =
+				ConfigurationManager.AppSettings[ "BaseUrl" ] +
+				ConfigurationManager.AppSettings[ "GroupUrl" ] +
+				groupId +
+				ConfigurationManager.AppSettings[ "GroupLeaveUrl" ];
+
+			string resultAsString = null;
+
+			try {
+
+				HttpResponseMessage response = await client.GetAsync( requestUrl );
+				resultAsString = await response.Content.ReadAsStringAsync();
+				response.Dispose();
+				client.Dispose();
+				Trace.TraceInformation( "Leave Group Response is : OK" );
+
+			}
+			catch( ArgumentNullException ) {
+				Trace.TraceError( "Leave Group is Argument Null Exception" );
+				client.Dispose();
+			}
+			catch( HttpRequestException ) {
+				Trace.TraceError( "Leave Group is Http Request Exception" );
+				client.Dispose();
+			}
+			catch( Exception ) {
+				Trace.TraceError( "Leave Group is Unexpected Exception" );
+				client.Dispose();
+			}
+
+		}
+		
 	}
 	
 }

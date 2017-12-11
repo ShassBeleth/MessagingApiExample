@@ -1,8 +1,0 @@
-﻿namespace MessagingApiExample.Models.Request.Webhook.Body.Event.Source {
-
-	/// <summary>
-	/// 送信元
-	/// </summary>
-	public abstract class SourceBase {}
-
-}

@@ -84,6 +84,33 @@
   <ItemGroup>
     <Compile Include="Models\Requests\Authentication\IssueChannelAccessTokenRequest.cs" />
     <Compile Include="Models\Requests\Authentication\RevokeChannelAccessTokenRequest.cs" />
+    <Compile Include="Models\Requests\Webhook\Event\BeaconEvent.cs" />
+    <Compile Include="Models\Requests\Webhook\Event\Beacon\BannerBeacon.cs" />
+    <Compile Include="Models\Requests\Webhook\Event\Beacon\BeaconBase.cs" />
+    <Compile Include="Models\Requests\Webhook\Event\Beacon\EnterBeacon.cs" />
+    <Compile Include="Models\Requests\Webhook\Event\Beacon\LeaveBeacon.cs" />
+    <Compile Include="Models\Requests\Webhook\Event\EventBase.cs" />
+    <Compile Include="Models\Requests\Webhook\Event\FollowEvent.cs" />
+    <Compile Include="Models\Requests\Webhook\Event\JoinEvent.cs" />
+    <Compile Include="Models\Requests\Webhook\Event\LeaveEvent.cs" />
+    <Compile Include="Models\Requests\Webhook\Event\MessageEvent.cs" />
+    <Compile Include="Models\Requests\Webhook\Event\Message\AudioMessage.cs" />
+    <Compile Include="Models\Requests\Webhook\Event\Message\FileMessage.cs" />
+    <Compile Include="Models\Requests\Webhook\Event\Message\ImageMessage.cs" />
+    <Compile Include="Models\Requests\Webhook\Event\Message\LocationMessage.cs" />
+    <Compile Include="Models\Requests\Webhook\Event\Message\MessageBase.cs" />
+    <Compile Include="Models\Requests\Webhook\Event\Message\StickerMessage.cs" />
+    <Compile Include="Models\Requests\Webhook\Event\Message\TextMessage.cs" />
+    <Compile Include="Models\Requests\Webhook\Event\Message\VideoMessage.cs" />
+    <Compile Include="Models\Requests\Webhook\Event\PostbackEvent.cs" />
+    <Compile Include="Models\Requests\Webhook\Event\Postback\Parameter\PostbackParameter.cs" />
+    <Compile Include="Models\Requests\Webhook\Event\Postback\PostbackData.cs" />
+    <Compile Include="Models\Requests\Webhook\Event\Source\GroupSource.cs" />
+    <Compile Include="Models\Requests\Webhook\Event\Source\RoomSource.cs" />
+    <Compile Include="Models\Requests\Webhook\Event\Source\SourveBase.cs" />
+    <Compile Include="Models\Requests\Webhook\Event\Source\UserSource.cs" />
+    <Compile Include="Models\Requests\Webhook\Event\UnfollowEvent.cs" />
+    <Compile Include="Models\Requests\Webhook\WebhookRequest.cs" />
     <Compile Include="Models\Responses\Authentication\IssueChannelAccessTokenResponse.cs" />
     <Compile Include="Models\Responses\Profile\GetProfileResponse.cs" />
     <Compile Include="Models\Responses\GetUserIdInGroupOrRoomMemberResponse.cs" />
@@ -94,6 +121,8 @@
     <Compile Include="Services\GroupService.cs" />
     <Compile Include="Services\ProfileService.cs" />
     <Compile Include="Services\RoomService.cs" />
+    <Compile Include="Services\WebhookService.cs" />
+    <Compile Include="Utils\JTokenConverter.cs" />
     <Compile Include="Utils\MessagingApiSender.cs" />
   </ItemGroup>
   <ItemGroup>

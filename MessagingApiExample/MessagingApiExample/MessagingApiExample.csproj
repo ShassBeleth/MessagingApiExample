@@ -101,38 +101,6 @@
     <Compile Include="Models\Request\ReplyMessage\Message\TextMessage.cs" />
     <Compile Include="Models\Request\ReplyMessage\Message\VideoMessage.cs" />
     <Compile Include="Models\Request\ReplyMessage\ReplyMessageRequest.cs" />
-    <Compile Include="Models\Request\Webhook\Header\WebhookRequestHeader.cs" />
-    <Compile Include="Models\Response\Error\Detail\ErrorDetail.cs" />
-    <Compile Include="Models\Response\Error\ErrorResponse.cs" />
-    <Compile Include="Models\Response\Header\ResponseHeader.cs" />
-    <Compile Include="Models\Request\Webhook\Body\Event\BeaconEvent.cs" />
-    <Compile Include="Models\Request\Webhook\Body\Event\Beacon\BannerBeacon.cs" />
-    <Compile Include="Models\Request\Webhook\Body\Event\Beacon\BeaconBase.cs" />
-    <Compile Include="Models\Request\Webhook\Body\Event\Beacon\EnterBeacon.cs" />
-    <Compile Include="Models\Request\Webhook\Body\Event\Beacon\LeaveBeacon.cs" />
-    <Compile Include="Models\Request\Webhook\Body\Event\EventBase.cs" />
-    <Compile Include="Models\Request\Webhook\Body\Event\FollowEvent.cs" />
-    <Compile Include="Models\Request\Webhook\Body\Event\JoinEvent.cs" />
-    <Compile Include="Models\Request\Webhook\Body\Event\LeaveEvent.cs" />
-    <Compile Include="Models\Request\Webhook\Body\Event\MessageEvent.cs" />
-    <Compile Include="Models\Request\Webhook\Body\Event\Message\AudioMessage.cs" />
-    <Compile Include="Models\Request\Webhook\Body\Event\Message\FileMessage.cs" />
-    <Compile Include="Models\Request\Webhook\Body\Event\Message\ImageMessage.cs" />
-    <Compile Include="Models\Request\Webhook\Body\Event\Message\LocationMessage.cs" />
-    <Compile Include="Models\Request\Webhook\Body\Event\Message\MessageBase.cs" />
-    <Compile Include="Models\Request\Webhook\Body\Event\Message\StickerMessage.cs" />
-    <Compile Include="Models\Request\Webhook\Body\Event\Message\TextMessage.cs" />
-    <Compile Include="Models\Request\Webhook\Body\Event\Message\VideoMessage.cs" />
-    <Compile Include="Models\Request\Webhook\Body\Event\PostbackEvent.cs" />
-    <Compile Include="Models\Request\Webhook\Body\Event\Postback\Parameter\PostbackParameter.cs" />
-    <Compile Include="Models\Request\Webhook\Body\Event\Postback\PostbackData.cs" />
-    <Compile Include="Models\Request\Webhook\Body\Event\Source\GroupSource.cs" />
-    <Compile Include="Models\Request\Webhook\Body\Event\Source\RoomSource.cs" />
-    <Compile Include="Models\Request\Webhook\Body\Event\Source\SourceBase.cs" />
-    <Compile Include="Models\Request\Webhook\Body\Event\Source\UserSource.cs" />
-    <Compile Include="Models\Request\Webhook\Body\Event\UnfollowEvent.cs" />
-    <Compile Include="Models\Request\Webhook\Body\WebhookRequest.cs" />
-    <Compile Include="Services\JTokenConverter\ConvertJTokenService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\MessageFactory\MessageFactoryService.cs" />
     <Compile Include="Services\PushMessage\PushMessageService.cs" />
@@ -149,6 +117,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Properties\PublishProfiles\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MessagingApiTemplate\MessagingApiTemplate.csproj">

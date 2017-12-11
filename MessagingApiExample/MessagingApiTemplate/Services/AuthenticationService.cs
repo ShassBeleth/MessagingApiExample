@@ -14,7 +14,7 @@ namespace MessagingApiTemplate.Services {
 	/// <summary>
 	/// 認証についてのService
 	/// </summary>
-	public class AuthenticationService {
+	internal static class AuthenticationService {
 
 		// TODO OKにならない
 		/// <summary>
@@ -23,7 +23,7 @@ namespace MessagingApiTemplate.Services {
 		/// <param name="xLineSignature">署名</param>
 		/// <param name="content">リクエストコンテント</param>
 		/// <returns>検証の合否</returns>
-		public async Task<bool> VerifySign( string xLineSignature , HttpContent content ) {
+		internal static async Task<bool> VerifySign( string xLineSignature , HttpContent content ) {
 
 			Trace.TraceInformation( "Start Verify Sign" );
 
@@ -64,7 +64,7 @@ namespace MessagingApiTemplate.Services {
 		/// チャンネルアクセストークンの発行
 		/// </summary>
 		/// <returns>レスポンス</returns>
-		public async Task<IssueChannelAccessTokenResponse> IssueChannelAccessToken() {
+		internal static async Task<IssueChannelAccessTokenResponse> IssueChannelAccessToken() {
 
 			Trace.TraceInformation( "Start Issue Channel Access Token" );
 

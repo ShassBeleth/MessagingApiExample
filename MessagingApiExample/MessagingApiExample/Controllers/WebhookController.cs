@@ -10,7 +10,6 @@ using MessagingApiExample.Models.Request.Webhook.Body.Event;
 using MessagingApiExample.Models.Request.Webhook.Body.Event.Beacon;
 using MessagingApiExample.Models.Request.Webhook.Body.Event.Message;
 using MessagingApiExample.Models.Request.Webhook.Body.Event.Source;
-using MessagingApiExample.Services.Authentication;
 using MessagingApiExample.Services.JTokenConverter;
 using MessagingApiExample.Services.MessageFactory;
 using MessagingApiExample.Services.ReplyMessage;

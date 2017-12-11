@@ -90,7 +90,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\Request\Authentication\ChannelAccessTokenRequest.cs" />
     <Compile Include="Models\Request\PushMessage\MultiCastMessageRequest.cs" />
     <Compile Include="Models\Request\PushMessage\PushMessageRequest.cs" />
     <Compile Include="Models\Request\ReplyMessage\Message\AudioMessage.cs" />
@@ -103,11 +102,8 @@
     <Compile Include="Models\Request\ReplyMessage\Message\VideoMessage.cs" />
     <Compile Include="Models\Request\ReplyMessage\ReplyMessageRequest.cs" />
     <Compile Include="Models\Request\Webhook\Header\WebhookRequestHeader.cs" />
-    <Compile Include="Models\Response\Authentication\ChannelAccessTokenResponse.cs" />
     <Compile Include="Models\Response\Error\Detail\ErrorDetail.cs" />
     <Compile Include="Models\Response\Error\ErrorResponse.cs" />
-    <Compile Include="Models\Response\Group\UserIdInGroupMemberResponse.cs" />
-    <Compile Include="Models\Response\Group\UserProfileInGroupMemberResponse.cs" />
     <Compile Include="Models\Response\Header\ResponseHeader.cs" />
     <Compile Include="Models\Request\Webhook\Body\Event\BeaconEvent.cs" />
     <Compile Include="Models\Request\Webhook\Body\Event\Beacon\BannerBeacon.cs" />
@@ -136,17 +132,11 @@
     <Compile Include="Models\Request\Webhook\Body\Event\Source\UserSource.cs" />
     <Compile Include="Models\Request\Webhook\Body\Event\UnfollowEvent.cs" />
     <Compile Include="Models\Request\Webhook\Body\WebhookRequest.cs" />
-    <Compile Include="Models\Response\Room\UserIdInRoomMemberRespoonse.cs" />
-    <Compile Include="Models\Response\Room\UserProfileInRoomMemberResponse.cs" />
-    <Compile Include="Services\Authentication\AuthenticationService.cs" />
-    <Compile Include="Services\Content\ContentService.cs" />
-    <Compile Include="Services\Group\GroupService.cs" />
     <Compile Include="Services\JTokenConverter\ConvertJTokenService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\MessageFactory\MessageFactoryService.cs" />
     <Compile Include="Services\PushMessage\PushMessageService.cs" />
     <Compile Include="Services\ReplyMessage\ReplyMessageService.cs" />
-    <Compile Include="Services\Room\RoomService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -165,6 +155,9 @@
       <Project>{A15ED5ED-2AC3-4E83-B98C-B7A6F5AD1CDF}</Project>
       <Name>MessagingApiTemplate</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -1,9 +1,9 @@
-﻿namespace MessagingApiExample.Models.Request.Authentication {
+﻿namespace MessagingApiTemplate.Models.Requests.Authentication {
 
 	/// <summary>
-	/// チャンネルアクセストークンリクエスト
+	/// チャンネルアクセストークン発行時Request
 	/// </summary>
-	public class ChannelAccessTokenRequest {
+	public class IssueChannelAccessTokenRequest {
 
 		/// <summary>
 		/// グラント種別

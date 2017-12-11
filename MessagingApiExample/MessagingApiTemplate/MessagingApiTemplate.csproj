@@ -82,10 +82,23 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\Requests\Authentication\IssueChannelAccessTokenRequest.cs" />
+    <Compile Include="Models\Requests\Authentication\RevokeChannelAccessTokenRequest.cs" />
+    <Compile Include="Models\Responses\Authentication\IssueChannelAccessTokenResponse.cs" />
     <Compile Include="Models\Responses\Profile\GetProfileResponse.cs" />
+    <Compile Include="Models\Responses\GetUserIdInGroupOrRoomMemberResponse.cs" />
+    <Compile Include="Models\Responses\GetUserProfileInGroupOrRoomMemberResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\AuthenticationService.cs" />
     <Compile Include="Services\ContentService.cs" />
+    <Compile Include="Services\GroupService.cs" />
     <Compile Include="Services\ProfileService.cs" />
+    <Compile Include="Services\RoomService.cs" />
+    <Compile Include="Utils\MessagingApiSender.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Models\Responses\Group\" />
+    <Folder Include="Models\Responses\Room\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

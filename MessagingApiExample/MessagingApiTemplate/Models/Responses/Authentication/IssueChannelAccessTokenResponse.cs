@@ -1,9 +1,9 @@
-﻿namespace MessagingApiExample.Models.Response.Authentication {
+﻿namespace MessagingApiTemplate.Models.Responses.Authentication {
 
 	/// <summary>
 	/// チャンネルアクセストークン発行時Response
 	/// </summary>
-	public class ChannelAccessTokenResponse {
+	public class IssueChannelAccessTokenResponse {
 
 		/// <summary>
 		/// チャンネルアクセストークン

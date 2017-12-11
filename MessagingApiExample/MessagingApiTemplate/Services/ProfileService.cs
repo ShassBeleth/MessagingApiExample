@@ -1,4 +1,4 @@
-﻿using MessagingApiTemplate.Models.Responses;
+﻿using MessagingApiTemplate.Models.Responses.Profile;
 using Newtonsoft.Json;
 using System;
 using System.Configuration;
@@ -17,18 +17,27 @@ namespace MessagingApiTemplate.Services {
 		/// <summary>
 		/// プロフィール情報取得
 		/// </summary>
-		/// <param name="channelAccessToken">ChannelAccessToken</param>
+		/// <param name="channelAccessToken">チャンネルアクセストークン</param>
 		/// <param name="userId">ユーザID</param>
 		/// <returns>プロフィール情報</returns>
 		public async Task<GetProfileResponse> GetProfile( string channelAccessToken , string userId ) {
 
 			Trace.TraceInformation( "Start Get Profile" );
 
+			// 引数のnullチェック
+			if( channelAccessToken == null ) {
+				Trace.TraceWarning( "Channel Access Token Of Get Profile is Null" );
+				return null;
+			}
+			if( userId == null ) {
+				Trace.TraceWarning( "User Id Of Get Profile is Null" );
+				return null;
+			}
+			
 			HttpClient client = new HttpClient();
 			client.DefaultRequestHeaders.Accept.Add( new MediaTypeWithQualityHeaderValue( "application/json" ) );
 			client.DefaultRequestHeaders.Add( "Authorization" , "Bearer {" + channelAccessToken + "}" );
-
-			string resultAsString = null;
+			
 			string requestUrl =
 				ConfigurationManager.AppSettings[ "BaseUrl" ] +
 				ConfigurationManager.AppSettings[ "ProfileUrl" ] +
@@ -37,10 +46,10 @@ namespace MessagingApiTemplate.Services {
 			try {
 
 				HttpResponseMessage response = await client.GetAsync( requestUrl );
-				resultAsString = await response.Content.ReadAsStringAsync();
+				string resultAsString = await response.Content.ReadAsStringAsync();
 				response.Dispose();
 				client.Dispose();
-				Trace.TraceInformation( "Get Profile Response is : " + resultAsString );
+				Trace.TraceInformation( "Get Profile Response is " + resultAsString );
 				return JsonConvert.DeserializeObject<GetProfileResponse>( resultAsString );
 
 			}

@@ -1,20 +1,19 @@
-﻿using System;
+﻿using MessagingApiTemplate.Models.Responses;
+using Newtonsoft.Json;
+using System;
 using System.Configuration;
 using System.Diagnostics;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using MessagingApiExample.Models.Response.Group;
-using Newtonsoft.Json;
-using MessagingApiExample.Models.Response.Room;
 
-namespace MessagingApiExample.Services.Room {
-
+namespace MessagingApiTemplate.Services {
+	
 	/// <summary>
 	/// トークルームについてのService
 	/// </summary>
 	public class RoomService {
-		
+
 		// TODO 未確認
 		/// <summary>
 		/// トークルームメンバーのプロフィールを取得する
@@ -23,13 +22,27 @@ namespace MessagingApiExample.Services.Room {
 		/// <param name="roomId">トークルームID</param>
 		/// <param name="userId">ユーザID</param>
 		/// <returns></returns>
-		public static async Task<UserProfileInRoomMemberResponse> GetUserProfileInRoomMember(
+		public async Task<GetUserProfileInGroupOrRoomMemberResponse> GetUserProfileInRoomMember(
 			string channelAccessToken ,
 			string roomId ,
 			string userId
 		) {
 
 			Trace.TraceInformation( "Start Get User Profile In Room Member" );
+
+			// 引数のnullチェック
+			if( channelAccessToken == null ) {
+				Trace.TraceWarning( "Channel Access Token Of Get User Profile In Room Member is Null" );
+				return null;
+			}
+			if( roomId == null ) {
+				Trace.TraceWarning( "Room Id Of Get User Profile In Room Member is Null" );
+				return null;
+			}
+			if( userId == null ) {
+				Trace.TraceWarning( "User Id Of Get User Profile In Room Member is Null" );
+				return null;
+			}
 
 			HttpClient client = new HttpClient();
 			client.DefaultRequestHeaders.Accept.Add( new MediaTypeWithQualityHeaderValue( "application/json" ) );
@@ -41,17 +54,15 @@ namespace MessagingApiExample.Services.Room {
 				roomId +
 				ConfigurationManager.AppSettings[ "RoomProfileUrl" ] +
 				userId;
-
-			string resultAsString = null;
-
+			
 			try {
 
 				HttpResponseMessage response = await client.GetAsync( requestUrl );
-				resultAsString = await response.Content.ReadAsStringAsync();
+				string resultAsString = await response.Content.ReadAsStringAsync();
 				response.Dispose();
 				client.Dispose();
-				Trace.TraceInformation( "Get User Profile In Room Member Response is : " + resultAsString );
-				return JsonConvert.DeserializeObject<UserProfileInRoomMemberResponse>( resultAsString );
+				Trace.TraceInformation( "Get User Profile In Room Member Response is " + resultAsString );
+				return JsonConvert.DeserializeObject<GetUserProfileInGroupOrRoomMemberResponse>( resultAsString );
 
 			}
 			catch( ArgumentNullException ) {
@@ -71,7 +82,7 @@ namespace MessagingApiExample.Services.Room {
 			}
 
 		}
-
+		
 		// TODO 未確認
 		/// <summary>
 		/// トークルームメンバーのIdを取得する
@@ -80,13 +91,23 @@ namespace MessagingApiExample.Services.Room {
 		/// <param name="roomId">トークルームID</param>
 		/// <param name="next">ユーザIDに続きがある場合に必要なキー</param>
 		/// <returns></returns>
-		public static async Task<UserIdInRoomMemberRespoonse> GetUserIdInRoomMember(
+		public async Task<GetUserIdInGroupOrRoomMemberResponse> GetUserIdInRoomMember(
 			string channelAccessToken ,
 			string roomId ,
 			string next = null
 		) {
 
 			Trace.TraceInformation( "Start Get User Id In Room Member" );
+
+			// 引数のnullチェック
+			if( channelAccessToken == null ) {
+				Trace.TraceWarning( "Channel Access Token Of Get User Id In Room Member is Null" );
+				return null;
+			}
+			if( roomId == null ) {
+				Trace.TraceWarning( "Group Id Of Get User Id In Room Member is Null" );
+				return null;
+			}
 
 			HttpClient client = new HttpClient();
 			client.DefaultRequestHeaders.Accept.Add( new MediaTypeWithQualityHeaderValue( "application/json" ) );
@@ -99,16 +120,14 @@ namespace MessagingApiExample.Services.Room {
 				ConfigurationManager.AppSettings[ "RoomIdUrl" ] +
 				( next == null ? "" : ( "?start=" + next ) );
 
-			string resultAsString = null;
-
 			try {
 
 				HttpResponseMessage response = await client.GetAsync( requestUrl );
-				resultAsString = await response.Content.ReadAsStringAsync();
+				string resultAsString = await response.Content.ReadAsStringAsync();
 				response.Dispose();
 				client.Dispose();
-				Trace.TraceInformation( "Get User Id In Room Member Response is : " + resultAsString );
-				return JsonConvert.DeserializeObject<UserIdInRoomMemberRespoonse>( resultAsString );
+				Trace.TraceInformation( "Get User Id In Room Member Response is " + resultAsString );
+				return JsonConvert.DeserializeObject<GetUserIdInGroupOrRoomMemberResponse>( resultAsString );
 
 			}
 			catch( ArgumentNullException ) {
@@ -135,12 +154,20 @@ namespace MessagingApiExample.Services.Room {
 		/// </summary>
 		/// <param name="channelAccessToken">ChannelAccessToken</param>
 		/// <param name="roomId">トークルームID</param>
-		public static async Task LeaveGroup(
+		public async Task LeaveGroup(
 			string channelAccessToken ,
 			string roomId
 		) {
 
 			Trace.TraceInformation( "Start Leave Room" );
+
+			// 引数のnullチェック
+			if( channelAccessToken == null ) {
+				Trace.TraceWarning( "Channel Access Token Of Leave Room Member is Null" );
+			}
+			if( roomId == null ) {
+				Trace.TraceWarning( "Group Id Of Leave Room Member is Null" );
+			}
 
 			HttpClient client = new HttpClient();
 			client.DefaultRequestHeaders.Accept.Add( new MediaTypeWithQualityHeaderValue( "application/json" ) );
@@ -151,16 +178,14 @@ namespace MessagingApiExample.Services.Room {
 				ConfigurationManager.AppSettings[ "RoomUrl" ] +
 				roomId +
 				ConfigurationManager.AppSettings[ "RoomLeaveUrl" ];
-
-			string resultAsString = null;
-
+			
 			try {
 
 				HttpResponseMessage response = await client.GetAsync( requestUrl );
-				resultAsString = await response.Content.ReadAsStringAsync();
+				string resultAsString = await response.Content.ReadAsStringAsync();
 				response.Dispose();
 				client.Dispose();
-				Trace.TraceInformation( "Leave Room Response is : OK" );
+				Trace.TraceInformation( "Leave Room Response is OK" );
 
 			}
 			catch( ArgumentNullException ) {

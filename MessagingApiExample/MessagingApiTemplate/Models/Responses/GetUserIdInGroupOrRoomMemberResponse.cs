@@ -1,9 +1,9 @@
-﻿namespace MessagingApiExample.Models.Response.Group {
+﻿namespace MessagingApiTemplate.Models.Responses {
 
 	/// <summary>
-	/// グループメンバーのId取得Response
+	/// グループまたはトークルームからユーザID取得Response
 	/// </summary>
-	public class UserIdInGroupMemberResponse {
+	public class GetUserIdInGroupOrRoomMemberResponse {
 
 		/// <summary>
 		/// グループメンバーのユーザID

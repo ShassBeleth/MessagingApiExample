@@ -1,9 +1,9 @@
-﻿namespace MessagingApiExample.Models.Response.Room {
+﻿namespace MessagingApiTemplate.Models.Responses {
 
 	/// <summary>
-	/// トークルームメンバーのプロフィール取得Response
+	/// グループまたはトークルームからユーザのプロフィール取得Response
 	/// </summary>
-	public class UserProfileInRoomMemberResponse {
+	public class GetUserProfileInGroupOrRoomMemberResponse {
 
 		/// <summary>
 		/// 表示名

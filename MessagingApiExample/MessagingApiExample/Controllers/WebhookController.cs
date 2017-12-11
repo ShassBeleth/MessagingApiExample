@@ -11,7 +11,6 @@ using MessagingApiExample.Models.Request.Webhook.Body.Event.Beacon;
 using MessagingApiExample.Models.Request.Webhook.Body.Event.Message;
 using MessagingApiExample.Models.Request.Webhook.Body.Event.Source;
 using MessagingApiExample.Services.Authentication;
-using MessagingApiExample.Services.Content;
 using MessagingApiExample.Services.JTokenConverter;
 using MessagingApiExample.Services.MessageFactory;
 using MessagingApiExample.Services.ReplyMessage;
@@ -223,7 +222,7 @@ namespace MessagingApiExample.Controllers {
 
 			Trace.TraceInformation( "Execute Image Message Event" );
 
-			byte[] content = await ContentService.GetContent( channelAccessToken , imageMessage.id );
+			byte[] content = await new ContentService().GetContent( channelAccessToken , imageMessage.id );
 			await ReplyMessageService.SendReplyMessage(
 				channelAccessToken ,
 				replyToken ,

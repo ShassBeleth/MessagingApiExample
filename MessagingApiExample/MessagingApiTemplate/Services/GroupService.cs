@@ -1,16 +1,16 @@
-﻿using System;
+﻿using MessagingApiTemplate.Models.Responses;
+using Newtonsoft.Json;
+using System;
 using System.Configuration;
 using System.Diagnostics;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using MessagingApiExample.Models.Response.Group;
-using Newtonsoft.Json;
 
-namespace MessagingApiExample.Services.Group {
+namespace MessagingApiTemplate.Services {
 
 	/// <summary>
-	/// グループに関するService
+	/// グループについてのService
 	/// </summary>
 	public class GroupService {
 
@@ -22,35 +22,47 @@ namespace MessagingApiExample.Services.Group {
 		/// <param name="groupId">グループID</param>
 		/// <param name="userId">ユーザID</param>
 		/// <returns></returns>
-		public static async Task<UserProfileInGroupMemberResponse> GetUserProfileInGroupMember( 
+		public async Task<GetUserProfileInGroupOrRoomMemberResponse> GetUserProfileInGroupMember(
 			string channelAccessToken ,
-			string groupId , 
-			string userId 
+			string groupId ,
+			string userId
 		) {
 
 			Trace.TraceInformation( "Start Get User Profile In Group Member" );
+
+			// 引数のnullチェック
+			if( channelAccessToken == null ) {
+				Trace.TraceWarning( "Channel Access Token Of Get User Profile In Group Member is Null" );
+				return null;
+			}
+			if( groupId == null ) {
+				Trace.TraceWarning( "Group Id Of Get User Profile In Group Member is Null" );
+				return null;
+			}
+			if( userId == null ) {
+				Trace.TraceWarning( "User Id Of Get User Profile In Group Member is Null" );
+				return null;
+			}
 
 			HttpClient client = new HttpClient();
 			client.DefaultRequestHeaders.Accept.Add( new MediaTypeWithQualityHeaderValue( "application/json" ) );
 			client.DefaultRequestHeaders.Add( "Authorization" , "Bearer {" + channelAccessToken + "}" );
 
-			string requestUrl = 
-				ConfigurationManager.AppSettings[ "BaseUrl" ] + 
-				ConfigurationManager.AppSettings[ "GroupUrl" ] + 
-				groupId + 
-				ConfigurationManager.AppSettings[ "GroupProfileUrl" ] + 
+			string requestUrl =
+				ConfigurationManager.AppSettings[ "BaseUrl" ] +
+				ConfigurationManager.AppSettings[ "GroupUrl" ] +
+				groupId +
+				ConfigurationManager.AppSettings[ "GroupProfileUrl" ] +
 				userId;
-
-			string resultAsString = null;
-
+			
 			try {
 
 				HttpResponseMessage response = await client.GetAsync( requestUrl );
-				resultAsString = await response.Content.ReadAsStringAsync();
+				string resultAsString = await response.Content.ReadAsStringAsync();
 				response.Dispose();
 				client.Dispose();
-				Trace.TraceInformation( "Get User Profile In Group Member Response is : " + resultAsString );
-				return JsonConvert.DeserializeObject<UserProfileInGroupMemberResponse>( resultAsString );
+				Trace.TraceInformation( "Get User Profile In Group Member Response is " + resultAsString );
+				return JsonConvert.DeserializeObject<GetUserProfileInGroupOrRoomMemberResponse>( resultAsString );
 
 			}
 			catch( ArgumentNullException ) {
@@ -79,13 +91,23 @@ namespace MessagingApiExample.Services.Group {
 		/// <param name="groupId">グループID</param>
 		/// <param name="next">ユーザIDに続きがある場合に必要なキー</param>
 		/// <returns></returns>
-		public static async Task<UserIdInGroupMemberResponse> GetUserIdInGroupMember(
+		public async Task<GetUserIdInGroupOrRoomMemberResponse> GetUserIdInGroupMember(
 			string channelAccessToken ,
 			string groupId ,
 			string next = null
 		) {
 
 			Trace.TraceInformation( "Start Get User Id In Group Member" );
+
+			// 引数のnullチェック
+			if( channelAccessToken == null ) {
+				Trace.TraceWarning( "Channel Access Token Of Get User Id In Group Member is Null" );
+				return null;
+			}
+			if( groupId == null ) {
+				Trace.TraceWarning( "Group Id Of Get User Id In Group Member is Null" );
+				return null;
+			}
 
 			HttpClient client = new HttpClient();
 			client.DefaultRequestHeaders.Accept.Add( new MediaTypeWithQualityHeaderValue( "application/json" ) );
@@ -98,16 +120,14 @@ namespace MessagingApiExample.Services.Group {
 				ConfigurationManager.AppSettings[ "GroupIdUrl" ] +
 				( next == null ? "" : ( "?start=" + next ) );
 			
-			string resultAsString = null;
-
 			try {
 
 				HttpResponseMessage response = await client.GetAsync( requestUrl );
-				resultAsString = await response.Content.ReadAsStringAsync();
+				string resultAsString = await response.Content.ReadAsStringAsync();
 				response.Dispose();
 				client.Dispose();
 				Trace.TraceInformation( "Get User Id In Group Member Response is : " + resultAsString );
-				return JsonConvert.DeserializeObject<UserIdInGroupMemberResponse>( resultAsString );
+				return JsonConvert.DeserializeObject<GetUserIdInGroupOrRoomMemberResponse>( resultAsString );
 
 			}
 			catch( ArgumentNullException ) {
@@ -134,12 +154,20 @@ namespace MessagingApiExample.Services.Group {
 		/// </summary>
 		/// <param name="channelAccessToken">ChannelAccessToken</param>
 		/// <param name="groupId">グループID</param>
-		public static async Task LeaveGroup(
+		public async Task LeaveGroup(
 			string channelAccessToken ,
 			string groupId
 		) {
 
 			Trace.TraceInformation( "Start Leave Group" );
+
+			// 引数のnullチェック
+			if( channelAccessToken == null ) {
+				Trace.TraceWarning( "Channel Access Token Of Leave Group Member is Null" );
+			}
+			if( groupId == null ) {
+				Trace.TraceWarning( "Group Id Of Leave Group Member is Null" );
+			}
 
 			HttpClient client = new HttpClient();
 			client.DefaultRequestHeaders.Accept.Add( new MediaTypeWithQualityHeaderValue( "application/json" ) );
@@ -176,7 +204,7 @@ namespace MessagingApiExample.Services.Group {
 			}
 
 		}
-		
+
 	}
-	
+
 }

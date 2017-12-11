@@ -1,9 +1,9 @@
-﻿namespace MessagingApiExample.Models.Response.Profile {
+﻿namespace MessagingApiTemplate.Models.Responses.Profile {
 
 	/// <summary>
-	/// プロフィールResponse
+	/// プロフィール取得Response
 	/// </summary>
-	public class ProfileResponse {
+	public class GetProfileResponse {
 
 		/// <summary>
 		/// 表示名

@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26403.7
+VisualStudioVersion = 15.0.26430.13
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessagingApiExample", "MessagingApiExample\MessagingApiExample.csproj", "{A7C3F0E3-E08A-48D0-9695-10B84BB47D9E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessagingApiExample.Tests", "MessagingApiExample.Tests\MessagingApiExample.Tests.csproj", "{D07147D3-1350-42B7-909D-78E16E644398}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessagingApiTemplate", "MessagingApiTemplate\MessagingApiTemplate.csproj", "{A15ED5ED-2AC3-4E83-B98C-B7A6F5AD1CDF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{D07147D3-1350-42B7-909D-78E16E644398}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D07147D3-1350-42B7-909D-78E16E644398}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D07147D3-1350-42B7-909D-78E16E644398}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A15ED5ED-2AC3-4E83-B98C-B7A6F5AD1CDF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A15ED5ED-2AC3-4E83-B98C-B7A6F5AD1CDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A15ED5ED-2AC3-4E83-B98C-B7A6F5AD1CDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A15ED5ED-2AC3-4E83-B98C-B7A6F5AD1CDF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

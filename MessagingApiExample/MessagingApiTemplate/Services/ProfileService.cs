@@ -1,16 +1,16 @@
-﻿using System;
+﻿using MessagingApiTemplate.Models.Responses;
+using Newtonsoft.Json;
+using System;
 using System.Configuration;
 using System.Diagnostics;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using MessagingApiExample.Models.Response.Profile;
-using Newtonsoft.Json;
 
-namespace MessagingApiExample.Services.Profile {
+namespace MessagingApiTemplate.Services {
 
 	/// <summary>
-	/// プロフィール用Service
+	/// プロフィールについてのService
 	/// </summary>
 	public class ProfileService {
 		
@@ -20,7 +20,7 @@ namespace MessagingApiExample.Services.Profile {
 		/// <param name="channelAccessToken">ChannelAccessToken</param>
 		/// <param name="userId">ユーザID</param>
 		/// <returns>プロフィール情報</returns>
-		public static async Task<ProfileResponse> GetProfile( string channelAccessToken , string userId ) {
+		public async Task<GetProfileResponse> GetProfile( string channelAccessToken , string userId ) {
 
 			Trace.TraceInformation( "Start Get Profile" );
 
@@ -41,7 +41,7 @@ namespace MessagingApiExample.Services.Profile {
 				response.Dispose();
 				client.Dispose();
 				Trace.TraceInformation( "Get Profile Response is : " + resultAsString );
-				return JsonConvert.DeserializeObject<ProfileResponse>( resultAsString );
+				return JsonConvert.DeserializeObject<GetProfileResponse>( resultAsString );
 
 			}
 			catch( ArgumentNullException ) {

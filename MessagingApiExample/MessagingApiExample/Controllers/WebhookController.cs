@@ -10,14 +10,14 @@ using MessagingApiExample.Models.Request.Webhook.Body.Event;
 using MessagingApiExample.Models.Request.Webhook.Body.Event.Beacon;
 using MessagingApiExample.Models.Request.Webhook.Body.Event.Message;
 using MessagingApiExample.Models.Request.Webhook.Body.Event.Source;
-using MessagingApiExample.Models.Response.Profile;
 using MessagingApiExample.Services.Authentication;
 using MessagingApiExample.Services.Content;
 using MessagingApiExample.Services.JTokenConverter;
 using MessagingApiExample.Services.MessageFactory;
-using MessagingApiExample.Services.Profile;
 using MessagingApiExample.Services.ReplyMessage;
 using Newtonsoft.Json.Linq;
+using MessagingApiTemplate.Models.Responses.Profile;
+using MessagingApiTemplate.Services;
 
 namespace MessagingApiExample.Controllers {
 
@@ -259,13 +259,14 @@ namespace MessagingApiExample.Controllers {
 
 			Trace.TraceInformation( "Execute Text Message Event" );
 			
-			ProfileResponse profileResponse = await ProfileService.GetProfile( channelAccessToken , userId );
+			GetProfileResponse profileResponse = await new ProfileService().GetProfile( channelAccessToken , userId );
 			await ReplyMessageService.SendReplyMessage(
 				channelAccessToken ,
 				replyToken ,
 				MessageFactoryService
 					.CreateMessage()
 					.AddTextMessage( "茜ちゃんやでー" )
+					.AddTextMessage( profileResponse.displayName )
 			);
 
 		}

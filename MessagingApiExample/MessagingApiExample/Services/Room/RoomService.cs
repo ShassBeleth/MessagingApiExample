@@ -6,6 +6,7 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using MessagingApiExample.Models.Response.Group;
 using Newtonsoft.Json;
+using MessagingApiExample.Models.Response.Room;
 
 namespace MessagingApiExample.Services.Room {
 
@@ -50,7 +51,7 @@ namespace MessagingApiExample.Services.Room {
 				response.Dispose();
 				client.Dispose();
 				Trace.TraceInformation( "Get User Profile In Room Member Response is : " + resultAsString );
-				return JsonConvert.DeserializeObject<UserProfileInGroupMemberResponse>( resultAsString );
+				return JsonConvert.DeserializeObject<UserProfileInRoomMemberResponse>( resultAsString );
 
 			}
 			catch( ArgumentNullException ) {
@@ -79,7 +80,7 @@ namespace MessagingApiExample.Services.Room {
 		/// <param name="roomId">トークルームID</param>
 		/// <param name="next">ユーザIDに続きがある場合に必要なキー</param>
 		/// <returns></returns>
-		public static async Task<UserIdInRoomMemberResponse> GetUserIdInRoomMember(
+		public static async Task<UserIdInRoomMemberRespoonse> GetUserIdInRoomMember(
 			string channelAccessToken ,
 			string roomId ,
 			string next = null
@@ -107,7 +108,7 @@ namespace MessagingApiExample.Services.Room {
 				response.Dispose();
 				client.Dispose();
 				Trace.TraceInformation( "Get User Id In Room Member Response is : " + resultAsString );
-				return JsonConvert.DeserializeObject<UserIdInGroupMemberResponse>( resultAsString );
+				return JsonConvert.DeserializeObject<UserIdInRoomMemberRespoonse>( resultAsString );
 
 			}
 			catch( ArgumentNullException ) {

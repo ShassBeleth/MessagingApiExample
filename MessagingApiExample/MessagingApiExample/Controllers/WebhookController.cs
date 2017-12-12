@@ -39,7 +39,7 @@ namespace MessagingApiExample.Controllers {
 				} ,
 
 				// グループ参加時イベント
-				( channelAccessToken , replyToken ) => {
+				async ( channelAccessToken , replyToken ) => {
 					await this.ExecuteJoinEvent( channelAccessToken , replyToken );
 				} ,
 

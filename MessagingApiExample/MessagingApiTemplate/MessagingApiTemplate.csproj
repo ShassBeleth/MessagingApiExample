@@ -91,6 +91,9 @@
     <Compile Include="Models\Requests\SendMessage\ImageMap\BaseSize.cs" />
     <Compile Include="Models\Requests\SendMessage\ImageMapMessage.cs" />
     <Compile Include="Models\Requests\SendMessage\ImageMap\ImageMapActionBase.cs" />
+    <Compile Include="Models\Requests\SendMessage\ImageMap\ImageMapArea.cs" />
+    <Compile Include="Models\Requests\SendMessage\ImageMap\ImageMapMessageAction.cs" />
+    <Compile Include="Models\Requests\SendMessage\ImageMap\ImageMapUriAction.cs" />
     <Compile Include="Models\Requests\SendMessage\ImageMessage.cs" />
     <Compile Include="Models\Requests\SendMessage\LocationMessage.cs" />
     <Compile Include="Models\Requests\SendMessage\MessageBase.cs" />

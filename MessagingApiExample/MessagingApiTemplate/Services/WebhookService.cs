@@ -12,6 +12,7 @@ using MessagingApiTemplate.Models.Requests.Webhook.Event.Message;
 using MessagingApiTemplate.Models.Responses.Authentication;
 using MessagingApiTemplate.Utils;
 using Newtonsoft.Json.Linq;
+using MessagingApiTemplate.Models.Requests.Webhook.Event.Source;
 
 namespace MessagingApiTemplate.Services {
 
@@ -52,7 +53,7 @@ namespace MessagingApiTemplate.Services {
 		/// <param name="headers">リクエストヘッダ</param>
 		/// <param name="content">リクエストコンテント</param>
 		/// <param name="isExecuteVerifySign">署名の検証をするかどうか</param>
-		/// <param name="isUseLongTermChannelAccessToken"></param>
+		/// <param name="isUseLongTermChannelAccessToken">ロングタームチャンネルアクセストークンを使用するかどうか</param>
 		/// <param name="followEventHandler"></param>
 		/// <param name="joinEventHandler"></param>
 		/// <param name="leaveEventHandler"></param>
@@ -75,8 +76,8 @@ namespace MessagingApiTemplate.Services {
 			HttpContent content ,
 			bool isExecuteVerifySign = true ,
 			bool isUseLongTermChannelAccessToken = false ,
-			Action followEventHandler = null,
-			Action joinEventHandler = null ,
+			Func< string , string , Task > followEventHandler = null ,
+			Func<string , string , Task> joinEventHandler = null ,
 			Action leaveEventHandler = null ,
 			Action audioMessageEventHandler = null ,
 			Action fileMessageEventHandler = null ,
@@ -104,9 +105,7 @@ namespace MessagingApiTemplate.Services {
 				verifySignResult = await AuthenticationService.VerifySign( GetSignature( headers ) , content ) ,
 
 			};
-
-			Trace.TraceInformation( "Signature is :" + webhookService.signature );
-
+			
 			// 署名の検証
 			if( isExecuteVerifySign ) {
 				if( !( webhookService.verifySignResult ) ) {
@@ -130,7 +129,7 @@ namespace MessagingApiTemplate.Services {
 
 				// 友達追加時イベント
 				if( webhookEvent is FollowEvent )
-					followEventHandler?.Invoke();
+					followEventHandler?.Invoke( webhookService.channelAccessToken , ( (FollowEvent)webhookEvent ).replyToken );
 
 				// ブロック時イベント
 				else if( webhookEvent is UnfollowEvent )
@@ -138,7 +137,7 @@ namespace MessagingApiTemplate.Services {
 
 				// グループ追加時イベント
 				else if( webhookEvent is JoinEvent )
-					joinEventHandler?.Invoke();
+					joinEventHandler?.Invoke( webhookService.channelAccessToken , ( (JoinEvent)webhookEvent ).replyToken );
 
 				// グループ退会時イベント
 				else if( webhookEvent is LeaveEvent )
@@ -224,7 +223,7 @@ namespace MessagingApiTemplate.Services {
 			string signature = "";
 			foreach( string item in signatures ) {
 				signature = item;
-				Trace.TraceInformation( "signature : " + item );
+				Trace.TraceInformation( "Signature is " + item );
 			}
 			return signature;
 		}

@@ -3,22 +3,22 @@
 	/// <summary>
 	/// チャンネルアクセストークン発行時Request
 	/// </summary>
-	internal class IssueChannelAccessTokenRequest {
+	public class IssueChannelAccessTokenRequest {
 
 		/// <summary>
 		/// グラント種別
 		/// </summary>
-		internal string grant_type;
+		public string grant_type;
 
 		/// <summary>
 		/// チャンネルID
 		/// </summary>
-		internal string client_id;
+		public string client_id;
 
 		/// <summary>
 		/// シークレットID
 		/// </summary>
-		internal string client_secret;
+		public string client_secret;
 
 	}
 

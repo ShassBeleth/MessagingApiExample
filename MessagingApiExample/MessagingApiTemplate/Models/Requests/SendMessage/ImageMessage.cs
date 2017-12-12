@@ -3,22 +3,22 @@
 	/// <summary>
 	/// 画像メッセージ
 	/// </summary>
-	internal class ImageMessage : MessageBase {
+	public class ImageMessage : MessageBase {
 
 		/// <summary>
 		/// メッセージ種別
 		/// </summary>
-		internal string type = "image";
+		public string type = "image";
 
 		/// <summary>
 		/// 画像URL
 		/// </summary>
-		internal string originalContentUrl;
+		public string originalContentUrl;
 
 		/// <summary>
 		/// プレビュー画像URL
 		/// </summary>
-		internal string previewImageUrl;
+		public string previewImageUrl;
 
 	}
 

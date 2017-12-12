@@ -34,13 +34,13 @@ namespace MessagingApiExample.Controllers {
 				true ,
 
 				// 友達追加、ブロック解除時イベント
-				() => {
-					Trace.TraceInformation( "Execute Follow Event" );
+				async ( channelAccessToken , replyToken ) => {
+					await this.ExecuteFollowEvent( channelAccessToken , replyToken );
 				} ,
 
 				// グループ参加時イベント
-				() => {
-					Trace.TraceInformation( "Execute Join Event" );
+				( channelAccessToken , replyToken ) => {
+					await this.ExecuteJoinEvent( channelAccessToken , replyToken );
 				} ,
 
 				// グループ退出時イベント
@@ -112,6 +112,44 @@ namespace MessagingApiExample.Controllers {
 			
 			return new HttpResponseMessage( HttpStatusCode.OK );
 
+		}
+
+		/// <summary>
+		/// 友達追加、ブロック解除イベント実行
+		/// </summary>
+		/// <param name="channelAccessToken">チャンネルアクセストークン</param>
+		/// <param name="replyToken">リプライトークン</param>
+		private async Task ExecuteFollowEvent(
+			string channelAccessToken ,
+			string replyToken
+		) {
+			Trace.TraceInformation( "Execute Follow Event" );
+			await ReplyMessageService.SendReplyMessage(
+				channelAccessToken ,
+				replyToken ,
+				MessageFactoryService
+					.CreateMessage()
+					.AddTextMessage( "茜ちゃんやで！友達登録ありがとうな！" )
+			);
+		}
+
+		/// <summary>
+		/// グループ追加イベント実行
+		/// </summary>
+		/// <param name="channelAccessToken">チャンネルアクセストークン</param>
+		/// <param name="replyToken">リプライトークン</param>
+		private async Task ExecuteJoinEvent(
+			string channelAccessToken ,
+			string replyToken
+		) {
+			Trace.TraceInformation( "Execute Join Event" );
+			await ReplyMessageService.SendReplyMessage(
+				channelAccessToken ,
+				replyToken ,
+				MessageFactoryService
+					.CreateMessage()
+					.AddTextMessage( "茜ちゃんやで！グループ追加ありがとうな！" )
+			);
 		}
 
 	}

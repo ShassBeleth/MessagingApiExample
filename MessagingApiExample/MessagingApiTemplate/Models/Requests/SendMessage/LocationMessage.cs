@@ -3,32 +3,32 @@
 	/// <summary>
 	/// 位置情報メッセージ
 	/// </summary>
-	internal class LocationMessage : MessageBase {
+	public class LocationMessage : MessageBase {
 
 		/// <summary>
 		/// メッセージ種別
 		/// </summary>
-		internal string type = "location";
+		public string type = "location";
 
 		/// <summary>
 		/// タイトル
 		/// </summary>
-		internal string title;
+		public string title;
 
 		/// <summary>
 		/// 住所
 		/// </summary>
-		internal string address;
+		public string address;
 
 		/// <summary>
 		/// 緯度
 		/// </summary>
-		internal decimal latitude;
+		public decimal latitude;
 
 		/// <summary>
 		/// 経度
 		/// </summary>
-		internal decimal longitude;
+		public decimal longitude;
 
 	}
 

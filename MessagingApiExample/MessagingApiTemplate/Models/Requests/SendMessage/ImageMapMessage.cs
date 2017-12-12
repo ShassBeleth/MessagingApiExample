@@ -3,7 +3,7 @@
 	/// <summary>
 	/// イメージマップメッセージ
 	/// </summary>
-	internal class ImageMapMessage : MessageBase {
+	public class ImageMapMessage : MessageBase {
 
 	}
 

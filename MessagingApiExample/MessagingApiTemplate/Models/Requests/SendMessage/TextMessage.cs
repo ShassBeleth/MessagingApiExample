@@ -3,17 +3,17 @@
 	/// <summary>
 	/// テキストメッセージ
 	/// </summary>
-	internal class TextMessage : MessageBase {
+	public class TextMessage : MessageBase {
 
 		/// <summary>
 		/// メッセージ種別
 		/// </summary>
-		internal string type = "text";
+		public string type = "text";
 
 		/// <summary>
 		/// テキスト本文
 		/// </summary>
-		internal string text;
+		public string text;
 
 	}
 

@@ -3,22 +3,22 @@
 	/// <summary>
 	/// 動画メッセージ
 	/// </summary>
-	internal class VideoMessage : MessageBase {
+	public class VideoMessage : MessageBase {
 
 		/// <summary>
 		/// メッセージ種別
 		/// </summary>
-		internal string type = "video";
+		public string type = "video";
 
 		/// <summary>
 		/// 動画ファイルURL
 		/// </summary>
-		internal string originalContentUrl;
+		public string originalContentUrl;
 
 		/// <summary>
 		/// プレビュー画像URL
 		/// </summary>
-		internal string previewImageUrl;
+		public string previewImageUrl;
 
 	}
 

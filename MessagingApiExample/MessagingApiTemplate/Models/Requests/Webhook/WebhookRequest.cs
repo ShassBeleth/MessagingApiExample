@@ -13,4 +13,5 @@ namespace MessagingApiTemplate.Models.Requests.Webhook {
 		public EventBase[] events;
 
 	}
+
 }

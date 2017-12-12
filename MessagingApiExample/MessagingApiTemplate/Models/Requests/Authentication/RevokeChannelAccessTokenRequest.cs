@@ -3,12 +3,12 @@
 	/// <summary>
 	/// チャンネルアクセストークンの取り消しRequest
 	/// </summary>
-	internal class RevokeChannelAccessTokenRequest {
+	public class RevokeChannelAccessTokenRequest {
 
 		/// <summary>
 		/// チャンネルアクセストークン
 		/// </summary>
-		internal string access_token;
+		public string access_token;
 
 	}
 

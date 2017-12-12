@@ -1,24 +1,24 @@
-﻿namespace MessagingApiExample.Models.Request.ReplyMessage.Message {
+﻿namespace MessagingApiTemplate.Models.Requests.SendMessage {
 
 	/// <summary>
 	/// 動画メッセージ
 	/// </summary>
-	public class VideoMessage : MessageBase{
+	internal class VideoMessage : MessageBase {
 
 		/// <summary>
 		/// メッセージ種別
 		/// </summary>
-		public string type = "video";
+		internal string type = "video";
 
 		/// <summary>
 		/// 動画ファイルURL
 		/// </summary>
-		public string originalContentUrl;
+		internal string originalContentUrl;
 
 		/// <summary>
 		/// プレビュー画像URL
 		/// </summary>
-		public string previewImageUrl;
+		internal string previewImageUrl;
 
 	}
 

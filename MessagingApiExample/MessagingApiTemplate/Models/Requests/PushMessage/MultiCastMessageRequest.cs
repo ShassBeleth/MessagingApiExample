@@ -1,12 +1,12 @@
-﻿using MessagingApiExample.Models.Request.ReplyMessage.Message;
+﻿using MessagingApiTemplate.Models.Requests.SendMessage;
 
-namespace MessagingApiExample.Models.Request.MultiCastMessage {
+namespace MessagingApiTemplate.Models.Requests.PushMessage {
 
 	/// <summary>
-	/// 複数人同時プッシュ通知Request
+	/// 複数人同時プッシュ通知Requeset
 	/// </summary>
 	public class MultiCastMessageRequest {
-		
+
 		/// <summary>
 		/// 送信先ID
 		/// </summary>

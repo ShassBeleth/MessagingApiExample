@@ -11,6 +11,9 @@ using Newtonsoft.Json.Linq;
 
 namespace MessagingApiTemplate.Utils {
 
+	/// <summary>
+	/// JToken変換用クラス
+	/// </summary>
 	internal static class JTokenConverter {
 
 		/// <summary>

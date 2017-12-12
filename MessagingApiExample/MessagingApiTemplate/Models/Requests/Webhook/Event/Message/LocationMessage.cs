@@ -6,11 +6,6 @@
 	public class LocationMessage : MessageBase {
 
 		/// <summary>
-		/// メッセージID
-		/// </summary>
-		public string id;
-
-		/// <summary>
 		/// タイトル
 		/// </summary>
 		public string title;

@@ -3,6 +3,13 @@
 	/// <summary>
 	/// メッセージイベントのメッセージ
 	/// </summary>
-	public class MessageBase { }
+	public class MessageBase {
+
+		/// <summary>
+		/// メッセージID
+		/// </summary>
+		public string id;
+
+	}
 
 }

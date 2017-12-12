@@ -4,12 +4,7 @@
 	/// ファイルメッセージ
 	/// </summary>
 	public class FileMessage : MessageBase {
-
-		/// <summary>
-		/// メッセージID
-		/// </summary>
-		public string id;
-
+		
 		/// <summary>
 		/// ファイル名
 		/// </summary>

@@ -1,8 +1,8 @@
-﻿using System;
+﻿using MessagingApiTemplate.Models.Requests.SendMessage;
+using System;
 using System.Diagnostics;
-using MessagingApiExample.Models.Request.ReplyMessage.Message;
 
-namespace MessagingApiExample.Services.MessageFactory {
+namespace MessagingApiTemplate.Services {
 
 	/// <summary>
 	/// メッセージ作成Service
@@ -12,7 +12,7 @@ namespace MessagingApiExample.Services.MessageFactory {
 		/// <summary>
 		/// メッセージ
 		/// </summary>
-		public MessageBase[] Messages { private set; get; }
+		internal MessageBase[] Messages { private set; get; }
 
 		/// <summary>
 		/// コンストラクタは隠す
@@ -23,8 +23,8 @@ namespace MessagingApiExample.Services.MessageFactory {
 		/// メッセージ作成
 		/// </summary>
 		public static MessageFactoryService CreateMessage() {
-			MessageFactoryService messageFactoryServiec = new MessageFactoryService();
-			return messageFactoryServiec;
+			MessageFactoryService messageFactoryService = new MessageFactoryService();
+			return messageFactoryService;
 		}
 
 		/// <summary>
@@ -55,7 +55,6 @@ namespace MessagingApiExample.Services.MessageFactory {
 					this.Messages = messages;
 					return true;
 				}
-
 			}
 
 		}
@@ -210,7 +209,6 @@ namespace MessagingApiExample.Services.MessageFactory {
 			return this;
 
 		}
-
 
 	}
 

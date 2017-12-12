@@ -1,34 +1,34 @@
-﻿namespace MessagingApiExample.Models.Request.ReplyMessage.Message {
+﻿namespace MessagingApiTemplate.Models.Requests.SendMessage {
 
 	/// <summary>
 	/// 位置情報メッセージ
 	/// </summary>
-	public class LocationMessage : MessageBase {
+	internal class LocationMessage : MessageBase {
 
 		/// <summary>
 		/// メッセージ種別
 		/// </summary>
-		public string type = "location";
+		internal string type = "location";
 
 		/// <summary>
 		/// タイトル
 		/// </summary>
-		public string title;
+		internal string title;
 
 		/// <summary>
 		/// 住所
 		/// </summary>
-		public string address;
+		internal string address;
 
 		/// <summary>
 		/// 緯度
 		/// </summary>
-		public decimal latitude;
+		internal decimal latitude;
 
 		/// <summary>
 		/// 経度
 		/// </summary>
-		public decimal longitude;
+		internal decimal longitude;
 
 	}
 

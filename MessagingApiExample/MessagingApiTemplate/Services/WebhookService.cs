@@ -21,7 +21,7 @@ namespace MessagingApiTemplate.Services {
 	public class WebhookService {
 
 		/// <summary>
-		/// リクエストz
+		/// リクエスト
 		/// </summary>
 		private WebhookRequest request;
 
@@ -45,6 +45,30 @@ namespace MessagingApiTemplate.Services {
 		/// </summary>
 		private WebhookService() { }
 
+		/// <summary>
+		/// サービス実行
+		/// </summary>
+		/// <param name="request">リクエスト</param>
+		/// <param name="headers">リクエストヘッダ</param>
+		/// <param name="content">リクエストコンテント</param>
+		/// <param name="isExecuteVerifySign">署名の検証をするかどうか</param>
+		/// <param name="isUseLongTermChannelAccessToken"></param>
+		/// <param name="followEventHandler"></param>
+		/// <param name="joinEventHandler"></param>
+		/// <param name="leaveEventHandler"></param>
+		/// <param name="audioMessageEventHandler"></param>
+		/// <param name="fileMessageEventHandler"></param>
+		/// <param name="ImageMessageEventHandler"></param>
+		/// <param name="locationMessageEventHandler"></param>
+		/// <param name="stickerMessageEventHandler"></param>
+		/// <param name="textMessageEventHandler"></param>
+		/// <param name="videoMessageEventHandler"></param>
+		/// <param name="postbackMessageEventHandler"></param>
+		/// <param name="unfollowEventHandler"></param>
+		/// <param name="bannerBeaconEventHandler"></param>
+		/// <param name="enterBeaconEventHandler"></param>
+		/// <param name="leaveBeaconEventHandler"></param>
+		/// <returns></returns>
 		public static async Task ExecuteService(
 			JToken request ,
 			HttpRequestHeaders headers ,

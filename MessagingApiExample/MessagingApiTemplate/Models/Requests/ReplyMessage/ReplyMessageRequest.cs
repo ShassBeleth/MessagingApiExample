@@ -1,6 +1,6 @@
-﻿using MessagingApiExample.Models.Request.ReplyMessage.Message;
+﻿using MessagingApiTemplate.Models.Requests.SendMessage;
 
-namespace MessagingApiExample.Models.Request.ReplyMessage {
+namespace MessagingApiTemplate.Models.Requests.ReplyMessage {
 
 	/// <summary>
 	/// リプライメッセージリクエスト

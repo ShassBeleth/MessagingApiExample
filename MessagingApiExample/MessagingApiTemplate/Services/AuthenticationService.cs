@@ -64,7 +64,7 @@ namespace MessagingApiTemplate.Services {
 		/// チャンネルアクセストークンの発行
 		/// </summary>
 		/// <returns>レスポンス</returns>
-		internal static async Task<IssueChannelAccessTokenResponse> IssueChannelAccessToken() {
+		public static async Task<IssueChannelAccessTokenResponse> IssueChannelAccessToken() {
 
 			Trace.TraceInformation( "Start Issue Channel Access Token" );
 

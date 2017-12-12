@@ -1,24 +1,24 @@
-﻿namespace MessagingApiExample.Models.Request.ReplyMessage.Message {
+﻿namespace MessagingApiTemplate.Models.Requests.SendMessage {
 
 	/// <summary>
 	/// 画像メッセージ
 	/// </summary>
-	public class ImageMessage : MessageBase {
+	internal class ImageMessage : MessageBase {
 
 		/// <summary>
 		/// メッセージ種別
 		/// </summary>
-		public string type = "image";
+		internal string type = "image";
 
 		/// <summary>
 		/// 画像URL
 		/// </summary>
-		public string originalContentUrl;
+		internal string originalContentUrl;
 
 		/// <summary>
 		/// プレビュー画像URL
 		/// </summary>
-		public string previewImageUrl;
+		internal string previewImageUrl;
 
 	}
 

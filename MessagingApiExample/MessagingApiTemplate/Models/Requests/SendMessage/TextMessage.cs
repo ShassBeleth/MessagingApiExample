@@ -1,19 +1,19 @@
-﻿namespace MessagingApiExample.Models.Request.ReplyMessage.Message {
+﻿namespace MessagingApiTemplate.Models.Requests.SendMessage {
 
 	/// <summary>
 	/// テキストメッセージ
 	/// </summary>
-	public class TextMessage : MessageBase {
+	internal class TextMessage : MessageBase {
 
 		/// <summary>
 		/// メッセージ種別
 		/// </summary>
-		public string type = "text";
-		
+		internal string type = "text";
+
 		/// <summary>
 		/// テキスト本文
 		/// </summary>
-		public string text;
+		internal string text;
 
 	}
 

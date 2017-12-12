@@ -3,10 +3,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
-using MessagingApiExample.Services.MessageFactory;
-using MessagingApiExample.Services.ReplyMessage;
 using Newtonsoft.Json.Linq;
-using MessagingApiTemplate.Models.Responses.Profile;
 using MessagingApiTemplate.Services;
 
 namespace MessagingApiExample.Controllers {

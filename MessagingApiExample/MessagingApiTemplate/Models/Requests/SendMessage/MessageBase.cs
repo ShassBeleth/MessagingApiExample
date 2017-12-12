@@ -1,4 +1,4 @@
-﻿namespace MessagingApiExample.Models.Request.ReplyMessage.Message {
+﻿namespace MessagingApiTemplate.Models.Requests.SendMessage {
 
 	/// <summary>
 	/// メッセージ種別ベース

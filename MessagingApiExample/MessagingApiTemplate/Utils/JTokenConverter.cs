@@ -199,8 +199,8 @@ namespace MessagingApiTemplate.Utils {
 						id = message[ "id" ].Value<string>() ,
 						address = message[ "address" ].Value<string>() ,
 						title = message[ "title" ].Value<string>() ,
-						latitude = message[ "latitude" ].Value<string>() ,
-						longitude = message[ "longitude" ].Value<string>()
+						latitude = message[ "latitude" ].Value<decimal>() ,
+						longitude = message[ "longitude" ].Value<decimal>()
 					};
 					Trace.TraceInformation( "Id is : " + locationMessage.id );
 					Trace.TraceInformation( "Address is : " + locationMessage.address );
@@ -259,9 +259,9 @@ namespace MessagingApiTemplate.Utils {
 			PostbackData postbackData = new PostbackData() {
 				data = postback[ "data" ].Value<string>() ,
 				parameters = new PostbackParameter() {
-					date = postback[ "param" ][ "date" ].Value<DateTime>() ,
-					datetime = postback[ "param" ][ "datetime" ].Value<DateTime>() ,
-					time = postback[ "param" ][ "time" ].Value<TimeSpan>()
+					date = postback[ "param" ][ "date" ].Value<string>() ,
+					datetime = postback[ "param" ][ "datetime" ].Value<string>() ,
+					time = postback[ "param" ][ "time" ].Value<string>()
 				}
 			};
 			Trace.TraceInformation( "Postback Data is :" + postbackData.data );

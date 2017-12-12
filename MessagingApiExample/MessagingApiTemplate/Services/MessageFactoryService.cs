@@ -1,6 +1,7 @@
 ﻿using MessagingApiTemplate.Models.Requests.SendMessage;
 using System;
 using System.Diagnostics;
+using MessagingApiTemplate.Models.Requests.SendMessage.ImageMap;
 
 namespace MessagingApiTemplate.Services {
 
@@ -206,6 +207,45 @@ namespace MessagingApiTemplate.Services {
 			};
 			this.Messages[ this.Messages.Length - 1 ] = locationMessage;
 
+			return this;
+
+		}
+
+		/// <summary>
+		/// イメージマップメッセージ追加
+		/// </summary>
+		/// <param name="baseUrl">画像URL</param>
+		/// <param name="altText">代替テキスト</param>
+		/// <param name="width">画像幅</param>
+		/// <param name="height">画像幅を1040とした時の高さ</param>
+		/// <param name="imageMapActionFfactoryService">画像がタップされた時のアクション</param>
+		/// <returns></returns>
+		public MessageFactoryService AddImageMapMessage(
+			string baseUrl ,
+			string altText ,
+			ImageMapActionFactoryService imageMapActionFfactoryService ,
+			int height ,
+			int width = 1040
+		) {
+
+			Trace.TraceInformation( "Start Add Image Map Message" );
+
+			if( !this.RegulateMessageArray() ) {
+				Trace.TraceWarning( "Regulate Message Array is False" );
+				return this;
+			}
+
+			ImageMapMessage imageMapMessage = new ImageMapMessage() {
+				baseUrl = baseUrl ,
+				altText = altText ,
+				baseSize = new BaseSize() {
+					width = width ,
+					height = height
+				} ,
+				actions = imageMapActionFfactoryService.Actions
+			};
+			this.Messages[ this.Messages.Length - 1 ] = imageMapMessage;
+			
 			return this;
 
 		}

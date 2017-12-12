@@ -88,7 +88,9 @@
     <Compile Include="Models\Requests\PushMessage\PushMessageRequest.cs" />
     <Compile Include="Models\Requests\ReplyMessage\ReplyMessageRequest.cs" />
     <Compile Include="Models\Requests\SendMessage\AudioMessage.cs" />
+    <Compile Include="Models\Requests\SendMessage\ImageMap\BaseSize.cs" />
     <Compile Include="Models\Requests\SendMessage\ImageMapMessage.cs" />
+    <Compile Include="Models\Requests\SendMessage\ImageMap\ImageMapActionBase.cs" />
     <Compile Include="Models\Requests\SendMessage\ImageMessage.cs" />
     <Compile Include="Models\Requests\SendMessage\LocationMessage.cs" />
     <Compile Include="Models\Requests\SendMessage\MessageBase.cs" />
@@ -130,6 +132,7 @@
     <Compile Include="Services\AuthenticationService.cs" />
     <Compile Include="Services\ContentService.cs" />
     <Compile Include="Services\GroupService.cs" />
+    <Compile Include="Services\ImageMapActionFactoryService.cs" />
     <Compile Include="Services\MessageFactoryService.cs" />
     <Compile Include="Services\ProfileService.cs" />
     <Compile Include="Services\PushMessageService.cs" />

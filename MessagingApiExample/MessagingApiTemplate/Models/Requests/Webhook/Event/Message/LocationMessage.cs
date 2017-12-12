@@ -18,12 +18,12 @@
 		/// <summary>
 		/// 緯度
 		/// </summary>
-		public string latitude;
+		public decimal latitude;
 
 		/// <summary>
 		/// 経度
 		/// </summary>
-		public string longitude;
+		public decimal longitude;
 
 	}
 

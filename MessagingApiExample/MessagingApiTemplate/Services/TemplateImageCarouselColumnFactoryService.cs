@@ -1,30 +1,30 @@
 ﻿using System;
 using System.Diagnostics;
-using MessagingApiTemplate.Models.Requests.SendMessage.Template.Carousel;
+using MessagingApiTemplate.Models.Requests.SendMessage.Template.ImageCarousel;
 
 namespace MessagingApiTemplate.Services {
 
 	/// <summary>
-	/// カルーセルのカラム作成用クラス
+	/// 画像カルーセルのカラム作成用クラス
 	/// </summary>
-	public class TemplateCarouselColumnFactoryService {
+	public class TemplateImageCarouselColumnFactoryService {
 
 		/// <summary>
 		/// カラム
 		/// </summary>
-		internal CarouselColumn[] Columns { private set; get; }
+		internal ImageCarouselColumn[] Columns { private set; get; }
 
 		/// <summary>
 		/// コンストラクタは隠す
 		/// </summary>
-		private TemplateCarouselColumnFactoryService() { }
+		private TemplateImageCarouselColumnFactoryService() { }
 
 		/// <summary>
 		/// カラム作成
 		/// </summary>
-		public static TemplateCarouselColumnFactoryService CreateColumn() {
-			TemplateCarouselColumnFactoryService templateCarouselColumnFactoryService = new TemplateCarouselColumnFactoryService();
-			return templateCarouselColumnFactoryService;
+		public static TemplateImageCarouselColumnFactoryService CreateColumn() {
+			TemplateImageCarouselColumnFactoryService templateImageCarouselColumnFactoryService = new TemplateImageCarouselColumnFactoryService();
+			return templateImageCarouselColumnFactoryService;
 		}
 
 		/// <summary>
@@ -37,7 +37,7 @@ namespace MessagingApiTemplate.Services {
 
 			if( this.Columns == null ) {
 				Trace.TraceInformation( "Column is Null" );
-				this.Columns = new CarouselColumn[ 1 ];
+				this.Columns = new ImageCarouselColumn[ 1 ];
 				return true;
 			}
 			else {
@@ -47,7 +47,7 @@ namespace MessagingApiTemplate.Services {
 				}
 				else {
 					Trace.TraceInformation( "Column Length is not Max" );
-					CarouselColumn[] column = this.Columns;
+					ImageCarouselColumn[] column = this.Columns;
 					Array.Resize(
 						ref column ,
 						this.Columns.Length + 1
@@ -58,7 +58,7 @@ namespace MessagingApiTemplate.Services {
 			}
 
 		}
-
+		
 		/// <summary>
 		/// カラム追加
 		/// </summary>
@@ -68,11 +68,8 @@ namespace MessagingApiTemplate.Services {
 		/// <param name="imageBackgroundColor">画像背景色</param>
 		/// <param name="templateActionFactoryService">アクション作成クラス</param>
 		/// <returns></returns>
-		public TemplateCarouselColumnFactoryService AddColumn(
-			string title , 
-			string text ,
-			string thumbnailImageUrl ,
-			string imageBackgroundColor ,
+		public TemplateImageCarouselColumnFactoryService AddColumn(
+			string imageUri ,
 			TemplateActionFactoryService templateActionFactoryService
 		) {
 
@@ -82,21 +79,16 @@ namespace MessagingApiTemplate.Services {
 				Trace.TraceWarning( "Regulate Column Array is False" );
 				return this;
 			}
-
-			CarouselColumn column = new CarouselColumn() {
-				title = title ,
-				text = text ,
-				thumbnailImageUrl = thumbnailImageUrl ,
-				imageBackgroundColor = imageBackgroundColor ,
-				actions = templateActionFactoryService.Actions
+			
+			ImageCarouselColumn column = new ImageCarouselColumn() {
+				imageUrl = imageUri ,
+				action = templateActionFactoryService.Actions[0]
 			};
 			this.Columns[ this.Columns.Length - 1 ] = column;
-
-
+			
 			return this;
 
 		}
-
 
 	}
 

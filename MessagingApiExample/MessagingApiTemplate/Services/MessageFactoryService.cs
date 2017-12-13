@@ -2,6 +2,7 @@
 using System;
 using System.Diagnostics;
 using MessagingApiTemplate.Models.Requests.SendMessage.ImageMap;
+using MessagingApiTemplate.Models.Requests.SendMessage.Template;
 
 namespace MessagingApiTemplate.Services {
 
@@ -246,6 +247,143 @@ namespace MessagingApiTemplate.Services {
 			};
 			this.Messages[ this.Messages.Length - 1 ] = imageMapMessage;
 			
+			return this;
+
+		}
+
+		/// <summary>
+		/// ボタンテンプレート追加
+		/// </summary>
+		/// <param name="altText">代替テキスト</param>
+		/// <param name="thumbnailImageUrl">サムネ画像URL</param>
+		/// <param name="imageBackgroundColor">画像背景色</param>
+		/// <param name="title">タイトル</param>
+		/// <param name="text">テキスト</param>
+		/// <param name="templateActionFactoryService">アクション作成用クラス</param>
+		/// <param name="isImageAspectSquare">アスペクト比を1:1にするかどうか</param>
+		/// <param name="isImageSizeCover">余白を付けずに表示するかどうか</param>
+		public MessageFactoryService AddButtonTemplateMessage(
+			string altText , 
+			string thumbnailImageUrl ,
+			string imageBackgroundColor ,
+			string title ,
+			string text ,
+			TemplateActionFactoryService templateActionFactoryService ,
+			bool isImageAspectSquare = false ,
+			bool isImageSizeCover = true
+		) {
+
+			Trace.TraceInformation( "Start Add Button Template Message" );
+
+			if( !this.RegulateMessageArray() ) {
+				Trace.TraceWarning( "Regulate Message Array is False" );
+				return this;
+			}
+
+			MessageBase templateMessage = new TemplateMessage() {
+				altText = altText ,
+				template = new ButtonTemplate() {
+					thumbnailImageUrl = thumbnailImageUrl ,
+					imageAspectRatio = isImageAspectSquare ? "square" : "rectangle" ,
+					imageSize = isImageSizeCover ? "cover" : "contain" ,
+					imageBackgroundColor = imageBackgroundColor ,
+					title = title ,
+					text = text ,
+					actions = templateActionFactoryService.Actions
+				}
+			};
+			this.Messages[ this.Messages.Length - 1 ] = templateMessage;
+
+			return this;
+		}
+
+		/// <summary>
+		/// 確認テンプレート追加
+		/// </summary>
+		/// <param name="text">テキスト</param>
+		/// <param name="templateActionFactoryService">アクション作成用クラス</param>
+		public MessageFactoryService AddConfirmTemplateMessage(
+			string text ,
+			TemplateActionFactoryService templateActionFactoryService
+		) {
+
+			Trace.TraceInformation( "Start Add Confirm Template Message" );
+
+			if( !this.RegulateMessageArray() ) {
+				Trace.TraceWarning( "Regulate Message Array is False" );
+				return this;
+			}
+
+			MessageBase templateMessage = new TemplateMessage() {
+				altText = text ,
+				template = new ConfirmTemplate() {
+					text = text ,
+					actions = templateActionFactoryService.Actions
+				}
+			};
+			this.Messages[ this.Messages.Length - 1 ] = templateMessage;
+
+			return this;
+		}
+
+		/// <summary>
+		/// カルーセルテンプレート追加
+		/// </summary>
+		/// <param name="altText">テキスト</param>
+		/// <param name="templateActionFactoryService">アクション作成用クラス</param>
+		public MessageFactoryService AddCarouselTemplateMessage(
+			TemplateCarouselColumnFactoryService templateCarouselColumnFactoryService ,
+			string altText ,
+			bool isImageAspectSquare = false ,
+			bool isImageSizeCover = true
+		) {
+
+			Trace.TraceInformation( "Start Add Carousel Template Message" );
+
+			if( !this.RegulateMessageArray() ) {
+				Trace.TraceWarning( "Regulate Message Array is False" );
+				return this;
+			}
+
+			MessageBase templateMessage = new TemplateMessage() {
+				altText = altText ,
+				template = new CarouselTemplate() {
+					columns = templateCarouselColumnFactoryService.Columns ,
+					imageAspectRatio = isImageAspectSquare ? "square" : "rectangle" ,
+					imageSize = isImageSizeCover ? "cover" : "contain"
+				}
+			};
+			this.Messages[ this.Messages.Length - 1 ] = templateMessage;
+
+			return this;
+
+		}
+
+		/// <summary>
+		/// 画像カルーセルテンプレート追加
+		/// </summary>
+		/// <param name="altText">テキスト</param>
+		/// <param name="templateActionFactoryService">アクション作成用クラス</param>
+		public MessageFactoryService AddImageCarouselTemplateMessage(
+			TemplateImageCarouselColumnFactoryService templateimageCarouselColumnFactoryService ,
+			string altText
+		) {
+
+			Trace.TraceInformation( "Start Add Image Carousel Template Message" );
+
+			if( !this.RegulateMessageArray() ) {
+				Trace.TraceWarning( "Regulate Message Array is False" );
+				return this;
+			}
+
+			MessageBase templateMessage = new TemplateMessage() {
+				altText = altText ,
+				template = new ImageCarouselTemplate() {					
+					columns = templateimageCarouselColumnFactoryService.Columns ,
+				}
+			};
+			this.Messages[ this.Messages.Length - 1 ] = templateMessage;
+
 			return this;
 
 		}

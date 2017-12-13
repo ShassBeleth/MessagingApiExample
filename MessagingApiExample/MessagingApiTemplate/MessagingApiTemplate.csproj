@@ -155,6 +155,8 @@
     <Compile Include="Services\ReplyMessageService.cs" />
     <Compile Include="Services\RoomService.cs" />
     <Compile Include="Services\TemplateActionFactoryService.cs" />
+    <Compile Include="Services\TemplateCarouselColumnFactoryService.cs" />
+    <Compile Include="Services\TemplateImageCarouselColumnFactoryService.cs" />
     <Compile Include="Services\WebhookService.cs" />
     <Compile Include="Utils\JTokenConverter.cs" />
     <Compile Include="Utils\MessagingApiSender.cs" />

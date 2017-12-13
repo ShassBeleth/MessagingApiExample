@@ -10,7 +10,7 @@ namespace MessagingApiTemplate.Models.Requests.SendMessage.Template.Carousel {
 		/// <summary>
 		/// 画像URL
 		/// </summary>
-		public string thmbnailImageUrl;
+		public string thumbnailImageUrl;
 
 		/// <summary>
 		/// 画像の背景色

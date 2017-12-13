@@ -153,7 +153,7 @@ namespace MessagingApiTemplate.Services {
 				return this;
 			}
 
-			TemplateActionBase action = new TemplateUriAction() {
+			TemplateActionBase action = new TemplateDatetimepickerAction() {
 				label = label ,
 				uri = uri
 			};

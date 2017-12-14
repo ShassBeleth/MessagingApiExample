@@ -82,6 +82,7 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\Config\WebhookService\WebhookServiceConfig.cs" />
     <Compile Include="Models\Requests\Authentication\IssueChannelAccessTokenRequest.cs" />
     <Compile Include="Models\Requests\Authentication\RevokeChannelAccessTokenRequest.cs" />
     <Compile Include="Models\Requests\PushMessage\MultiCastMessageRequest.cs" />
@@ -145,19 +146,19 @@
     <Compile Include="Models\Responses\GetUserIdInGroupOrRoomMemberResponse.cs" />
     <Compile Include="Models\Responses\GetUserProfileInGroupOrRoomMemberResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\AuthenticationService.cs" />
-    <Compile Include="Services\ContentService.cs" />
+    <Compile Include="Services\Webhook\AuthenticationService.cs" />
+    <Compile Include="Services\Message\ContentService.cs" />
     <Compile Include="Services\GroupService.cs" />
     <Compile Include="Services\ImageMapActionFactoryService.cs" />
     <Compile Include="Services\MessageFactoryService.cs" />
     <Compile Include="Services\ProfileService.cs" />
-    <Compile Include="Services\PushMessageService.cs" />
-    <Compile Include="Services\ReplyMessageService.cs" />
+    <Compile Include="Services\Message\PushMessageService.cs" />
+    <Compile Include="Services\Message\ReplyMessageService.cs" />
     <Compile Include="Services\RoomService.cs" />
     <Compile Include="Services\TemplateActionFactoryService.cs" />
     <Compile Include="Services\TemplateCarouselColumnFactoryService.cs" />
     <Compile Include="Services\TemplateImageCarouselColumnFactoryService.cs" />
-    <Compile Include="Services\WebhookService.cs" />
+    <Compile Include="Services\Webhook\WebhookService.cs" />
     <Compile Include="Utils\JTokenConverter.cs" />
     <Compile Include="Utils\MessagingApiSender.cs" />
   </ItemGroup>

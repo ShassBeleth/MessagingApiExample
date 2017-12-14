@@ -135,33 +135,7 @@ namespace MessagingApiTemplate.Services {
 
 			return this;
 		}
-
-		/// <summary>
-		/// URIアクション追加
-		/// </summary>
-		/// <param name="text">テキスト</param>
-		/// <param name="templateActionFactoryService">アクション作成用クラス</param>
-		public TemplateActionFactoryService AddUriTemplateMessage(
-			string label ,
-			string uri
-		) {
-
-			Trace.TraceInformation( "Start Add Uri Action" );
-
-			if( !this.RegulateMessageArray() ) {
-				Trace.TraceWarning( "Regulate Action Array is False" );
-				return this;
-			}
-
-			TemplateActionBase action = new TemplateDatetimepickerAction() {
-				label = label ,
-				uri = uri
-			};
-			this.Actions[ this.Actions.Length - 1 ] = action;
-
-			return this;
-		}
-
+		
 	}
 
 }

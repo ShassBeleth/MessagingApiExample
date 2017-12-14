@@ -4,7 +4,8 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Newtonsoft.Json.Linq;
-using MessagingApiTemplate.Services;
+using MessagingApiTemplate.Services.Webhook;
+using MessagingApiTemplate.Models.Config.Webhook;
 
 namespace MessagingApiExample.Controllers {
 
@@ -21,93 +22,31 @@ namespace MessagingApiExample.Controllers {
 		public async Task<HttpResponseMessage> Post( JToken requestToken ) {
 			
 			Trace.TraceInformation( "Webhook API Start" );
+			
+			// Webhook Serviceの実行
+			await WebhookService.Execute( 
 
-			await WebhookService.ExecuteService( 
-				requestToken , 
-				this.Request.Headers , 
-				this.Request.Content ,
-				
-				// 署名の検証はしない
-				false , 
-				
-				// ロングタームのチャンネルアクセストークンを使用する
-				true ,
+				// Webhook Serviceの設定
+				new WebhookServiceConfig() {
 
-				// 友達追加、ブロック解除時イベント
-				async ( channelAccessToken , replyToken ) => {
-					await this.ExecuteFollowEvent( channelAccessToken , replyToken );
-				} ,
+					RequestJToken = requestToken ,
+					RequestHeaders = this.Request.Headers ,
+					RequestContent = this.Request.Content ,
 
-				// グループ参加時イベント
-				async ( channelAccessToken , replyToken ) => {
-					await this.ExecuteJoinEvent( channelAccessToken , replyToken );
-				} ,
+					// 署名の検証は行わない
+					IsExecuteVerifySign = false ,
 
-				// グループ退出時イベント
-				() => {
-					Trace.TraceInformation( "Execute Leave Event" );
-				} ,
+					// ロングタームチャンネルアクセストークンを使用する
+					IsUseLongTermChannelAccessToken = true ,
 
-				// 音声メッセージイベント
-				() => {
-					Trace.TraceInformation( "Execute Audio Message Event" );
-				} ,
-		
-				// ファイルメッセージイベント
-				() => {
-					Trace.TraceInformation( "Execute File Message Event" );
-				} ,
+					// フォローイベント
+					FollowEventHandler = async ( channelAccessToken , replyToken ) => await this.ExecuteFollowEvent( channelAccessToken , replyToken ) ,
 
-				// 画像メッセージイベント
-				() => {
-					Trace.TraceInformation( "Execute Image Message Event" );
-				} ,
+					// 参加イベント
+					JoinEventHandler = async ( channelAccessToken , replyToken ) => await this.ExecuteJoinEvent( channelAccessToken , replyToken )
 
-				// 位置情報メッセージイベント
-				() => {
-					Trace.TraceInformation( "Execute Location Message Event" );
-				} ,
-				
-				// スタンプメッセージイベント
-				() => {
-					Trace.TraceInformation( "Execute Sticker Message Event" );
-				} ,
-
-				// テキストメッセージイベント
-				() => {
-					Trace.TraceInformation( "Execute Text Message Event" );
-				} ,
-
-				// 動画メッセージイベント
-				() => {
-					Trace.TraceInformation( "Execute Video Message Event" );
-				} ,
-
-				// ポストバックイベント
-				() => {
-					Trace.TraceInformation( "Execute Postback Message Event" );
-				} ,
-
-				// ブロック時イベント
-				() => {
-					Trace.TraceInformation( "Execute Unfollow Message Event" );
-				} ,
-
-				// バナータップ時イベント
-				() => {
-					Trace.TraceInformation( "Execute Banner Beacon Message Event" );
-				} ,
-
-				// ビーコン受信圏内に入った時のイベント
-				() => {
-					Trace.TraceInformation( "Execute Enter Beacon Message Event" );
-				} ,
-
-				// ビーコン受信圏外に出た時のイベント
-				() => {
-					Trace.TraceInformation( "Execute Leave Beacon Message Event" );
 				}
-				
+
 			);
 			
 			return new HttpResponseMessage( HttpStatusCode.OK );
@@ -119,18 +58,12 @@ namespace MessagingApiExample.Controllers {
 		/// </summary>
 		/// <param name="channelAccessToken">チャンネルアクセストークン</param>
 		/// <param name="replyToken">リプライトークン</param>
-		private async Task ExecuteFollowEvent(
+		private async Task ExecuteFollowEvent( 
 			string channelAccessToken ,
 			string replyToken
 		) {
 			Trace.TraceInformation( "Execute Follow Event" );
-			await ReplyMessageService.SendReplyMessage(
-				channelAccessToken ,
-				replyToken ,
-				MessageFactoryService
-					.CreateMessage()
-					.AddTextMessage( "茜ちゃんやで！友達登録ありがとうな！" )
-			);
+			await Task.CompletedTask;
 		}
 
 		/// <summary>
@@ -143,13 +76,7 @@ namespace MessagingApiExample.Controllers {
 			string replyToken
 		) {
 			Trace.TraceInformation( "Execute Join Event" );
-			await ReplyMessageService.SendReplyMessage(
-				channelAccessToken ,
-				replyToken ,
-				MessageFactoryService
-					.CreateMessage()
-					.AddTextMessage( "茜ちゃんやで！グループ追加ありがとうな！" )
-			);
+			await Task.CompletedTask;
 		}
 
 	}

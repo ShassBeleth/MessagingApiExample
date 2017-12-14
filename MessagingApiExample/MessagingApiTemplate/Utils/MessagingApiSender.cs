@@ -33,7 +33,17 @@ namespace MessagingApiTemplate.Utils {
 		{
 
 			Trace.TraceInformation( "Start Send Messaging Api" );
-			
+
+			// 引数のnullチェック
+			if( channelAccessToken == null ) {
+				Trace.TraceWarning( "Channel Access Token Of Send Messaging Api is Null" );
+				return null;
+			}
+			if( url == null ) {
+				Trace.TraceWarning( "Url Of Send Messaging Api is Null" );
+				return null;
+			}
+
 			Trace.TraceInformation( "Channel Access Token Of Send Messaging Api is " + channelAccessToken );
 			Trace.TraceInformation( "Url Of Send Messaging Api is " + url );
 			Trace.TraceInformation( "Request Of Send Messaging Api is " + request );
@@ -108,7 +118,8 @@ namespace MessagingApiTemplate.Utils {
 			string contentType = "application/json"
 		)
 			where RequestT : class
-			where ResponseT : class {
+			where ResponseT : class 
+		{
 
 			Trace.TraceInformation( "Start Send Messaging Api" );
 

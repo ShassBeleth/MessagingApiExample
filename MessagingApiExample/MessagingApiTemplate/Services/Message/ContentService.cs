@@ -3,7 +3,7 @@ using System.Configuration;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
-namespace MessagingApiTemplate.Services {
+namespace MessagingApiTemplate.Services.Message {
 
 	/// <summary>
 	/// ユーザから送られた画像や動画についてのService

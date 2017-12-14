@@ -4,7 +4,7 @@ using System.Configuration;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
-namespace MessagingApiTemplate.Services {
+namespace MessagingApiTemplate.Services.Message {
 
 	/// <summary>
 	/// Push通知を送るService

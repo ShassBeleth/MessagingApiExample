@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using MessagingApiTemplate.Models.Requests.Webhook;
 using MessagingApiTemplate.Models.Requests.Webhook.Event;
 using MessagingApiTemplate.Models.Requests.Webhook.Event.Beacon;
@@ -28,12 +27,10 @@ namespace MessagingApiTemplate.Utils {
 			// Event数を取得
 			JArray events = (JArray)token[ "events" ];
 			webhookRequest.events = new EventBase[ events.Count ];
-			Trace.TraceInformation( "Events Count is : " + events.Count );
 
 			// TypeからEventを割り出す
 			for( int i = 0 ; i < webhookRequest.events.Length ; i++ ) {
-
-				Trace.TraceInformation( "Event Type is : " + events[ i ][ "type" ] );
+				
 				switch( events[ i ][ "type" ].Value<string>() ) {
 
 					// ビーコン
@@ -43,7 +40,6 @@ namespace MessagingApiTemplate.Utils {
 							beacon = ConvertBeacon( (JObject)events[ i ][ "beacon" ] ) ,
 							replyToken = events[ i ][ "replyToken" ].Value<string>()
 						};
-						Trace.TraceInformation( "Reply Token is : " + ( webhookRequest.events[ i ] as BeaconEvent ).replyToken );
 						break;
 
 					// 友達追加またはブロック解除時
@@ -52,7 +48,6 @@ namespace MessagingApiTemplate.Utils {
 						webhookRequest.events[ i ] = new FollowEvent() {
 							replyToken = events[ i ][ "replyToken" ].Value<string>()
 						};
-						Trace.TraceInformation( "Reply Token is : " + ( webhookRequest.events[ i ] as FollowEvent ).replyToken );
 						break;
 
 					// グループ参加時

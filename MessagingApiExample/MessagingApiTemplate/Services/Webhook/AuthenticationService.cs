@@ -9,7 +9,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MessagingApiTemplate.Services {
+namespace MessagingApiTemplate.Services.Webhook {
 
 	/// <summary>
 	/// 認証についてのService
@@ -39,9 +39,19 @@ namespace MessagingApiTemplate.Services {
 
 			try {
 
+				// シークレットチャンネルアクセストークンをキーにSHA256ハッシュを作成
 				HMACSHA256 hmacSha256 = new HMACSHA256( Encoding.UTF8.GetBytes( ConfigurationManager.AppSettings[ "SecretChannelToken" ] ) );
+
+				// リクエストコンテンツをハッシュ化
 				byte[] computeHash = hmacSha256.ComputeHash( Encoding.UTF8.GetBytes( await content.ReadAsStringAsync() ) );
+
+				// base64文字列に変換
 				string base64Content = Convert.ToBase64String( computeHash );
+
+				Trace.TraceInformation( "X Line Signature is " + xLineSignature );
+				Trace.TraceInformation( "Base64 Content is " + base64Content );
+				
+				// ヘッダにある署名と暗号情報が等しければOK
 				if( xLineSignature.Equals( base64Content ) ) {
 					Trace.TraceInformation( "Verify Sign is OK" );
 					return true;

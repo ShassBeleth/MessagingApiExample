@@ -31,7 +31,7 @@ namespace MessagingApiTemplate.Services.Webhook {
 				Trace.TraceError( "Config is Null" );
 				return;
 			}
-			
+						
 			// 署名の検証を行う場合
 			if( config.IsExecuteVerifySign ) {
 
@@ -45,11 +45,8 @@ namespace MessagingApiTemplate.Services.Webhook {
 			}
 
 			// リクエストトークンをデータモデルに変換
-			WebhookRequest request = JTokenConverter.ConvertJTokenToWebhookRequest( config.RequestJToken );
-
-			// シグネチャ取得
-			string signature = GetSignature( config.RequestHeaders );
-
+			WebhookRequest request = JTokenConverter.ConvertJTokenToWebhookRequest( config.RequestJToken ) ?? new WebhookRequest();
+			
 			// チャンネルアクセストークンの取得
 			string channelAccessToken;
 
@@ -68,7 +65,7 @@ namespace MessagingApiTemplate.Services.Webhook {
 
 				// 友達追加時イベント
 				if( webhookEvent is FollowEvent )
-					config.FollowEventHandler?.Invoke( channelAccessToken , ( (FollowEvent)webhookEvent ).replyToken );
+					config.FollowEventHandler?.Invoke( channelAccessToken , ( (FollowEvent)webhookEvent )?.replyToken );
 
 				// ブロック時イベント
 				else if( webhookEvent is UnfollowEvent )
@@ -76,7 +73,7 @@ namespace MessagingApiTemplate.Services.Webhook {
 
 				// グループ追加時イベント
 				else if( webhookEvent is JoinEvent )
-					config.JoinEventHandler?.Invoke( channelAccessToken , ( (JoinEvent)webhookEvent ).replyToken );
+					config.JoinEventHandler?.Invoke( channelAccessToken , ( (JoinEvent)webhookEvent )?.replyToken );
 
 				// グループ退会時イベント
 				else if( webhookEvent is LeaveEvent )
@@ -86,31 +83,31 @@ namespace MessagingApiTemplate.Services.Webhook {
 				else if( webhookEvent is MessageEvent ) {
 
 					// 音声
-					if( ( (MessageEvent)webhookEvent ).message is AudioMessage )
+					if( ( (MessageEvent)webhookEvent )?.message is AudioMessage )
 						config.AudioMessageEventHandler?.Invoke();
 
 					// ファイル
-					else if( ( (MessageEvent)webhookEvent ).message is FileMessage )
+					else if( ( (MessageEvent)webhookEvent )?.message is FileMessage )
 						config.FileMessageEventHandler?.Invoke();
 
 					// 画像
-					else if( ( (MessageEvent)webhookEvent ).message is ImageMessage )
+					else if( ( (MessageEvent)webhookEvent )?.message is ImageMessage )
 						config.ImageMessageEventHandler?.Invoke();
 					
 					// 位置情報
-					else if( ( (MessageEvent)webhookEvent ).message is LocationMessage )
+					else if( ( (MessageEvent)webhookEvent )?.message is LocationMessage )
 						config.LocationMessageEventHandler?.Invoke();
 
 					// スタンプ
-					else if( ( (MessageEvent)webhookEvent ).message is StickerMessage )
+					else if( ( (MessageEvent)webhookEvent )?.message is StickerMessage )
 						config.StickerMessageEventHandler?.Invoke();
 
 					// テキスト
-					else if( ( (MessageEvent)webhookEvent ).message is TextMessage )
+					else if( ( (MessageEvent)webhookEvent )?.message is TextMessage )
 						config.TextMessageEventHandler?.Invoke();
 
 					// 動画
-					else if( ( (MessageEvent)webhookEvent ).message is VideoMessage )
+					else if( ( (MessageEvent)webhookEvent )?.message is VideoMessage )
 						config.VideoMessageEventHandler?.Invoke();
 					
 					// 想定外のイベントの時は何もしない
@@ -127,15 +124,15 @@ namespace MessagingApiTemplate.Services.Webhook {
 				else if( webhookEvent is BeaconEvent ) {
 
 					// バナータップ時イベント
-					if( ( (BeaconEvent)webhookEvent ).beacon is BannerBeacon )
+					if( ( (BeaconEvent)webhookEvent )?.beacon is BannerBeacon )
 						config.BannerBeaconEventHandler?.Invoke();
 
 					// バナー受信圏内に入った時のイベント
-					else if( ( (BeaconEvent)webhookEvent ).beacon is EnterBeacon )
+					else if( ( (BeaconEvent)webhookEvent )?.beacon is EnterBeacon )
 						config.EnterBeaconEventHandler?.Invoke();
 
 					// バナー受信圏外に出た時のイベント
-					else if( ( (BeaconEvent)webhookEvent ).beacon is LeaveBeacon )
+					else if( ( (BeaconEvent)webhookEvent )?.beacon is LeaveBeacon )
 						config.LeaveBeaconEventHandler?.Invoke();
 
 					// 想定外のイベントの時は何もしない
@@ -158,6 +155,11 @@ namespace MessagingApiTemplate.Services.Webhook {
 		private static string GetSignature( HttpRequestHeaders headers ) {
 
 			Trace.TraceInformation( "Start Get Signature" );
+
+			if( headers == null ) {
+				Trace.TraceWarning( "Headers Of Get Signature is Null" );
+				return null;
+			}
 
 			IEnumerable<string> signatures = headers.GetValues( "X-Line-Signature" );
 

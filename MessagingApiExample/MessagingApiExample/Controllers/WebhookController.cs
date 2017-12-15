@@ -48,6 +48,8 @@ namespace MessagingApiExample.Controllers {
 				}
 
 			);
+
+			Trace.TraceInformation( "Webhook API End" );
 			
 			return new HttpResponseMessage( HttpStatusCode.OK );
 

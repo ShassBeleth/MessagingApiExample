@@ -24,7 +24,6 @@ namespace MessagingApiTemplate.Utils {
 
 			WebhookRequest webhookRequest = new WebhookRequest();
 
-			// Event数を取得
 			JArray events = (JArray)token[ "events" ];
 			webhookRequest.events = new EventBase[ events.Count ];
 
@@ -35,7 +34,6 @@ namespace MessagingApiTemplate.Utils {
 
 					// ビーコン
 					case "beacon":
-						// TODO 未確認
 						webhookRequest.events[ i ] = new BeaconEvent() {
 							beacon = ConvertBeacon( (JObject)events[ i ][ "beacon" ] ) ,
 							replyToken = events[ i ][ "replyToken" ].Value<string>()
@@ -44,7 +42,6 @@ namespace MessagingApiTemplate.Utils {
 
 					// 友達追加またはブロック解除時
 					case "follow":
-						// TODO 未確認
 						webhookRequest.events[ i ] = new FollowEvent() {
 							replyToken = events[ i ][ "replyToken" ].Value<string>()
 						};
@@ -52,7 +49,6 @@ namespace MessagingApiTemplate.Utils {
 
 					// グループ参加時
 					case "join":
-						// TODO 未確認
 						webhookRequest.events[ i ] = new JoinEvent() {
 							replyToken = events[ i ][ "replyToken" ].Value<string>()
 						};
@@ -60,7 +56,6 @@ namespace MessagingApiTemplate.Utils {
 
 					// グループ退出時
 					case "leave":
-						// TODO 未確認
 						webhookRequest.events[ i ] = new LeaveEvent();
 						break;
 
@@ -70,28 +65,23 @@ namespace MessagingApiTemplate.Utils {
 							message = ConvertMessage( (JObject)events[ i ][ "message" ] ) ,
 							replyToken = events[ i ][ "replyToken" ].Value<string>()
 						};
-						Trace.TraceInformation( "Reply Token is : " + ( webhookRequest.events[ i ] as MessageEvent ).replyToken );
 						break;
 
 					// ポストバック
 					case "postback":
-						// TODO 未確認
 						webhookRequest.events[ i ] = new PostbackEvent() {
 							postback = ConvertPostback( (JObject)events[ i ][ "postback" ] ) ,
 							replyToken = events[ i ][ "replyToken" ].Value<string>()
 						};
-						Trace.TraceInformation( "Reply Token is : " + ( webhookRequest.events[ i ] as PostbackEvent ).replyToken );
 						break;
 
 					// ブロック時
 					case "unfollow":
-						// TODO 未確認
 						webhookRequest.events[ i ] = new UnfollowEvent();
 						break;
 
 					// その他
 					default:
-						// TODO 未確認
 						Trace.TraceInformation( "Event Type Couldn't Be Identified" );
 						return null;
 
@@ -117,7 +107,6 @@ namespace MessagingApiTemplate.Utils {
 
 			BeaconBase beaconBase;
 
-			Trace.TraceInformation( "Beacon Type is : " + beacon[ "type" ].Value<string>() );
 			switch( beacon[ "type" ].Value<string>() ) {
 
 				case "enter":
@@ -140,9 +129,7 @@ namespace MessagingApiTemplate.Utils {
 
 			// 共通情報設定
 			beaconBase.hwid = beacon[ "hwid" ].Value<string>();
-			Trace.TraceInformation( "Hard Were Id is : " + beaconBase.hwid );
 			beaconBase.dm = beacon[ "dm" ].Value<string>();
-			Trace.TraceInformation( "DM is : " + beaconBase.dm );
 
 			return beaconBase;
 
@@ -164,7 +151,6 @@ namespace MessagingApiTemplate.Utils {
 					AudioMessage audioMessage = new AudioMessage() {
 						id = message[ "id" ].Value<string>()
 					};
-					Trace.TraceInformation( "Id is : " + audioMessage.id );
 					return audioMessage;
 
 				// ファイル
@@ -175,9 +161,6 @@ namespace MessagingApiTemplate.Utils {
 						fileSize = message[ "fileSize" ].Value<string>() ,
 						fileName = message[ "fileName" ].Value<string>()
 					};
-					Trace.TraceInformation( "Id is : " + fileMessage.id );
-					Trace.TraceInformation( "File Size is : " + fileMessage.fileSize );
-					Trace.TraceInformation( "File Name is : " + fileMessage.fileName );
 					return fileMessage;
 
 				// 画像
@@ -197,11 +180,6 @@ namespace MessagingApiTemplate.Utils {
 						latitude = message[ "latitude" ].Value<decimal>() ,
 						longitude = message[ "longitude" ].Value<decimal>()
 					};
-					Trace.TraceInformation( "Id is : " + locationMessage.id );
-					Trace.TraceInformation( "Address is : " + locationMessage.address );
-					Trace.TraceInformation( "Title is :" + locationMessage.title );
-					Trace.TraceInformation( "Latitude is : " + locationMessage.latitude );
-					Trace.TraceInformation( "Longitude is : " + locationMessage.longitude );
 					return locationMessage;
 
 				// スタンプ
@@ -211,9 +189,6 @@ namespace MessagingApiTemplate.Utils {
 						stickerId = message[ "stickerId" ].Value<string>() ,
 						packageId = message[ "packageId" ].Value<string>()
 					};
-					Trace.TraceInformation( "Id is : " + stickerMessage.id );
-					Trace.TraceInformation( "Sticker Id is : " + stickerMessage.stickerId );
-					Trace.TraceInformation( "Package Id is :" + stickerMessage.packageId );
 					return stickerMessage;
 
 
@@ -223,8 +198,6 @@ namespace MessagingApiTemplate.Utils {
 						id = message[ "id" ].Value<string>() ,
 						text = message[ "text" ].Value<string>()
 					};
-					Trace.TraceInformation( "Id is : " + textMessage.id );
-					Trace.TraceInformation( "Textis : " + textMessage.text );
 					return textMessage;
 
 				// 動画
@@ -251,6 +224,7 @@ namespace MessagingApiTemplate.Utils {
 		/// <param name="postback">JValueのpostback</param>
 		/// <returns>PostbackDataのpostback</returns>
 		private static PostbackData ConvertPostback( JObject postback ) {
+
 			PostbackData postbackData = new PostbackData() {
 				data = postback[ "data" ].Value<string>() ,
 				parameters = new PostbackParameter() {
@@ -259,11 +233,9 @@ namespace MessagingApiTemplate.Utils {
 					time = postback[ "param" ][ "time" ].Value<string>()
 				}
 			};
-			Trace.TraceInformation( "Postback Data is :" + postbackData.data );
-			Trace.TraceInformation( "Postback Parameter Date is : " + postbackData.parameters.date );
-			Trace.TraceInformation( "Postback Parameter Date Time is : " + postbackData.parameters.datetime );
-			Trace.TraceInformation( "Postback Parameter Time is : " + postbackData.parameters.time );
+
 			return postbackData;
+
 		}
 
 		/// <summary>
@@ -273,7 +245,6 @@ namespace MessagingApiTemplate.Utils {
 		/// <returns>SourceBaseのsource</returns>
 		private static SourceBase ConvertSource( JObject source ) {
 
-			Trace.TraceInformation( "Source Type is : " + source[ "type" ].Value<string>() );
 			switch( source[ "type" ].Value<string>() ) {
 
 				// グループ
@@ -283,8 +254,6 @@ namespace MessagingApiTemplate.Utils {
 						groupId = source[ "groupId" ]?.Value<string>() ,
 						userId = source[ "userId" ]?.Value<string>()
 					};
-					Trace.TraceInformation( "Group Id is : " + groupSource.groupId );
-					Trace.TraceInformation( "User Id is : " + groupSource.userId );
 					return groupSource;
 
 				// トークルーム
@@ -294,8 +263,6 @@ namespace MessagingApiTemplate.Utils {
 						roomId = source[ "roomId" ]?.Value<string>() ,
 						userId = source[ "userId" ]?.Value<string>()
 					};
-					Trace.TraceInformation( "Room Id is : " + roomSource.roomId );
-					Trace.TraceInformation( "User Id is : " + roomSource.userId );
 					return roomSource;
 
 				// ユーザ
@@ -303,7 +270,6 @@ namespace MessagingApiTemplate.Utils {
 					UserSource userSource = new UserSource() {
 						userId = source[ "userId" ]?.Value<string>()
 					};
-					Trace.TraceInformation( "User Id is : " + userSource.userId );
 					return userSource;
 
 				default:

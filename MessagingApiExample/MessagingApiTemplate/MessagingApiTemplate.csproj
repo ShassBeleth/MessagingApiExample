@@ -151,7 +151,7 @@
     <Compile Include="Services\GroupService.cs" />
     <Compile Include="Services\ImageMapActionFactoryService.cs" />
     <Compile Include="Services\MessageFactoryService.cs" />
-    <Compile Include="Services\ProfileService.cs" />
+    <Compile Include="Services\Profile\ProfileService.cs" />
     <Compile Include="Services\Message\PushMessageService.cs" />
     <Compile Include="Services\Message\ReplyMessageService.cs" />
     <Compile Include="Services\RoomService.cs" />

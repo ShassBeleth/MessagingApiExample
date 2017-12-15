@@ -68,10 +68,10 @@ namespace MessagingApiTemplate.Utils {
 			
 			try {
 
-				HttpResponseMessage response = ( 
-					isGetRequest ? 
-					await client.GetAsync( url ) : 
-					await client.PostAsync( url , content ) 
+				HttpResponseMessage response = (
+					isGetRequest ?
+					await client.GetAsync( url ).ConfigureAwait( false ) :
+					await client.PostAsync( url , content ).ConfigureAwait( false )
 				);
 				byte[] resultAsBinary = await response.Content.ReadAsByteArrayAsync();
 				response.Dispose();
@@ -135,9 +135,11 @@ namespace MessagingApiTemplate.Utils {
 				Trace.TraceWarning( "Url is Null" );
 				return default( ResponseT );
 			}
+
 			Trace.TraceInformation( "Request is " + ( request == null ? "Null" : "Not Null" ) );
 			Trace.TraceInformation( "Get Request is " + isGetRequest );
 			Trace.TraceInformation( "Content Type is " + contentType );
+			Trace.TraceInformation( "Url is " + url );
 
 			// リクエストがあればcontentを作成
 			StringContent content = null;
@@ -153,16 +155,16 @@ namespace MessagingApiTemplate.Utils {
 
 			HttpClient client = new HttpClient();
 			client.DefaultRequestHeaders.Accept.Add( new MediaTypeWithQualityHeaderValue( contentType ) );
-			client.DefaultRequestHeaders.Add( "Authorization" , "Bearer {" + channelAccessToken + "}" );
+			client.DefaultRequestHeaders.Add( "Authorization" , "Bearer " + channelAccessToken );
 
 			try {
 
-				HttpResponseMessage response = (
+				HttpResponseMessage response =
 					isGetRequest ?
-					await client.GetAsync( url ) :
-					await client.PostAsync( url , content )
-				);
-				string resultAsString = await response.Content.ReadAsStringAsync();
+					await client.GetAsync( url ).ConfigureAwait( false ) :
+					await client.PostAsync( url , content ).ConfigureAwait( false );
+
+				string resultAsString = await response?.Content.ReadAsStringAsync();
 				Trace.TraceInformation( "Response is " + resultAsString );
 				response.Dispose();
 				client.Dispose();

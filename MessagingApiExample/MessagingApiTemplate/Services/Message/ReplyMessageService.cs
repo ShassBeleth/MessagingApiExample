@@ -1,7 +1,6 @@
 ﻿using MessagingApiTemplate.Models.Requests.ReplyMessage;
 using MessagingApiTemplate.Utils;
 using System.Configuration;
-using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace MessagingApiTemplate.Services.Message {
@@ -34,7 +33,9 @@ namespace MessagingApiTemplate.Services.Message {
 				requestUrl ,
 				request ,
 				false
-			);
+			).ConfigureAwait( false );
+
+			Trace.TraceInformation( "bbb" );
 
 		}
 

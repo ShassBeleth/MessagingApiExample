@@ -1,7 +1,6 @@
 ﻿using MessagingApiTemplate.Models.Responses.Profile;
 using MessagingApiTemplate.Utils;
 using System.Configuration;
-using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace MessagingApiTemplate.Services {
@@ -9,7 +8,7 @@ namespace MessagingApiTemplate.Services {
 	/// <summary>
 	/// プロフィールについてのService
 	/// </summary>
-	public class ProfileService {
+	public static class ProfileService {
 		
 		/// <summary>
 		/// プロフィール情報取得
@@ -17,17 +16,17 @@ namespace MessagingApiTemplate.Services {
 		/// <param name="channelAccessToken">チャンネルアクセストークン</param>
 		/// <param name="userId">ユーザID</param>
 		/// <returns>プロフィール情報</returns>
-		public async Task<GetProfileResponse> GetProfile( string channelAccessToken , string userId ) {
+		public static async Task<GetProfileResponse> GetProfile( string channelAccessToken , string userId ) {
 
-			System.Diagnostics.Trace.TraceInformation( "Start Get Profile" );
+			Trace.TraceInformation( "Start" );
 
 			// 引数のnullチェック
 			if( channelAccessToken == null ) {
-				System.Diagnostics.Trace.TraceWarning( "Channel Access Token Of Get Profile is Null" );
+				Trace.TraceWarning( "Channel Access Token is Null" );
 				return null;
 			}
 			if( userId == null ) {
-				System.Diagnostics.Trace.TraceWarning( "User Id Of Get Profile is Null" );
+				Trace.TraceWarning( "User Id is Null" );
 				return null;
 			}
 
@@ -35,10 +34,15 @@ namespace MessagingApiTemplate.Services {
 				ConfigurationManager.AppSettings[ "BaseUrl" ] +
 				ConfigurationManager.AppSettings[ "ProfileUrl" ] +
 				userId;
-			return await MessagingApiSender.SendMessagingApi<string,GetProfileResponse>(
+
+			GetProfileResponse response = await MessagingApiSender.SendMessagingApi<string,GetProfileResponse>(
 				channelAccessToken ,
 				requestUrl
 			);
+
+			Trace.TraceInformation( "End" );
+
+			return response;
 			
 		}
 

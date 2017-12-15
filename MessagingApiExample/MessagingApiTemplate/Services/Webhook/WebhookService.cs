@@ -9,7 +9,6 @@ using MessagingApiTemplate.Models.Responses.Authentication;
 using MessagingApiTemplate.Utils;
 using MessagingApiTemplate.Models.Config.Webhook;
 using MessagingApiTemplate.Models.Requests.Webhook;
-using System;
 
 namespace MessagingApiTemplate.Services.Webhook {
 
@@ -67,7 +66,7 @@ namespace MessagingApiTemplate.Services.Webhook {
 
 				// 友達追加時イベント
 				if( webhookEvent is FollowEvent )
-					config.FollowEventHandler?.Invoke( channelAccessToken , ( (FollowEvent)webhookEvent )?.replyToken );
+					config.FollowEventHandler?.Invoke( channelAccessToken , ( webhookEvent as FollowEvent )?.replyToken );
 
 				// ブロック時イベント
 				else if( webhookEvent is UnfollowEvent )
@@ -75,7 +74,7 @@ namespace MessagingApiTemplate.Services.Webhook {
 
 				// グループ追加時イベント
 				else if( webhookEvent is JoinEvent )
-					config.JoinEventHandler?.Invoke( channelAccessToken , ( (JoinEvent)webhookEvent )?.replyToken );
+					config.JoinEventHandler?.Invoke( channelAccessToken , ( webhookEvent as JoinEvent )?.replyToken );
 
 				// グループ退会時イベント
 				else if( webhookEvent is LeaveEvent )
@@ -84,37 +83,41 @@ namespace MessagingApiTemplate.Services.Webhook {
 				// メッセージイベント
 				else if( webhookEvent is MessageEvent ) {
 
+					MessageEvent messageEvent = webhookEvent as MessageEvent;
+
 					// 音声
-					if( ( (MessageEvent)webhookEvent )?.message is AudioMessage )
+					if( messageEvent?.message is AudioMessage )
 						config.AudioMessageEventHandler?.Invoke();
 
 					// ファイル
-					else if( ( (MessageEvent)webhookEvent )?.message is FileMessage )
+					else if( messageEvent?.message is FileMessage )
 						config.FileMessageEventHandler?.Invoke();
 
 					// 画像
-					else if( ( (MessageEvent)webhookEvent )?.message is ImageMessage )
+					else if( messageEvent?.message is ImageMessage )
 						config.ImageMessageEventHandler?.Invoke();
-					
+
 					// 位置情報
-					else if( ( (MessageEvent)webhookEvent )?.message is LocationMessage )
+					else if( messageEvent?.message is LocationMessage )
 						config.LocationMessageEventHandler?.Invoke();
 
 					// スタンプ
-					else if( ( (MessageEvent)webhookEvent )?.message is StickerMessage )
+					else if( messageEvent?.message is StickerMessage )
 						config.StickerMessageEventHandler?.Invoke();
 
 					// テキスト
-					else if( ( (MessageEvent)webhookEvent )?.message is TextMessage )
-						config.TextMessageEventHandler?.Invoke();
+					else if( messageEvent?.message is TextMessage ) {
+						TextMessage textMessage = messageEvent?.message as TextMessage;
+						config.TextMessageEventHandler?.Invoke( channelAccessToken , messageEvent?.source , messageEvent?.replyToken , textMessage?.text );
+					}
 
 					// 動画
-					else if( ( (MessageEvent)webhookEvent )?.message is VideoMessage )
+					else if( messageEvent?.message is VideoMessage )
 						config.VideoMessageEventHandler?.Invoke();
-					
+
 					// 想定外のイベントの時は何もしない
 					else
-						System.Diagnostics.Trace.TraceError( "Unexpected Type" );
+						Trace.TraceError( "Unexpected Type" );
 
 				}
 

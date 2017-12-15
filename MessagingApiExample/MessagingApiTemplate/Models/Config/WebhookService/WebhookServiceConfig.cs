@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using MessagingApiTemplate.Models.Requests.Webhook.Event.Source;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -79,7 +80,7 @@ namespace MessagingApiTemplate.Models.Config.Webhook {
 		/// <summary>
 		/// テキストメッセージイベント
 		/// </summary>
-		public Action TextMessageEventHandler { set; get; } = null ;
+		public Func<string , SourceBase , string , string , Task> TextMessageEventHandler { set; get; } = null ;
 
 		/// <summary>
 		/// 動画メッセージイベント

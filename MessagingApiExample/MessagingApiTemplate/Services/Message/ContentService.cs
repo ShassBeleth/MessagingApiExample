@@ -18,15 +18,15 @@ namespace MessagingApiTemplate.Services.Message {
 		/// <returns>取得した画像や動画のバイナリ</returns>
 		public async Task<byte[]> GetContent( string channelAccessToken , string messageId ) {
 
-			Trace.TraceInformation( "Start Get Content" );
+			System.Diagnostics.Trace.TraceInformation( "Start Get Content" );
 
 			// 引数のnullチェック
 			if( channelAccessToken == null ) {
-				Trace.TraceWarning( "Channel Access Token Of Get Content is Null" );
+				System.Diagnostics.Trace.TraceWarning( "Channel Access Token Of Get Content is Null" );
 				return null;
 			}
 			if( messageId == null ) {
-				Trace.TraceWarning( "Message Id Of Get Content is Null" );
+				System.Diagnostics.Trace.TraceWarning( "Message Id Of Get Content is Null" );
 				return null;
 			}
 

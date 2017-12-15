@@ -19,7 +19,7 @@ namespace MessagingApiTemplate.Services.Message {
 		/// <param name="messageFactoryService">MessageFactoryService</param>
 		public static async Task SendReplyMessage( string channelAccessToken , string replyToken , MessageFactoryService messageFactoryService ) {
 
-			Trace.TraceInformation( "Start Send Reply Message" );
+			System.Diagnostics.Trace.TraceInformation( "Start Send Reply Message" );
 
 			ReplyMessageRequest request = new ReplyMessageRequest() {
 				replyToken = replyToken ,

@@ -25,19 +25,19 @@ namespace MessagingApiTemplate.Services {
 			string userId
 		) {
 
-			Trace.TraceInformation( "Start Get User Profile In Group Member" );
+			System.Diagnostics.Trace.TraceInformation( "Start Get User Profile In Group Member" );
 
 			// 引数のnullチェック
 			if( channelAccessToken == null ) {
-				Trace.TraceWarning( "Channel Access Token Of Get User Profile In Group Member is Null" );
+				System.Diagnostics.Trace.TraceWarning( "Channel Access Token Of Get User Profile In Group Member is Null" );
 				return null;
 			}
 			if( groupId == null ) {
-				Trace.TraceWarning( "Group Id Of Get User Profile In Group Member is Null" );
+				System.Diagnostics.Trace.TraceWarning( "Group Id Of Get User Profile In Group Member is Null" );
 				return null;
 			}
 			if( userId == null ) {
-				Trace.TraceWarning( "User Id Of Get User Profile In Group Member is Null" );
+				System.Diagnostics.Trace.TraceWarning( "User Id Of Get User Profile In Group Member is Null" );
 				return null;
 			}
 
@@ -68,15 +68,15 @@ namespace MessagingApiTemplate.Services {
 			string next = null
 		) {
 
-			Trace.TraceInformation( "Start Get User Id In Group Member" );
+			System.Diagnostics.Trace.TraceInformation( "Start Get User Id In Group Member" );
 
 			// 引数のnullチェック
 			if( channelAccessToken == null ) {
-				Trace.TraceWarning( "Channel Access Token Of Get User Id In Group Member is Null" );
+				System.Diagnostics.Trace.TraceWarning( "Channel Access Token Of Get User Id In Group Member is Null" );
 				return null;
 			}
 			if( groupId == null ) {
-				Trace.TraceWarning( "Group Id Of Get User Id In Group Member is Null" );
+				System.Diagnostics.Trace.TraceWarning( "Group Id Of Get User Id In Group Member is Null" );
 				return null;
 			}
 			
@@ -104,14 +104,14 @@ namespace MessagingApiTemplate.Services {
 			string groupId
 		) {
 
-			Trace.TraceInformation( "Start Leave Group" );
+			System.Diagnostics.Trace.TraceInformation( "Start Leave Group" );
 
 			// 引数のnullチェック
 			if( channelAccessToken == null ) {
-				Trace.TraceWarning( "Channel Access Token Of Leave Group Member is Null" );
+				System.Diagnostics.Trace.TraceWarning( "Channel Access Token Of Leave Group Member is Null" );
 			}
 			if( groupId == null ) {
-				Trace.TraceWarning( "Group Id Of Leave Group Member is Null" );
+				System.Diagnostics.Trace.TraceWarning( "Group Id Of Leave Group Member is Null" );
 			}
 
 			string requestUrl =

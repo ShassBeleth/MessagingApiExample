@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using MessagingApiTemplate.Models.Requests.Webhook;
+﻿using MessagingApiTemplate.Models.Requests.Webhook;
 using MessagingApiTemplate.Models.Requests.Webhook.Event;
 using MessagingApiTemplate.Models.Requests.Webhook.Event.Beacon;
 using MessagingApiTemplate.Models.Requests.Webhook.Event.Message;
@@ -22,15 +21,20 @@ namespace MessagingApiTemplate.Utils {
 		/// <returns>WebhookRequest</returns>
 		internal static WebhookRequest ConvertJTokenToWebhookRequest( JToken token ) {
 
+			Trace.TraceInformation( "Start" );
+
 			WebhookRequest webhookRequest = new WebhookRequest();
 
 			JArray events = (JArray)token[ "events" ];
 			webhookRequest.events = new EventBase[ events.Count ];
+			Trace.TraceInformation( "Events Length is " + webhookRequest.events.Length );
 
 			// TypeからEventを割り出す
 			for( int i = 0 ; i < webhookRequest.events.Length ; i++ ) {
-				
-				switch( events[ i ][ "type" ].Value<string>() ) {
+
+				string eventType = events[ i ][ "type" ].Value<string>();
+				Trace.TraceInformation( "Event Type is " + eventType );
+				switch( eventType ) {
 
 					// ビーコン
 					case "beacon":
@@ -38,6 +42,7 @@ namespace MessagingApiTemplate.Utils {
 							beacon = ConvertBeacon( (JObject)events[ i ][ "beacon" ] ) ,
 							replyToken = events[ i ][ "replyToken" ].Value<string>()
 						};
+						Trace.TraceInformation( "Reply Token is " + ( (BeaconEvent)webhookRequest.events[ i ] ).replyToken );
 						break;
 
 					// 友達追加またはブロック解除時
@@ -45,6 +50,7 @@ namespace MessagingApiTemplate.Utils {
 						webhookRequest.events[ i ] = new FollowEvent() {
 							replyToken = events[ i ][ "replyToken" ].Value<string>()
 						};
+						Trace.TraceInformation( "Reply Token is " + ( (FollowEvent)webhookRequest.events[ i ] ).replyToken );
 						break;
 
 					// グループ参加時
@@ -52,6 +58,7 @@ namespace MessagingApiTemplate.Utils {
 						webhookRequest.events[ i ] = new JoinEvent() {
 							replyToken = events[ i ][ "replyToken" ].Value<string>()
 						};
+						Trace.TraceInformation( "Reply Token is " + ( (JoinEvent)webhookRequest.events[ i ] ).replyToken );
 						break;
 
 					// グループ退出時
@@ -65,6 +72,7 @@ namespace MessagingApiTemplate.Utils {
 							message = ConvertMessage( (JObject)events[ i ][ "message" ] ) ,
 							replyToken = events[ i ][ "replyToken" ].Value<string>()
 						};
+						Trace.TraceInformation( "Reply Token is " + ( (MessageEvent)webhookRequest.events[ i ] ).replyToken );
 						break;
 
 					// ポストバック
@@ -73,6 +81,7 @@ namespace MessagingApiTemplate.Utils {
 							postback = ConvertPostback( (JObject)events[ i ][ "postback" ] ) ,
 							replyToken = events[ i ][ "replyToken" ].Value<string>()
 						};
+						Trace.TraceInformation( "Reply Token is " + ( (PostbackEvent)webhookRequest.events[ i ] ).replyToken );
 						break;
 
 					// ブロック時
@@ -94,6 +103,8 @@ namespace MessagingApiTemplate.Utils {
 
 			}
 
+			Trace.TraceInformation( "End" );
+
 			return webhookRequest;
 
 		}
@@ -105,9 +116,14 @@ namespace MessagingApiTemplate.Utils {
 		/// <returns>BeaconBaseのbeacon</returns>
 		private static BeaconBase ConvertBeacon( JObject beacon ) {
 
+			Trace.TraceInformation( "Start" );
+
 			BeaconBase beaconBase;
 
-			switch( beacon[ "type" ].Value<string>() ) {
+			string beaconType = beacon[ "type" ].Value<string>();
+			Trace.TraceInformation( "Beacon Type is " + beaconType );
+
+			switch( beaconType ) {
 
 				case "enter":
 					beaconBase = new EnterBeacon();
@@ -130,6 +146,10 @@ namespace MessagingApiTemplate.Utils {
 			// 共通情報設定
 			beaconBase.hwid = beacon[ "hwid" ].Value<string>();
 			beaconBase.dm = beacon[ "dm" ].Value<string>();
+			Trace.TraceInformation( "Beacon Hwid is " + beaconBase.hwid );
+			Trace.TraceInformation( "Beacon Dm is " + beaconBase.dm );
+
+			Trace.TraceInformation( "End" );
 
 			return beaconBase;
 
@@ -142,15 +162,20 @@ namespace MessagingApiTemplate.Utils {
 		/// <returns>MessageBaseのmessage</returns>
 		private static MessageBase ConvertMessage( JObject message ) {
 
+			Trace.TraceInformation( "Start" );
+
 			// typeで分岐
-			Trace.TraceInformation( "Message Type is : " + message[ "type" ].Value<string>() );
-			switch( message[ "type" ].Value<string>() ) {
+			string messageType = message[ "type" ].Value<string>();
+			Trace.TraceInformation( "Message Type is " + messageType );
+			switch( messageType ) {
 
 				// 音声
 				case "audio":
 					AudioMessage audioMessage = new AudioMessage() {
 						id = message[ "id" ].Value<string>()
 					};
+					Trace.TraceInformation( "Message Id is " + audioMessage.id );
+					Trace.TraceInformation( "End" );
 					return audioMessage;
 
 				// ファイル
@@ -161,6 +186,10 @@ namespace MessagingApiTemplate.Utils {
 						fileSize = message[ "fileSize" ].Value<string>() ,
 						fileName = message[ "fileName" ].Value<string>()
 					};
+					Trace.TraceInformation( "Message Id is " + fileMessage.id );
+					Trace.TraceInformation( "File Size is " + fileMessage.fileSize );
+					Trace.TraceInformation( "File Name is " + fileMessage.fileName );
+					Trace.TraceInformation( "End" );
 					return fileMessage;
 
 				// 画像
@@ -168,7 +197,8 @@ namespace MessagingApiTemplate.Utils {
 					ImageMessage imageMessage = new ImageMessage() {
 						id = message[ "id" ].Value<string>()
 					};
-					Trace.TraceInformation( "Id is : " + imageMessage.id );
+					Trace.TraceInformation( "Message Id is " + imageMessage.id );
+					Trace.TraceInformation( "End" );
 					return imageMessage;
 
 				// 位置情報
@@ -180,6 +210,12 @@ namespace MessagingApiTemplate.Utils {
 						latitude = message[ "latitude" ].Value<decimal>() ,
 						longitude = message[ "longitude" ].Value<decimal>()
 					};
+					Trace.TraceInformation( "Message Id is " + locationMessage.id );
+					Trace.TraceInformation( "Address is " + locationMessage.address );
+					Trace.TraceInformation( "Title is " + locationMessage.title );
+					Trace.TraceInformation( "Latitude is " + locationMessage.latitude );
+					Trace.TraceInformation( "Longitude is " + locationMessage.longitude );
+					Trace.TraceInformation( "End" );
 					return locationMessage;
 
 				// スタンプ
@@ -189,6 +225,10 @@ namespace MessagingApiTemplate.Utils {
 						stickerId = message[ "stickerId" ].Value<string>() ,
 						packageId = message[ "packageId" ].Value<string>()
 					};
+					Trace.TraceInformation( "Message Id is " + stickerMessage.id );
+					Trace.TraceInformation( "Sticker Id is " + stickerMessage.stickerId );
+					Trace.TraceInformation( "Package Id is " + stickerMessage.packageId );
+					Trace.TraceInformation( "End" );
 					return stickerMessage;
 
 
@@ -198,6 +238,9 @@ namespace MessagingApiTemplate.Utils {
 						id = message[ "id" ].Value<string>() ,
 						text = message[ "text" ].Value<string>()
 					};
+					Trace.TraceInformation( "Message Id is " + textMessage.id );
+					Trace.TraceInformation( "Text is " + textMessage.text );
+					Trace.TraceInformation( "End" );
 					return textMessage;
 
 				// 動画
@@ -205,13 +248,15 @@ namespace MessagingApiTemplate.Utils {
 					VideoMessage videoMessage = new VideoMessage() {
 						id = message[ "id" ].Value<string>()
 					};
-					Trace.TraceInformation( "Id is : " + videoMessage.id );
+					Trace.TraceInformation( "Message Id is " + videoMessage.id );
+					Trace.TraceInformation( "End" );
 					return videoMessage;
 
 				// その他
 				default:
 					// TODO 未確認
 					Trace.TraceWarning( "Don't Convert Message" );
+					Trace.TraceInformation( "End" );
 					return null;
 
 			}
@@ -225,6 +270,8 @@ namespace MessagingApiTemplate.Utils {
 		/// <returns>PostbackDataのpostback</returns>
 		private static PostbackData ConvertPostback( JObject postback ) {
 
+			Trace.TraceInformation( "Start" );
+
 			PostbackData postbackData = new PostbackData() {
 				data = postback[ "data" ].Value<string>() ,
 				parameters = new PostbackParameter() {
@@ -233,6 +280,12 @@ namespace MessagingApiTemplate.Utils {
 					time = postback[ "param" ][ "time" ].Value<string>()
 				}
 			};
+
+			Trace.TraceInformation( "Data is " + postbackData.data );
+			Trace.TraceInformation( "Parameters Date is " + postbackData.parameters.date );
+			Trace.TraceInformation( "Parameters Datetime is " + postbackData.parameters.datetime );
+			Trace.TraceInformation( "Parameters Time is " + postbackData.parameters.time );
+			Trace.TraceInformation( "End" );
 
 			return postbackData;
 
@@ -244,8 +297,12 @@ namespace MessagingApiTemplate.Utils {
 		/// <param name="source">JValueのsource</param>
 		/// <returns>SourceBaseのsource</returns>
 		private static SourceBase ConvertSource( JObject source ) {
+			
+			Trace.TraceInformation( "Start" );
 
-			switch( source[ "type" ].Value<string>() ) {
+			string sourceType = source[ "type" ].Value<string>();
+			Trace.TraceInformation( "Source Type is " + sourceType );
+			switch( sourceType ) {
 
 				// グループ
 				case "group":
@@ -254,6 +311,9 @@ namespace MessagingApiTemplate.Utils {
 						groupId = source[ "groupId" ]?.Value<string>() ,
 						userId = source[ "userId" ]?.Value<string>()
 					};
+					Trace.TraceInformation( "Group Id is " + groupSource.groupId );
+					Trace.TraceInformation( "User Id is " + groupSource.userId );
+					Trace.TraceInformation( "End" );
 					return groupSource;
 
 				// トークルーム
@@ -263,6 +323,9 @@ namespace MessagingApiTemplate.Utils {
 						roomId = source[ "roomId" ]?.Value<string>() ,
 						userId = source[ "userId" ]?.Value<string>()
 					};
+					Trace.TraceInformation( "Room Id is " + roomSource.roomId );
+					Trace.TraceInformation( "User Id is " + roomSource.userId );
+					Trace.TraceInformation( "End" );
 					return roomSource;
 
 				// ユーザ
@@ -270,11 +333,14 @@ namespace MessagingApiTemplate.Utils {
 					UserSource userSource = new UserSource() {
 						userId = source[ "userId" ]?.Value<string>()
 					};
+					Trace.TraceInformation( "User Id is " + userSource.userId );
+					Trace.TraceInformation( "End" );
 					return userSource;
 
 				default:
 					// TODO 未確認
 					Trace.TraceWarning( "Don't Convert Source" );
+					Trace.TraceInformation( "End" );
 					return null;
 			}
 

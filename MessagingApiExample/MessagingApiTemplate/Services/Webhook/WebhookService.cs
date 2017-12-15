@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Configuration;
-using System.Diagnostics;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using MessagingApiTemplate.Models.Requests.Webhook.Event;
@@ -10,6 +9,7 @@ using MessagingApiTemplate.Models.Responses.Authentication;
 using MessagingApiTemplate.Utils;
 using MessagingApiTemplate.Models.Config.Webhook;
 using MessagingApiTemplate.Models.Requests.Webhook;
+using System;
 
 namespace MessagingApiTemplate.Services.Webhook {
 
@@ -24,11 +24,11 @@ namespace MessagingApiTemplate.Services.Webhook {
 		/// <param name="config">設定項目</param>
 		public static async Task Execute( WebhookServiceConfig config ) {
 
-			Trace.TraceInformation( "Start Execute Webhook Service" );
+			Trace.TraceInformation( "Start" );
 
 			// 引数のnullチェック
 			if( config == null ) {
-				Trace.TraceError( "Config is Null" );
+				Trace.TraceInformation( "Config is Null" );
 				return;
 			}
 						
@@ -39,8 +39,10 @@ namespace MessagingApiTemplate.Services.Webhook {
 				bool verifySignResult = await AuthenticationService.VerifySign( GetSignature( config.RequestHeaders ) , config.RequestContent );
 
 				// NGなら以下の処理を行わない
-				if( !verifySignResult )
+				if( !verifySignResult ) {
+					Trace.TraceInformation( "Verify Sign Result is NG" );
 					return;
+				}
 
 			}
 
@@ -57,7 +59,7 @@ namespace MessagingApiTemplate.Services.Webhook {
 			// ロングタームチャンネルアクセストークンを使用しない場合はチャンネルアクセストークンを発行する
 			else {
 				IssueChannelAccessTokenResponse channelAccessTokenResponse = await AuthenticationService.IssueChannelAccessToken();
-				channelAccessToken = channelAccessTokenResponse.access_token;
+				channelAccessToken = channelAccessTokenResponse?.access_token;
 			}
 
 			// イベント毎に分岐
@@ -112,7 +114,7 @@ namespace MessagingApiTemplate.Services.Webhook {
 					
 					// 想定外のイベントの時は何もしない
 					else
-						Trace.TraceError( "Unexpected Type" );
+						System.Diagnostics.Trace.TraceError( "Unexpected Type" );
 
 				}
 
@@ -146,6 +148,8 @@ namespace MessagingApiTemplate.Services.Webhook {
 
 			}
 
+			Trace.TraceInformation( "End" );
+
 		}
 
 		/// <summary>
@@ -154,7 +158,7 @@ namespace MessagingApiTemplate.Services.Webhook {
 		/// <returns>シグネチャ</returns>
 		private static string GetSignature( HttpRequestHeaders headers ) {
 
-			Trace.TraceInformation( "Start Get Signature" );
+			Trace.TraceInformation( "Start" );
 
 			if( headers == null ) {
 				Trace.TraceWarning( "Headers Of Get Signature is Null" );
@@ -168,6 +172,8 @@ namespace MessagingApiTemplate.Services.Webhook {
 				signature = item;
 				Trace.TraceInformation( "Signature is " + item );
 			}
+
+			Trace.TraceInformation( "End" );
 
 			return signature;
 

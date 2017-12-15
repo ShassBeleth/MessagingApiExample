@@ -19,7 +19,7 @@ namespace MessagingApiTemplate.Services.Message {
 		/// <param name="messageFactoryService">MessageFactoryService</param>
 		public static async Task SendReplyMessage( string channelAccessToken , string to , MessageFactoryService messageFactoryService ) {
 
-			Trace.TraceInformation( "Start Send Push Message" );
+			System.Diagnostics.Trace.TraceInformation( "Start Send Push Message" );
 
 			PushMessageRequest request = new PushMessageRequest() {
 				to = to ,
@@ -44,7 +44,7 @@ namespace MessagingApiTemplate.Services.Message {
 		/// <param name="messageFactoryService">MessageFactoryService</param>
 		public static async Task SendMultiCastPushMessage( string channelAccessToken , string[] to , MessageFactoryService messageFactoryService ) {
 
-			Trace.TraceInformation( "Start Send Multi Cast Push Message" );
+			System.Diagnostics.Trace.TraceInformation( "Start Send Multi Cast Push Message" );
 
 			MultiCastMessageRequest request = new MultiCastMessageRequest() {
 				to = to ,

@@ -159,6 +159,7 @@
     <Compile Include="Services\TemplateCarouselColumnFactoryService.cs" />
     <Compile Include="Services\TemplateImageCarouselColumnFactoryService.cs" />
     <Compile Include="Services\Webhook\WebhookService.cs" />
+    <Compile Include="Utils\Trace.cs" />
     <Compile Include="Utils\JTokenConverter.cs" />
     <Compile Include="Utils\MessagingApiSender.cs" />
   </ItemGroup>

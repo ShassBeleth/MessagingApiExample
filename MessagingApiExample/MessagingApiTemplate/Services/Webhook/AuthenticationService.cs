@@ -3,7 +3,6 @@ using MessagingApiTemplate.Models.Responses.Authentication;
 using MessagingApiTemplate.Utils;
 using System;
 using System.Configuration;
-using System.Diagnostics;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
@@ -25,15 +24,15 @@ namespace MessagingApiTemplate.Services.Webhook {
 		/// <returns>検証の合否</returns>
 		internal static async Task<bool> VerifySign( string xLineSignature , HttpContent content ) {
 
-			Trace.TraceInformation( "Start Verify Sign" );
+			Trace.TraceInformation( "Start" );
 
 			// 引数のnullチェック
 			if( xLineSignature == null ) {
-				Trace.TraceWarning( "X Line Signature Of Verify Sign is Null" );
+				Trace.TraceWarning( "X Line Signature is Null" );
 				return false;
 			}
 			if( content == null ) {
-				Trace.TraceWarning( "Content Of Verify Sign is Null" );
+				Trace.TraceWarning( "Content is Null" );
 				return false;
 			}
 
@@ -48,22 +47,22 @@ namespace MessagingApiTemplate.Services.Webhook {
 				// base64文字列に変換
 				string base64Content = Convert.ToBase64String( computeHash );
 
-				Trace.TraceInformation( "X Line Signature is " + xLineSignature );
-				Trace.TraceInformation( "Base64 Content is " + base64Content );
-				
 				// ヘッダにある署名と暗号情報が等しければOK
 				if( xLineSignature.Equals( base64Content ) ) {
 					Trace.TraceInformation( "Verify Sign is OK" );
+					Trace.TraceInformation( "End" );
 					return true;
 				}
 				else {
 					Trace.TraceInformation( "Verify Sign is NG" );
+					Trace.TraceInformation( "End" );
 					return false;
 				}
 
 			}
 			catch( ArgumentNullException ) {
-				Trace.TraceInformation( "Verify Sign is Argument Null Exception" );
+				System.Diagnostics.Trace.TraceInformation( "Verify Sign is Argument Null Exception" );
+				Trace.TraceInformation( "End" );
 				return false;
 			}
 
@@ -76,7 +75,7 @@ namespace MessagingApiTemplate.Services.Webhook {
 		/// <returns>レスポンス</returns>
 		public static async Task<IssueChannelAccessTokenResponse> IssueChannelAccessToken() {
 
-			Trace.TraceInformation( "Start Issue Channel Access Token" );
+			Trace.TraceInformation( "Start" );
 
 			IssueChannelAccessTokenRequest request = new IssueChannelAccessTokenRequest() {
 				grant_type = "client_credentials" ,
@@ -87,13 +86,17 @@ namespace MessagingApiTemplate.Services.Webhook {
 				ConfigurationManager.AppSettings[ "BaseUrl" ] + 
 				ConfigurationManager.AppSettings[ "IssueChannelAccessTokenUrl" ];
 
-			return await MessagingApiSender.SendMessagingApi<IssueChannelAccessTokenRequest , IssueChannelAccessTokenResponse>(
+			IssueChannelAccessTokenResponse response = await MessagingApiSender.SendMessagingApi<IssueChannelAccessTokenRequest , IssueChannelAccessTokenResponse>(
 				null ,
 				requestUrl ,
 				request ,
 				false ,
 				"application/x-www-form-urlencoded"
 			);
+
+			Trace.TraceInformation( "End" );
+
+			return response;
 
 		}
 
@@ -105,11 +108,11 @@ namespace MessagingApiTemplate.Services.Webhook {
 		/// <returns>レスポンス</returns>
 		public static async Task RevokeChannelAccessToken( string channelAccessToken ) {
 
-			Trace.TraceInformation( "Start Revoke Channel Access Token" );
+			Trace.TraceInformation( "Start" );
 
 			// 引数のnullチェック
 			if( channelAccessToken == null ) {
-				Trace.TraceWarning( "Channel Access Token Of Revoke Channel Access Token is Null" );
+				System.Diagnostics.Trace.TraceWarning( "Channel Access Token is Null" );
 				return;
 			}
 
@@ -127,6 +130,8 @@ namespace MessagingApiTemplate.Services.Webhook {
 				false ,
 				"application/x-www-form-urlencoded"
 			);
+
+			Trace.TraceInformation( "End" );
 
 		}
 

@@ -1,11 +1,11 @@
-﻿using System.Diagnostics;
-using System.Net;
+﻿using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Newtonsoft.Json.Linq;
 using MessagingApiTemplate.Services.Webhook;
 using MessagingApiTemplate.Models.Config.Webhook;
+using MessagingApiTemplate.Utils;
 
 namespace MessagingApiExample.Controllers {
 
@@ -22,9 +22,9 @@ namespace MessagingApiExample.Controllers {
 		public async Task<HttpResponseMessage> Post( JToken requestToken ) {
 			
 			Trace.TraceInformation( "Webhook API Start" );
-			
+
 			// Webhook Serviceの実行
-			await WebhookService.Execute( 
+			await WebhookService.Execute(
 
 				// Webhook Serviceの設定
 				new WebhookServiceConfig() {
@@ -43,7 +43,10 @@ namespace MessagingApiExample.Controllers {
 					FollowEventHandler = async ( channelAccessToken , replyToken ) => await this.ExecuteFollowEvent( channelAccessToken , replyToken ) ,
 
 					// 参加イベント
-					JoinEventHandler = async ( channelAccessToken , replyToken ) => await this.ExecuteJoinEvent( channelAccessToken , replyToken )
+					JoinEventHandler = async ( channelAccessToken , replyToken ) => await this.ExecuteJoinEvent( channelAccessToken , replyToken ) ,
+
+					// テキストイベント
+					TextMessageEventHandler = async () => await this.ExecuteTextMessageEvent()
 
 				}
 
@@ -64,8 +67,9 @@ namespace MessagingApiExample.Controllers {
 			string channelAccessToken ,
 			string replyToken
 		) {
-			Trace.TraceInformation( "Execute Follow Event" );
+			Trace.TraceInformation( "Start" );
 			await Task.CompletedTask;
+			Trace.TraceInformation( "End" );
 		}
 
 		/// <summary>
@@ -77,8 +81,15 @@ namespace MessagingApiExample.Controllers {
 			string channelAccessToken ,
 			string replyToken
 		) {
-			Trace.TraceInformation( "Execute Join Event" );
+			Trace.TraceInformation( "Start" );
 			await Task.CompletedTask;
+			Trace.TraceInformation( "End" );
+		}
+
+		private async Task ExecuteTextMessageEvent() {
+			Trace.TraceInformation( "Start" );
+			await Task.CompletedTask;
+			Trace.TraceInformation( "End" );
 		}
 
 	}

@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Diagnostics;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -32,30 +31,30 @@ namespace MessagingApiTemplate.Utils {
 			where RequestT : class
 		{
 
-			Trace.TraceInformation( "Start Send Messaging Api" );
+			Trace.TraceInformation( "Start" );
 
 			// 引数のnullチェック
 			if( channelAccessToken == null ) {
-				Trace.TraceWarning( "Channel Access Token Of Send Messaging Api is Null" );
+				Trace.TraceWarning( "Channel Access Token is Null" );
 				return null;
 			}
 			if( url == null ) {
-				Trace.TraceWarning( "Url Of Send Messaging Api is Null" );
+				Trace.TraceWarning( "Url is Null" );
 				return null;
 			}
 
-			Trace.TraceInformation( "Channel Access Token Of Send Messaging Api is " + channelAccessToken );
-			Trace.TraceInformation( "Url Of Send Messaging Api is " + url );
-			Trace.TraceInformation( "Request Of Send Messaging Api is " + request );
-			Trace.TraceInformation( "Get Request Of Send Messaging Api is " + isGetRequest );
-			Trace.TraceInformation( "Content Type Of Send Messaging Api is " + contentType );
+			Trace.TraceInformation( "Channel Access Token is " + channelAccessToken );
+			Trace.TraceInformation( "Url is " + url );
+			Trace.TraceInformation( "Request is " + ( request == null ? "Null" : "Not Null" ) );
+			Trace.TraceInformation( "Get Request is " + isGetRequest );
+			Trace.TraceInformation( "Content Type is " + contentType );
 
 			// リクエストがあればcontentを作成
 			StringContent content = null;
 			if( request != null ) {
 
 				string jsonRequest = JsonConvert.SerializeObject( request );
-				Trace.TraceInformation( "Request Of Send Messaging Api is " + jsonRequest );
+				Trace.TraceInformation( "Json Request is " + jsonRequest );
 
 				content = new StringContent( jsonRequest );
 				content.Headers.ContentType = new MediaTypeHeaderValue( contentType );
@@ -78,22 +77,26 @@ namespace MessagingApiTemplate.Utils {
 				response.Dispose();
 				client.Dispose();
 				Trace.TraceInformation( "Send Messaging Api is OK" );
+				Trace.TraceInformation( "End" );
 				return resultAsBinary;
 
 			}
 			catch( ArgumentNullException ) {
 				Trace.TraceError( "Send Messaging Api is Argument Null Exception" );
 				client.Dispose();
+				Trace.TraceInformation( "End" );
 				return null;
 			}
 			catch( HttpRequestException ) {
 				Trace.TraceError( "Send Messaging Api is Http Request Exception" );
 				client.Dispose();
+				Trace.TraceInformation( "End" );
 				return null;
 			}
 			catch( Exception ) {
 				Trace.TraceError( "Send Messaging Api is Unexpected Exception" );
 				client.Dispose();
+				Trace.TraceInformation( "End" );
 				return null;
 			}
 			
@@ -121,28 +124,27 @@ namespace MessagingApiTemplate.Utils {
 			where ResponseT : class 
 		{
 
-			Trace.TraceInformation( "Start Send Messaging Api" );
+			Trace.TraceInformation( "Start" );
 
 			// 引数のnullチェック
 			if( channelAccessToken == null ) {
-				Trace.TraceWarning( "Channel Access Token Of Send Messaging Api is Null" );
+				Trace.TraceWarning( "Channel Access Token is Null" );
 				return default( ResponseT );
 			}
 			if( url == null ) {
-				Trace.TraceWarning( "Url Of Send Messaging Api is Null" );
+				Trace.TraceWarning( "Url is Null" );
 				return default( ResponseT );
 			}
-			if( request == null )
-				Trace.TraceInformation( "Request Of Send Messaging Api is Null" );
-			Trace.TraceInformation( "Get Request Of Send Messaging Api is " + isGetRequest );
-			Trace.TraceInformation( "Content Type Of Send Messaging Api is " + contentType );
+			Trace.TraceInformation( "Request is " + ( request == null ? "Null" : "Not Null" ) );
+			Trace.TraceInformation( "Get Request is " + isGetRequest );
+			Trace.TraceInformation( "Content Type is " + contentType );
 
 			// リクエストがあればcontentを作成
 			StringContent content = null;
 			if( request != null ) {
 
 				string jsonRequest = JsonConvert.SerializeObject( request );
-				Trace.TraceInformation( "Request Of Send Messaging Api is " + jsonRequest );
+				Trace.TraceInformation( "Json Request is " + jsonRequest );
 
 				content = new StringContent( jsonRequest );
 				content.Headers.ContentType = new MediaTypeHeaderValue( contentType );
@@ -161,28 +163,33 @@ namespace MessagingApiTemplate.Utils {
 					await client.PostAsync( url , content )
 				);
 				string resultAsString = await response.Content.ReadAsStringAsync();
+				Trace.TraceInformation( "Response is " + resultAsString );
 				response.Dispose();
 				client.Dispose();
 				Trace.TraceInformation( "Send Messaging Api is OK" );
-				if( typeof( ResponseT ) != typeof( string ) )
-					return JsonConvert.DeserializeObject<ResponseT>( resultAsString );
-				else
-					return null;
+
+				bool isStringResponseType = ( typeof( ResponseT ) == typeof( string ) );
+				Trace.TraceInformation( "String Response Type is " + isStringResponseType );
+				Trace.TraceInformation( "End" );
+				return isStringResponseType ? null : JsonConvert.DeserializeObject<ResponseT>( resultAsString );
 
 			}
 			catch( ArgumentNullException ) {
 				Trace.TraceError( "Send Messaging Api is Argument Null Exception" );
 				client.Dispose();
+				Trace.TraceInformation( "End" );
 				return null;
 			}
 			catch( HttpRequestException ) {
 				Trace.TraceError( "Send Messaging Api is Http Request Exception" );
 				client.Dispose();
+				Trace.TraceInformation( "End" );
 				return null;
 			}
 			catch( Exception ) {
 				Trace.TraceError( "Send Messaging Api is Unexpected Exception" );
 				client.Dispose();
+				Trace.TraceInformation( "End" );
 				return null;
 			}
 

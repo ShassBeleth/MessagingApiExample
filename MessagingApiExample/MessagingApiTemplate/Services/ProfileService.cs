@@ -19,15 +19,15 @@ namespace MessagingApiTemplate.Services {
 		/// <returns>プロフィール情報</returns>
 		public async Task<GetProfileResponse> GetProfile( string channelAccessToken , string userId ) {
 
-			Trace.TraceInformation( "Start Get Profile" );
+			System.Diagnostics.Trace.TraceInformation( "Start Get Profile" );
 
 			// 引数のnullチェック
 			if( channelAccessToken == null ) {
-				Trace.TraceWarning( "Channel Access Token Of Get Profile is Null" );
+				System.Diagnostics.Trace.TraceWarning( "Channel Access Token Of Get Profile is Null" );
 				return null;
 			}
 			if( userId == null ) {
-				Trace.TraceWarning( "User Id Of Get Profile is Null" );
+				System.Diagnostics.Trace.TraceWarning( "User Id Of Get Profile is Null" );
 				return null;
 			}
 

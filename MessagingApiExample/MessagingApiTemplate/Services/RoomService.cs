@@ -25,19 +25,19 @@ namespace MessagingApiTemplate.Services {
 			string userId
 		) {
 
-			Trace.TraceInformation( "Start Get User Profile In Room Member" );
+			System.Diagnostics.Trace.TraceInformation( "Start Get User Profile In Room Member" );
 
 			// 引数のnullチェック
 			if( channelAccessToken == null ) {
-				Trace.TraceWarning( "Channel Access Token Of Get User Profile In Room Member is Null" );
+				System.Diagnostics.Trace.TraceWarning( "Channel Access Token Of Get User Profile In Room Member is Null" );
 				return null;
 			}
 			if( roomId == null ) {
-				Trace.TraceWarning( "Room Id Of Get User Profile In Room Member is Null" );
+				System.Diagnostics.Trace.TraceWarning( "Room Id Of Get User Profile In Room Member is Null" );
 				return null;
 			}
 			if( userId == null ) {
-				Trace.TraceWarning( "User Id Of Get User Profile In Room Member is Null" );
+				System.Diagnostics.Trace.TraceWarning( "User Id Of Get User Profile In Room Member is Null" );
 				return null;
 			}
 
@@ -68,15 +68,15 @@ namespace MessagingApiTemplate.Services {
 			string next = null
 		) {
 
-			Trace.TraceInformation( "Start Get User Id In Room Member" );
+			System.Diagnostics.Trace.TraceInformation( "Start Get User Id In Room Member" );
 
 			// 引数のnullチェック
 			if( channelAccessToken == null ) {
-				Trace.TraceWarning( "Channel Access Token Of Get User Id In Room Member is Null" );
+				System.Diagnostics.Trace.TraceWarning( "Channel Access Token Of Get User Id In Room Member is Null" );
 				return null;
 			}
 			if( roomId == null ) {
-				Trace.TraceWarning( "Group Id Of Get User Id In Room Member is Null" );
+				System.Diagnostics.Trace.TraceWarning( "Group Id Of Get User Id In Room Member is Null" );
 				return null;
 			}
 			
@@ -104,14 +104,14 @@ namespace MessagingApiTemplate.Services {
 			string roomId
 		) {
 
-			Trace.TraceInformation( "Start Leave Room" );
+			System.Diagnostics.Trace.TraceInformation( "Start Leave Room" );
 
 			// 引数のnullチェック
 			if( channelAccessToken == null ) {
-				Trace.TraceWarning( "Channel Access Token Of Leave Room Member is Null" );
+				System.Diagnostics.Trace.TraceWarning( "Channel Access Token Of Leave Room Member is Null" );
 			}
 			if( roomId == null ) {
-				Trace.TraceWarning( "Group Id Of Leave Room Member is Null" );
+				System.Diagnostics.Trace.TraceWarning( "Group Id Of Leave Room Member is Null" );
 			}
 			
 			string requestUrl =

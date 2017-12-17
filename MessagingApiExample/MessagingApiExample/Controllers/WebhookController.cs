@@ -10,6 +10,9 @@ using MessagingApiTemplate.Models.Responses.Profile;
 using MessagingApiTemplate.Services;
 using MessagingApiTemplate.Models.Requests.Webhook.Event.Source;
 using MessagingApiTemplate.Services.Message;
+using MessagingApiTemplate.Services.Profile;
+using MessagingApiTemplate.Services.Group;
+using MessagingApiTemplate.Models.Responses;
 
 namespace MessagingApiExample.Controllers {
 
@@ -118,15 +121,43 @@ namespace MessagingApiExample.Controllers {
 
 			switch( text ) {
 
-				case "プロフィール取得":
+				case "プロフィールほしい":
 
 					if( source is GroupSource ) {
+						
+						string groupId = ( source as GroupSource ).groupId;
+						if( groupId == null ) {
+							Trace.TraceInformation( "Group Id is Null" );
+							return;
+						}
+						string userId = ( source as GroupSource ).userId;
+						if( userId == null ) {
+							Trace.TraceInformation( "User Id is Null" );
+							return;
+						}
 
-					}
-					else if( source is RoomSource ) {
+						string messageText = "";
 
+						GetUserProfileInGroupOrRoomMemberResponse profilesResponse = 
+							await GroupService.GetUserProfileInGroupMember( channelAccessToken , groupId , userId )
+							.ConfigureAwait( false );
+						messageText +=
+							"表示名:" + profilesResponse.displayName +
+							"ID:" + profilesResponse.userId +
+							"画像:" + profilesResponse.pictureUrl +
+							"\n";
+
+						await ReplyMessageService.SendReplyMessage(
+							channelAccessToken ,
+							replyToken ,
+							MessageFactoryService.CreateMessage()
+								.AddTextMessage( messageText )
+						).ConfigureAwait( false );
+						
 					}
+
 					else if( source is UserSource ) {
+
 						string userId = ( source as UserSource ).userId;
 						if( userId == null ) {
 							Trace.TraceInformation( "User Id is Null" );
@@ -149,6 +180,21 @@ namespace MessagingApiExample.Controllers {
 
 					break;
 
+				case "茜ちゃん帰って":
+
+					if( source is GroupSource ) {
+
+						string groupId = ( source as GroupSource ).groupId;
+						if( groupId == null ) {
+							Trace.TraceInformation( "Group Id is Null" );
+							return;
+						}
+
+						await GroupService.LeaveGroup( channelAccessToken , groupId ).ConfigureAwait( false );
+
+					}
+
+					break;
 				default:
 					Trace.TraceInformation( "Unexpected Text" );
 					break;

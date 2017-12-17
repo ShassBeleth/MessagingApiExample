@@ -3,7 +3,7 @@ using MessagingApiTemplate.Utils;
 using System.Configuration;
 using System.Threading.Tasks;
 
-namespace MessagingApiTemplate.Services {
+namespace MessagingApiTemplate.Services.Profile {
 
 	/// <summary>
 	/// プロフィールについてのService
@@ -38,7 +38,7 @@ namespace MessagingApiTemplate.Services {
 			GetProfileResponse response = await MessagingApiSender.SendMessagingApi<string,GetProfileResponse>(
 				channelAccessToken ,
 				requestUrl
-			);
+			).ConfigureAwait( false );
 
 			Trace.TraceInformation( "End" );
 

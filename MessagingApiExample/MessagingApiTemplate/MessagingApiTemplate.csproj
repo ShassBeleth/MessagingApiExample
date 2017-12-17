@@ -148,7 +148,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Webhook\AuthenticationService.cs" />
     <Compile Include="Services\Message\ContentService.cs" />
-    <Compile Include="Services\GroupService.cs" />
+    <Compile Include="Services\Group\GroupService.cs" />
     <Compile Include="Services\ImageMapActionFactoryService.cs" />
     <Compile Include="Services\MessageFactoryService.cs" />
     <Compile Include="Services\Profile\ProfileService.cs" />

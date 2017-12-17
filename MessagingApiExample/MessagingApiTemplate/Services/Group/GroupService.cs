@@ -1,17 +1,15 @@
 ﻿using MessagingApiTemplate.Models.Responses;
 using MessagingApiTemplate.Utils;
 using System.Configuration;
-using System.Diagnostics;
 using System.Threading.Tasks;
 
-namespace MessagingApiTemplate.Services {
+namespace MessagingApiTemplate.Services.Group {
 
 	/// <summary>
 	/// グループについてのService
 	/// </summary>
-	public class GroupService {
-
-		// TODO 未確認
+	public static class GroupService {
+		
 		/// <summary>
 		/// グループメンバーのプロフィールを取得する
 		/// </summary>
@@ -19,25 +17,25 @@ namespace MessagingApiTemplate.Services {
 		/// <param name="groupId">グループID</param>
 		/// <param name="userId">ユーザID</param>
 		/// <returns></returns>
-		public async Task<GetUserProfileInGroupOrRoomMemberResponse> GetUserProfileInGroupMember(
+		public static async Task<GetUserProfileInGroupOrRoomMemberResponse> GetUserProfileInGroupMember(
 			string channelAccessToken ,
 			string groupId ,
 			string userId
 		) {
 
-			System.Diagnostics.Trace.TraceInformation( "Start Get User Profile In Group Member" );
+			Trace.TraceInformation( "Start" );
 
 			// 引数のnullチェック
 			if( channelAccessToken == null ) {
-				System.Diagnostics.Trace.TraceWarning( "Channel Access Token Of Get User Profile In Group Member is Null" );
+				Trace.TraceWarning( "Channel Access Token is Null" );
 				return null;
 			}
 			if( groupId == null ) {
-				System.Diagnostics.Trace.TraceWarning( "Group Id Of Get User Profile In Group Member is Null" );
+				Trace.TraceWarning( "Group Id is Null" );
 				return null;
 			}
 			if( userId == null ) {
-				System.Diagnostics.Trace.TraceWarning( "User Id Of Get User Profile In Group Member is Null" );
+				Trace.TraceWarning( "User Id is Null" );
 				return null;
 			}
 
@@ -47,36 +45,39 @@ namespace MessagingApiTemplate.Services {
 				groupId +
 				ConfigurationManager.AppSettings[ "GroupProfileUrl" ] +
 				userId;
-			return await MessagingApiSender.SendMessagingApi<string,GetUserProfileInGroupOrRoomMemberResponse> (
+			GetUserProfileInGroupOrRoomMemberResponse response = await MessagingApiSender.SendMessagingApi<string , GetUserProfileInGroupOrRoomMemberResponse>(
 				channelAccessToken ,
 				requestUrl
-			);
+			).ConfigureAwait( false );
+
+			Trace.TraceInformation( "End" );
+
+			return response;
 			
 		}
 
-		// TODO 未確認
+		// TODO 認証済みLINE@アカウントまたは公式アカウントでないと確認できない
 		/// <summary>
 		/// グループメンバーのIdを取得する
 		/// </summary>
 		/// <param name="channelAccessToken">ChannelAccessToken</param>
 		/// <param name="groupId">グループID</param>
 		/// <param name="next">ユーザIDに続きがある場合に必要なキー</param>
-		/// <returns></returns>
-		public async Task<GetUserIdInGroupOrRoomMemberResponse> GetUserIdInGroupMember(
+		public static async Task<GetUserIdInGroupOrRoomMemberResponse> GetUserIdInGroupMember(
 			string channelAccessToken ,
 			string groupId ,
 			string next = null
 		) {
 
-			System.Diagnostics.Trace.TraceInformation( "Start Get User Id In Group Member" );
+			Trace.TraceInformation( "Start" );
 
 			// 引数のnullチェック
 			if( channelAccessToken == null ) {
-				System.Diagnostics.Trace.TraceWarning( "Channel Access Token Of Get User Id In Group Member is Null" );
+				Trace.TraceWarning( "Channel Access Token is Null" );
 				return null;
 			}
 			if( groupId == null ) {
-				System.Diagnostics.Trace.TraceWarning( "Group Id Of Get User Id In Group Member is Null" );
+				Trace.TraceWarning( "Group Id Of Get User Id In Group Member is Null" );
 				return null;
 			}
 			
@@ -86,32 +87,35 @@ namespace MessagingApiTemplate.Services {
 				groupId +
 				ConfigurationManager.AppSettings[ "GroupIdUrl" ] +
 				( next == null ? "" : ( "?start=" + next ) );
-			return await MessagingApiSender.SendMessagingApi<string , GetUserIdInGroupOrRoomMemberResponse>(
+			GetUserIdInGroupOrRoomMemberResponse response = await MessagingApiSender.SendMessagingApi<string , GetUserIdInGroupOrRoomMemberResponse>(
 				channelAccessToken ,
 				requestUrl
-			);
+			).ConfigureAwait( false );
+
+			Trace.TraceInformation( "End" );
+
+			return response;
 
 		}
-
-		// TODO 未確認
+		
 		/// <summary>
 		/// グループから退出する
 		/// </summary>
 		/// <param name="channelAccessToken">ChannelAccessToken</param>
 		/// <param name="groupId">グループID</param>
-		public async Task LeaveGroup(
+		public static async Task LeaveGroup(
 			string channelAccessToken ,
 			string groupId
 		) {
 
-			System.Diagnostics.Trace.TraceInformation( "Start Leave Group" );
+			Trace.TraceInformation( "Start" );
 
 			// 引数のnullチェック
 			if( channelAccessToken == null ) {
-				System.Diagnostics.Trace.TraceWarning( "Channel Access Token Of Leave Group Member is Null" );
+				Trace.TraceWarning( "Channel Access Token is Null" );
 			}
 			if( groupId == null ) {
-				System.Diagnostics.Trace.TraceWarning( "Group Id Of Leave Group Member is Null" );
+				Trace.TraceWarning( "Group Id is Null" );
 			}
 
 			string requestUrl =
@@ -121,8 +125,12 @@ namespace MessagingApiTemplate.Services {
 				ConfigurationManager.AppSettings[ "GroupLeaveUrl" ];
 			await MessagingApiSender.SendMessagingApi<string,string>(
 				channelAccessToken ,
-				requestUrl
-			);
+				requestUrl ,
+				null ,
+				false
+			).ConfigureAwait( false );
+
+			Trace.TraceInformation( "End" );
 
 		}
 

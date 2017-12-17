@@ -92,7 +92,7 @@ namespace MessagingApiTemplate.Services.Webhook {
 				request ,
 				false ,
 				"application/x-www-form-urlencoded"
-			);
+			).ConfigureAwait( false );
 
 			Trace.TraceInformation( "End" );
 
@@ -129,7 +129,7 @@ namespace MessagingApiTemplate.Services.Webhook {
 				request ,
 				false ,
 				"application/x-www-form-urlencoded"
-			);
+			).ConfigureAwait( false );
 
 			Trace.TraceInformation( "End" );
 

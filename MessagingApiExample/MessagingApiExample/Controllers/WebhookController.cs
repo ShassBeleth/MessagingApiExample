@@ -44,7 +44,7 @@ namespace MessagingApiExample.Controllers {
 					IsExecuteVerifySign = false ,
 
 					// ロングタームチャンネルアクセストークンを使用する
-					IsUseLongTermChannelAccessToken = true ,
+					IsUseLongTermChannelAccessToken = false ,
 
 					// フォローイベント
 					FollowEventHandler = async ( channelAccessToken , replyToken ) => await this.ExecuteFollowEvent( channelAccessToken , replyToken ) ,
@@ -57,7 +57,7 @@ namespace MessagingApiExample.Controllers {
 
 				}
 
-			);
+			).ConfigureAwait( false );
 
 			Trace.TraceInformation( "Webhook API End" );
 			
@@ -195,6 +195,9 @@ namespace MessagingApiExample.Controllers {
 					}
 
 					break;
+					
+					
+
 				default:
 					Trace.TraceInformation( "Unexpected Text" );
 					break;

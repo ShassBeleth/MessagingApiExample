@@ -35,7 +35,7 @@ namespace MessagingApiTemplate.Services.Webhook {
 			if( config.IsExecuteVerifySign ) {
 
 				// 署名の検証
-				bool verifySignResult = await AuthenticationService.VerifySign( GetSignature( config.RequestHeaders ) , config.RequestContent );
+				bool verifySignResult = await AuthenticationService.VerifySign( GetSignature( config.RequestHeaders ) , config.RequestContent ).ConfigureAwait( false );
 
 				// NGなら以下の処理を行わない
 				if( !verifySignResult ) {
@@ -57,7 +57,7 @@ namespace MessagingApiTemplate.Services.Webhook {
 
 			// ロングタームチャンネルアクセストークンを使用しない場合はチャンネルアクセストークンを発行する
 			else {
-				IssueChannelAccessTokenResponse channelAccessTokenResponse = await AuthenticationService.IssueChannelAccessToken();
+				IssueChannelAccessTokenResponse channelAccessTokenResponse = await AuthenticationService.IssueChannelAccessToken().ConfigureAwait( false );
 				channelAccessToken = channelAccessTokenResponse?.access_token;
 			}
 

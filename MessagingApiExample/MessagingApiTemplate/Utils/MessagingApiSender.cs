@@ -118,7 +118,8 @@ namespace MessagingApiTemplate.Utils {
 			string url ,
 			RequestT request = default( RequestT ) ,
 			bool isGetRequest = true ,
-			string contentType = "application/json"
+			string contentType = "application/json" ,
+			bool isAuthenticationApi = false
 		)
 			where RequestT : class
 			where ResponseT : class 
@@ -129,7 +130,8 @@ namespace MessagingApiTemplate.Utils {
 			// 引数のnullチェック
 			if( channelAccessToken == null ) {
 				Trace.TraceWarning( "Channel Access Token is Null" );
-				return default( ResponseT );
+				if( isAuthenticationApi )
+					return default( ResponseT );
 			}
 			if( url == null ) {
 				Trace.TraceWarning( "Url is Null" );

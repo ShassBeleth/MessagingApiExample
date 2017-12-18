@@ -154,7 +154,7 @@
     <Compile Include="Services\Profile\ProfileService.cs" />
     <Compile Include="Services\Message\PushMessageService.cs" />
     <Compile Include="Services\Message\ReplyMessageService.cs" />
-    <Compile Include="Services\RoomService.cs" />
+    <Compile Include="Services\Room\RoomService.cs" />
     <Compile Include="Services\TemplateActionFactoryService.cs" />
     <Compile Include="Services\TemplateCarouselColumnFactoryService.cs" />
     <Compile Include="Services\TemplateImageCarouselColumnFactoryService.cs" />

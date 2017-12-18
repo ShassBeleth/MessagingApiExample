@@ -1,15 +1,14 @@
 ﻿using MessagingApiTemplate.Models.Responses;
 using MessagingApiTemplate.Utils;
 using System.Configuration;
-using System.Diagnostics;
 using System.Threading.Tasks;
 
-namespace MessagingApiTemplate.Services {
+namespace MessagingApiTemplate.Services.Room {
 	
 	/// <summary>
 	/// トークルームについてのService
 	/// </summary>
-	public class RoomService {
+	public static class RoomService {
 
 		// TODO 未確認
 		/// <summary>
@@ -19,25 +18,25 @@ namespace MessagingApiTemplate.Services {
 		/// <param name="roomId">トークルームID</param>
 		/// <param name="userId">ユーザID</param>
 		/// <returns></returns>
-		public async Task<GetUserProfileInGroupOrRoomMemberResponse> GetUserProfileInRoomMember(
+		public static async Task<GetUserProfileInGroupOrRoomMemberResponse> GetUserProfileInRoomMember(
 			string channelAccessToken ,
 			string roomId ,
 			string userId
 		) {
 
-			System.Diagnostics.Trace.TraceInformation( "Start Get User Profile In Room Member" );
+			Trace.TraceInformation( "Start" );
 
 			// 引数のnullチェック
 			if( channelAccessToken == null ) {
-				System.Diagnostics.Trace.TraceWarning( "Channel Access Token Of Get User Profile In Room Member is Null" );
+				Trace.TraceWarning( "Channel Access Token is Null" );
 				return null;
 			}
 			if( roomId == null ) {
-				System.Diagnostics.Trace.TraceWarning( "Room Id Of Get User Profile In Room Member is Null" );
+				Trace.TraceWarning( "Room Id is Null" );
 				return null;
 			}
 			if( userId == null ) {
-				System.Diagnostics.Trace.TraceWarning( "User Id Of Get User Profile In Room Member is Null" );
+				Trace.TraceWarning( "User Id is Null" );
 				return null;
 			}
 
@@ -47,10 +46,14 @@ namespace MessagingApiTemplate.Services {
 				roomId +
 				ConfigurationManager.AppSettings[ "RoomProfileUrl" ] +
 				userId;
-			return await MessagingApiSender.SendMessagingApi<string , GetUserProfileInGroupOrRoomMemberResponse>(
+			GetUserProfileInGroupOrRoomMemberResponse response = await MessagingApiSender.SendMessagingApi<string , GetUserProfileInGroupOrRoomMemberResponse>(
 				channelAccessToken ,
 				requestUrl
-			);
+			).ConfigureAwait( false );
+
+			Trace.TraceInformation( "End" );
+
+			return response;
 			
 		}
 		
@@ -62,21 +65,21 @@ namespace MessagingApiTemplate.Services {
 		/// <param name="roomId">トークルームID</param>
 		/// <param name="next">ユーザIDに続きがある場合に必要なキー</param>
 		/// <returns></returns>
-		public async Task<GetUserIdInGroupOrRoomMemberResponse> GetUserIdInRoomMember(
+		public static async Task<GetUserIdInGroupOrRoomMemberResponse> GetUserIdInRoomMember(
 			string channelAccessToken ,
 			string roomId ,
 			string next = null
 		) {
 
-			System.Diagnostics.Trace.TraceInformation( "Start Get User Id In Room Member" );
+			Trace.TraceInformation( "Start" );
 
 			// 引数のnullチェック
 			if( channelAccessToken == null ) {
-				System.Diagnostics.Trace.TraceWarning( "Channel Access Token Of Get User Id In Room Member is Null" );
+				Trace.TraceWarning( "Channel Access Token is Null" );
 				return null;
 			}
 			if( roomId == null ) {
-				System.Diagnostics.Trace.TraceWarning( "Group Id Of Get User Id In Room Member is Null" );
+				Trace.TraceWarning( "Group Id is Null" );
 				return null;
 			}
 			
@@ -86,11 +89,16 @@ namespace MessagingApiTemplate.Services {
 				roomId +
 				ConfigurationManager.AppSettings[ "RoomIdUrl" ] +
 				( next == null ? "" : ( "?start=" + next ) );
-			return await MessagingApiSender.SendMessagingApi<string , GetUserIdInGroupOrRoomMemberResponse>(
+
+			GetUserIdInGroupOrRoomMemberResponse response = await MessagingApiSender.SendMessagingApi<string , GetUserIdInGroupOrRoomMemberResponse>(
 				channelAccessToken ,
 				requestUrl
-			);
-			
+			).ConfigureAwait( false );
+
+			Trace.TraceInformation( "End" );
+
+			return response;
+
 		}
 
 		// TODO 未確認
@@ -99,19 +107,19 @@ namespace MessagingApiTemplate.Services {
 		/// </summary>
 		/// <param name="channelAccessToken">ChannelAccessToken</param>
 		/// <param name="roomId">トークルームID</param>
-		public async Task LeaveGroup(
+		public static async Task LeaveRoom(
 			string channelAccessToken ,
 			string roomId
 		) {
 
-			System.Diagnostics.Trace.TraceInformation( "Start Leave Room" );
+			Trace.TraceInformation( "Start" );
 
 			// 引数のnullチェック
 			if( channelAccessToken == null ) {
-				System.Diagnostics.Trace.TraceWarning( "Channel Access Token Of Leave Room Member is Null" );
+				Trace.TraceWarning( "Channel Access Token is Null" );
 			}
 			if( roomId == null ) {
-				System.Diagnostics.Trace.TraceWarning( "Group Id Of Leave Room Member is Null" );
+				Trace.TraceWarning( "Group Id is Null" );
 			}
 			
 			string requestUrl =
@@ -121,8 +129,12 @@ namespace MessagingApiTemplate.Services {
 				ConfigurationManager.AppSettings[ "RoomLeaveUrl" ];
 			await MessagingApiSender.SendMessagingApi<string , string>(
 				channelAccessToken ,
-				requestUrl
-			);
+				requestUrl ,
+				null ,
+				false
+			).ConfigureAwait( false );
+
+			Trace.TraceInformation( "End" );
 			
 		}
 

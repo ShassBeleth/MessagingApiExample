@@ -13,6 +13,7 @@ using MessagingApiTemplate.Services.Message;
 using MessagingApiTemplate.Services.Profile;
 using MessagingApiTemplate.Services.Group;
 using MessagingApiTemplate.Models.Responses;
+using MessagingApiTemplate.Services.Room;
 
 namespace MessagingApiExample.Controllers {
 
@@ -44,7 +45,7 @@ namespace MessagingApiExample.Controllers {
 					IsExecuteVerifySign = false ,
 
 					// ロングタームチャンネルアクセストークンを使用する
-					IsUseLongTermChannelAccessToken = false ,
+					IsUseLongTermChannelAccessToken = true ,
 
 					// フォローイベント
 					FollowEventHandler = async ( channelAccessToken , replyToken ) => await this.ExecuteFollowEvent( channelAccessToken , replyToken ) ,
@@ -135,13 +136,11 @@ namespace MessagingApiExample.Controllers {
 							Trace.TraceInformation( "User Id is Null" );
 							return;
 						}
-
-						string messageText = "";
-
+						
 						GetUserProfileInGroupOrRoomMemberResponse profilesResponse = 
 							await GroupService.GetUserProfileInGroupMember( channelAccessToken , groupId , userId )
 							.ConfigureAwait( false );
-						messageText +=
+						string messageText = 
 							"表示名:" + profilesResponse.displayName +
 							"ID:" + profilesResponse.userId +
 							"画像:" + profilesResponse.pictureUrl +
@@ -154,6 +153,38 @@ namespace MessagingApiExample.Controllers {
 								.AddTextMessage( messageText )
 						).ConfigureAwait( false );
 						
+					}
+
+					else if( source is RoomSource ) {
+
+						string roomId = ( source as RoomSource ).roomId;
+						if( roomId == null ) {
+							Trace.TraceInformation( "Room Id is Null" );
+							return;
+						}
+						string userId = ( source as RoomSource ).userId;
+						if( userId == null ) {
+							Trace.TraceInformation( "User Id is Null" );
+							return;
+						}
+
+						GetUserProfileInGroupOrRoomMemberResponse profilesResponse =
+							await RoomService.GetUserProfileInRoomMember( channelAccessToken , roomId , userId )
+							.ConfigureAwait( false );
+						string messageText =
+							"表示名:" + profilesResponse.displayName +
+							"ID:" + profilesResponse.userId +
+							"画像:" + profilesResponse.pictureUrl +
+							"\n";
+
+						await ReplyMessageService.SendReplyMessage(
+							channelAccessToken ,
+							replyToken ,
+							MessageFactoryService.CreateMessage()
+								.AddTextMessage( messageText )
+						).ConfigureAwait( false );
+
+
 					}
 
 					else if( source is UserSource ) {
@@ -191,6 +222,18 @@ namespace MessagingApiExample.Controllers {
 						}
 
 						await GroupService.LeaveGroup( channelAccessToken , groupId ).ConfigureAwait( false );
+
+					}
+
+					else if( source is RoomSource ) {
+
+						string roomId = ( source as RoomSource ).roomId;
+						if( roomId == null ) {
+							Trace.TraceInformation( "Room Id is Null" );
+							return;
+						}
+
+						await RoomService.LeaveRoom( channelAccessToken , roomId ).ConfigureAwait( false );
 
 					}
 

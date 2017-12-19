@@ -1,7 +1,6 @@
 ﻿using MessagingApiTemplate.Models.Requests.PushMessage;
 using MessagingApiTemplate.Utils;
 using System.Configuration;
-using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace MessagingApiTemplate.Services.Message {
@@ -9,7 +8,7 @@ namespace MessagingApiTemplate.Services.Message {
 	/// <summary>
 	/// Push通知を送るService
 	/// </summary>
-	public class PushMessageService {
+	public static class PushMessageService {
 
 		/// <summary>
 		/// プッシュ送信
@@ -19,7 +18,7 @@ namespace MessagingApiTemplate.Services.Message {
 		/// <param name="messageFactoryService">MessageFactoryService</param>
 		public static async Task SendReplyMessage( string channelAccessToken , string to , MessageFactoryService messageFactoryService ) {
 
-			System.Diagnostics.Trace.TraceInformation( "Start Send Push Message" );
+			Trace.TraceInformation( "Start" );
 
 			PushMessageRequest request = new PushMessageRequest() {
 				to = to ,
@@ -32,7 +31,9 @@ namespace MessagingApiTemplate.Services.Message {
 				requestUrl ,
 				request ,
 				false
-			);
+			).ConfigureAwait( false );
+
+			Trace.TraceInformation( "End" );
 
 		}
 
@@ -44,7 +45,7 @@ namespace MessagingApiTemplate.Services.Message {
 		/// <param name="messageFactoryService">MessageFactoryService</param>
 		public static async Task SendMultiCastPushMessage( string channelAccessToken , string[] to , MessageFactoryService messageFactoryService ) {
 
-			System.Diagnostics.Trace.TraceInformation( "Start Send Multi Cast Push Message" );
+			Trace.TraceInformation( "Start" );
 
 			MultiCastMessageRequest request = new MultiCastMessageRequest() {
 				to = to ,
@@ -57,7 +58,9 @@ namespace MessagingApiTemplate.Services.Message {
 				requestUrl ,
 				request ,
 				false
-			);
+			).ConfigureAwait( false );
+
+			Trace.TraceInformation( "End" );
 
 		}
 

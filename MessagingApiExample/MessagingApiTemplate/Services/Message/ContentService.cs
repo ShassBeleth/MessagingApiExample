@@ -1,6 +1,5 @@
 ﻿using MessagingApiTemplate.Utils;
 using System.Configuration;
-using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace MessagingApiTemplate.Services.Message {
@@ -8,7 +7,7 @@ namespace MessagingApiTemplate.Services.Message {
 	/// <summary>
 	/// ユーザから送られた画像や動画についてのService
 	/// </summary>
-	public class ContentService {
+	public static class ContentService {
 
 		/// <summary>
 		/// ユーザから送られた画像や動画取得
@@ -16,17 +15,17 @@ namespace MessagingApiTemplate.Services.Message {
 		/// <param name="channelAccessToken">チャンネルアクセストークン</param>
 		/// <param name="messageId">メッセージID</param>
 		/// <returns>取得した画像や動画のバイナリ</returns>
-		public async Task<byte[]> GetContent( string channelAccessToken , string messageId ) {
+		public static async Task<byte[]> GetContent( string channelAccessToken , string messageId ) {
 
-			System.Diagnostics.Trace.TraceInformation( "Start Get Content" );
+			Trace.TraceInformation( "Start" );
 
 			// 引数のnullチェック
 			if( channelAccessToken == null ) {
-				System.Diagnostics.Trace.TraceWarning( "Channel Access Token Of Get Content is Null" );
+				Trace.TraceWarning( "Channel Access Token is Null" );
 				return null;
 			}
 			if( messageId == null ) {
-				System.Diagnostics.Trace.TraceWarning( "Message Id Of Get Content is Null" );
+				Trace.TraceWarning( "Message Id is Null" );
 				return null;
 			}
 
@@ -36,8 +35,12 @@ namespace MessagingApiTemplate.Services.Message {
 				messageId +
 				ConfigurationManager.AppSettings[ "GetContentUrlAfter" ];
 
-			return await MessagingApiSender.SendMessagingApi<string>( channelAccessToken , requestUrl );
-			
+			byte[] response = await MessagingApiSender.SendMessagingApi<string>( channelAccessToken , requestUrl );
+
+			Trace.TraceInformation( "End" );
+
+			return response;
+
 		}
 
 	}

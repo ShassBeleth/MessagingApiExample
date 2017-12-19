@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Diagnostics;
 using MessagingApiTemplate.Models.Requests.SendMessage.ImageMap;
+using MessagingApiTemplate.Utils;
 
-namespace MessagingApiTemplate.Services {
+namespace MessagingApiTemplate.Services.Message.Factory {
 
 	/// <summary>
 	/// イメージマップアクション作成Service
@@ -33,16 +33,18 @@ namespace MessagingApiTemplate.Services {
 		/// <returns>配列が既に50つたまっていた場合は何もしない</returns>
 		private bool RegulateImageMapActionArray() {
 
-			Trace.TraceInformation( "Start Regulate Image Map Action Array" );
+			Trace.TraceInformation( "Start" );
 
 			if( this.Actions == null ) {
 				Trace.TraceInformation( "Image Map Action is Null" );
 				this.Actions = new ImageMapActionBase[ 1 ];
+				Trace.TraceInformation( "End" );
 				return true;
 			}
 			else {
 				if( this.Actions.Length == 50 ) {
 					Trace.TraceWarning( "Image Map Action Length is Max" );
+					Trace.TraceInformation( "End" );
 					return false;
 				}
 				else {
@@ -53,6 +55,7 @@ namespace MessagingApiTemplate.Services {
 						this.Actions.Length + 1
 					);
 					this.Actions = actions;
+					Trace.TraceInformation( "End" );
 					return true;
 				}
 			}
@@ -75,7 +78,7 @@ namespace MessagingApiTemplate.Services {
 			int height
 		) {
 
-			Trace.TraceInformation( "Start Add Url Image Map Action" );
+			Trace.TraceInformation( "Start" );
 
 			if( !this.RegulateImageMapActionArray() ) {
 				Trace.TraceWarning( "Regulate Image Map Action Array is False" );
@@ -93,6 +96,8 @@ namespace MessagingApiTemplate.Services {
 			};
 
 			this.Actions[ this.Actions.Length - 1 ] = imageMapUriAction;
+
+			Trace.TraceInformation( "Start" );
 
 			return this;
 
@@ -114,7 +119,7 @@ namespace MessagingApiTemplate.Services {
 			int height
 		) {
 
-			Trace.TraceInformation( "Start Add Message Image Map Action" );
+			Trace.TraceInformation( "Start" );
 
 			if( !this.RegulateImageMapActionArray() ) {
 				Trace.TraceWarning( "Regulate Image Map Action Array is False" );
@@ -132,6 +137,8 @@ namespace MessagingApiTemplate.Services {
 			};
 
 			this.Actions[ this.Actions.Length - 1 ] = imageMapMessageAction;
+
+			Trace.TraceInformation( "End" );
 
 			return this;
 

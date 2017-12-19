@@ -18,7 +18,7 @@ namespace MessagingApiTemplate.Services.Message {
 		/// <param name="messageFactoryService">MessageFactoryService</param>
 		public static async Task SendReplyMessage( string channelAccessToken , string replyToken , MessageFactoryService messageFactoryService ) {
 
-			System.Diagnostics.Trace.TraceInformation( "Start Send Reply Message" );
+			Trace.TraceInformation( "Start" );
 
 			ReplyMessageRequest request = new ReplyMessageRequest() {
 				replyToken = replyToken ,
@@ -35,7 +35,7 @@ namespace MessagingApiTemplate.Services.Message {
 				false
 			).ConfigureAwait( false );
 
-			Trace.TraceInformation( "bbb" );
+			Trace.TraceInformation( "End" );
 
 		}
 

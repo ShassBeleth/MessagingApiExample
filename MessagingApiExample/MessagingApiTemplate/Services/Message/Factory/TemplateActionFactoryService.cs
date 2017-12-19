@@ -1,9 +1,12 @@
 ﻿using MessagingApiTemplate.Models.Requests.SendMessage.Template.Action;
+using MessagingApiTemplate.Utils;
 using System;
-using System.Diagnostics;
 
-namespace MessagingApiTemplate.Services {
+namespace MessagingApiTemplate.Services.Message.Factory{
 
+	/// <summary>
+	/// テンプレートのアクション作成用クラス
+	/// </summary>
 	public class TemplateActionFactoryService {
 
 		/// <summary>
@@ -30,16 +33,18 @@ namespace MessagingApiTemplate.Services {
 		/// <returns>配列が既に5つたまっていた場合は何もしない</returns>
 		private bool RegulateMessageArray() {
 
-			Trace.TraceInformation( "Start Regulate Actions Array" );
+			Trace.TraceInformation( "Start" );
 
 			if( this.Actions == null ) {
 				Trace.TraceInformation( "Actions is Null" );
 				this.Actions = new TemplateActionBase[ 1 ];
+				Trace.TraceInformation( "End" );
 				return true;
 			}
 			else {
 				if( this.Actions.Length == 5 ) {
 					Trace.TraceWarning( "Actions Length is Max" );
+					Trace.TraceInformation( "End" );
 					return false;
 				}
 				else {
@@ -50,6 +55,7 @@ namespace MessagingApiTemplate.Services {
 						this.Actions.Length + 1
 					);
 					this.Actions = action;
+					Trace.TraceInformation( "End" );
 					return true;
 				}
 			}

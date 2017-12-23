@@ -2,6 +2,7 @@
 using MessagingApiTemplate.Utils;
 using System.Configuration;
 using System.Threading.Tasks;
+using MessagingApiTemplate.Services.Message.Factory;
 
 namespace MessagingApiTemplate.Services.Message {
 

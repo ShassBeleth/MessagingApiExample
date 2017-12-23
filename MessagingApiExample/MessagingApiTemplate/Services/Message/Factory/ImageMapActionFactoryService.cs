@@ -23,7 +23,9 @@ namespace MessagingApiTemplate.Services.Message.Factory {
 		/// アクション作成
 		/// </summary>
 		public static ImageMapActionFactoryService CreateAction() {
+			Trace.TraceInformation( "Start" );
 			ImageMapActionFactoryService imageMapActionFactoryService = new ImageMapActionFactoryService();
+			Trace.TraceInformation( "End" );
 			return imageMapActionFactoryService;
 		}
 
@@ -82,6 +84,7 @@ namespace MessagingApiTemplate.Services.Message.Factory {
 
 			if( !this.RegulateImageMapActionArray() ) {
 				Trace.TraceWarning( "Regulate Image Map Action Array is False" );
+				Trace.TraceInformation( "End" );
 				return this;
 			}
 
@@ -123,6 +126,7 @@ namespace MessagingApiTemplate.Services.Message.Factory {
 
 			if( !this.RegulateImageMapActionArray() ) {
 				Trace.TraceWarning( "Regulate Image Map Action Array is False" );
+				Trace.TraceInformation( "End" );
 				return this;
 			}
 

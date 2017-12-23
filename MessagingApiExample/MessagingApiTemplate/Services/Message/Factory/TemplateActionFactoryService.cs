@@ -23,7 +23,9 @@ namespace MessagingApiTemplate.Services.Message.Factory{
 		/// アクション作成
 		/// </summary>
 		public static TemplateActionFactoryService CreateAction() {
+			Trace.TraceInformation( "Start" );
 			TemplateActionFactoryService templateActionFactoryService = new TemplateActionFactoryService();
+			Trace.TraceInformation( "End" );
 			return templateActionFactoryService;
 		}
 
@@ -73,10 +75,11 @@ namespace MessagingApiTemplate.Services.Message.Factory{
 			string data
 		) {
 
-			Trace.TraceInformation( "Start Add Postback Action" );
+			Trace.TraceInformation( "Start" );
 
 			if( !this.RegulateMessageArray() ) {
 				Trace.TraceWarning( "Regulate Action Array is False" );
+				Trace.TraceInformation( "End" );
 				return this;
 			}
 
@@ -87,6 +90,8 @@ namespace MessagingApiTemplate.Services.Message.Factory{
 			};
 			this.Actions[ this.Actions.Length - 1 ] = action;
 
+			Trace.TraceInformation( "End" );
+				 
 			return this;
 		}
 
@@ -100,10 +105,11 @@ namespace MessagingApiTemplate.Services.Message.Factory{
 			string text
 		) {
 
-			Trace.TraceInformation( "Start Add Message Action" );
+			Trace.TraceInformation( "Start" );
 
 			if( !this.RegulateMessageArray() ) {
 				Trace.TraceWarning( "Regulate Action Array is False" );
+				Trace.TraceInformation( "End" );
 				return this;
 			}
 
@@ -113,7 +119,10 @@ namespace MessagingApiTemplate.Services.Message.Factory{
 			};
 			this.Actions[ this.Actions.Length - 1 ] = action;
 
+			Trace.TraceInformation( "End" );
+
 			return this;
+
 		}
 
 		/// <summary>
@@ -126,10 +135,11 @@ namespace MessagingApiTemplate.Services.Message.Factory{
 			string uri
 		) {
 
-			Trace.TraceInformation( "Start Add Uri Action" );
+			Trace.TraceInformation( "Start" );
 
 			if( !this.RegulateMessageArray() ) {
 				Trace.TraceWarning( "Regulate Action Array is False" );
+				Trace.TraceInformation( "End" );
 				return this;
 			}
 
@@ -138,6 +148,8 @@ namespace MessagingApiTemplate.Services.Message.Factory{
 				uri = uri
 			};
 			this.Actions[ this.Actions.Length - 1 ] = action;
+
+			Trace.TraceInformation( "End" );
 
 			return this;
 		}

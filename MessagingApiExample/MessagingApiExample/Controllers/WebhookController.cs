@@ -14,6 +14,7 @@ using MessagingApiTemplate.Services.Profile;
 using MessagingApiTemplate.Services.Group;
 using MessagingApiTemplate.Models.Responses;
 using MessagingApiTemplate.Services.Room;
+using MessagingApiTemplate.Services.Message.Factory;
 
 namespace MessagingApiExample.Controllers {
 

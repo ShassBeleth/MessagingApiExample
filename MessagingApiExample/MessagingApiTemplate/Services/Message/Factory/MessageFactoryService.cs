@@ -1,10 +1,10 @@
 ﻿using MessagingApiTemplate.Models.Requests.SendMessage;
 using System;
-using System.Diagnostics;
 using MessagingApiTemplate.Models.Requests.SendMessage.ImageMap;
 using MessagingApiTemplate.Models.Requests.SendMessage.Template;
+using MessagingApiTemplate.Utils;
 
-namespace MessagingApiTemplate.Services {
+namespace MessagingApiTemplate.Services.Message.Factory {
 
 	/// <summary>
 	/// メッセージ作成Service
@@ -25,7 +25,9 @@ namespace MessagingApiTemplate.Services {
 		/// メッセージ作成
 		/// </summary>
 		public static MessageFactoryService CreateMessage() {
+			Trace.TraceInformation( "Start" );
 			MessageFactoryService messageFactoryService = new MessageFactoryService();
+			Trace.TraceInformation( "End" );
 			return messageFactoryService;
 		}
 
@@ -35,16 +37,18 @@ namespace MessagingApiTemplate.Services {
 		/// <returns>配列が既に5つたまっていた場合は何もしない</returns>
 		private bool RegulateMessageArray() {
 
-			Trace.TraceInformation( "Start Regulate Message Array" );
+			Trace.TraceInformation( "Start" );
 
 			if( this.Messages == null ) {
 				Trace.TraceInformation( "Messages is Null" );
 				this.Messages = new MessageBase[ 1 ];
+				Trace.TraceInformation( "End" );
 				return true;
 			}
 			else {
 				if( this.Messages.Length == 5 ) {
 					Trace.TraceWarning( "Messages Length is Max" );
+					Trace.TraceInformation( "End" );
 					return false;
 				}
 				else {
@@ -55,6 +59,7 @@ namespace MessagingApiTemplate.Services {
 						this.Messages.Length + 1
 					);
 					this.Messages = messages;
+					Trace.TraceInformation( "End" );
 					return true;
 				}
 			}
@@ -67,10 +72,11 @@ namespace MessagingApiTemplate.Services {
 		/// <param name="text">テキスト</param>
 		public MessageFactoryService AddTextMessage( string text ) {
 
-			Trace.TraceInformation( "Start Add Text Message" );
+			Trace.TraceInformation( "Start" );
 
 			if( !this.RegulateMessageArray() ) {
 				Trace.TraceWarning( "Regulate Message Array is False" );
+				Trace.TraceInformation( "End" );
 				return this;
 			}
 
@@ -78,6 +84,8 @@ namespace MessagingApiTemplate.Services {
 				text = text
 			};
 			this.Messages[ this.Messages.Length - 1 ] = textMessage;
+
+			Trace.TraceInformation( "End" );
 
 			return this;
 
@@ -90,10 +98,11 @@ namespace MessagingApiTemplate.Services {
 		/// <param name="stickerId">スタンプID</param>
 		public MessageFactoryService AddStickerMessage( string packageId , string stickerId ) {
 
-			Trace.TraceInformation( "Start Add Sticker Message" );
+			Trace.TraceInformation( "Start" );
 
 			if( !this.RegulateMessageArray() ) {
 				Trace.TraceWarning( "Regulate Message Array is False" );
+				Trace.TraceInformation( "End" );
 				return this;
 			}
 
@@ -102,6 +111,8 @@ namespace MessagingApiTemplate.Services {
 				stickerId = stickerId
 			};
 			this.Messages[ this.Messages.Length - 1 ] = stickerMessage;
+
+			Trace.TraceInformation( "End" );
 
 			return this;
 
@@ -114,10 +125,11 @@ namespace MessagingApiTemplate.Services {
 		/// <param name="previewImageUrl">プレビュー画像URL</param>
 		public MessageFactoryService AddImageMessage( string originalContentUrl , string previewImageUrl ) {
 
-			Trace.TraceInformation( "Start Add Image Message" );
+			Trace.TraceInformation( "Start" );
 
 			if( !this.RegulateMessageArray() ) {
 				Trace.TraceWarning( "Regulate Message Array is False" );
+				Trace.TraceInformation( "End" );
 				return this;
 			}
 
@@ -126,6 +138,8 @@ namespace MessagingApiTemplate.Services {
 				previewImageUrl = previewImageUrl
 			};
 			this.Messages[ this.Messages.Length - 1 ] = imageMessage;
+
+			Trace.TraceInformation( "End" );
 
 			return this;
 
@@ -138,10 +152,11 @@ namespace MessagingApiTemplate.Services {
 		/// <param name="previewImageUrl">プレビュー画像URL</param>
 		public MessageFactoryService AddVideoMessage( string originalContentUrl , string previewImageUrl ) {
 
-			Trace.TraceInformation( "Start Add Video Message" );
+			Trace.TraceInformation( "Start" );
 
 			if( !this.RegulateMessageArray() ) {
 				Trace.TraceWarning( "Regulate Message Array is False" );
+				Trace.TraceInformation( "End" );
 				return this;
 			}
 
@@ -150,6 +165,8 @@ namespace MessagingApiTemplate.Services {
 				previewImageUrl = previewImageUrl
 			};
 			this.Messages[ this.Messages.Length - 1 ] = videoMessage;
+
+			Trace.TraceInformation( "End" );
 
 			return this;
 
@@ -162,10 +179,11 @@ namespace MessagingApiTemplate.Services {
 		/// <param name="duration">音声ファイルの長さ</param>
 		public MessageFactoryService AddAudioMessage( string originalContentUrl , int duration ) {
 
-			Trace.TraceInformation( "Start Add Audio Message" );
+			Trace.TraceInformation( "Start" );
 
 			if( !this.RegulateMessageArray() ) {
 				Trace.TraceWarning( "Regulate Message Array is False" );
+				Trace.TraceInformation( "End" );
 				return this;
 			}
 
@@ -174,6 +192,8 @@ namespace MessagingApiTemplate.Services {
 				duration = duration
 			};
 			this.Messages[ this.Messages.Length - 1 ] = audioMessage;
+
+			Trace.TraceInformation( "End" );
 
 			return this;
 
@@ -193,10 +213,11 @@ namespace MessagingApiTemplate.Services {
 			decimal longitude
 		) {
 
-			Trace.TraceInformation( "Start Add Location Message" );
+			Trace.TraceInformation( "Start" );
 
 			if( !this.RegulateMessageArray() ) {
 				Trace.TraceWarning( "Regulate Message Array is False" );
+				Trace.TraceInformation( "End" );
 				return this;
 			}
 
@@ -207,6 +228,8 @@ namespace MessagingApiTemplate.Services {
 				longitude = longitude
 			};
 			this.Messages[ this.Messages.Length - 1 ] = locationMessage;
+
+			Trace.TraceInformation( "End" );
 
 			return this;
 
@@ -229,10 +252,11 @@ namespace MessagingApiTemplate.Services {
 			int width = 1040
 		) {
 
-			Trace.TraceInformation( "Start Add Image Map Message" );
+			Trace.TraceInformation( "Start" );
 
 			if( !this.RegulateMessageArray() ) {
 				Trace.TraceWarning( "Regulate Message Array is False" );
+				Trace.TraceInformation( "End" );
 				return this;
 			}
 
@@ -246,7 +270,9 @@ namespace MessagingApiTemplate.Services {
 				actions = imageMapActionFfactoryService.Actions
 			};
 			this.Messages[ this.Messages.Length - 1 ] = imageMapMessage;
-			
+
+			Trace.TraceInformation( "End" );
+
 			return this;
 
 		}
@@ -273,10 +299,11 @@ namespace MessagingApiTemplate.Services {
 			bool isImageSizeCover = true
 		) {
 
-			Trace.TraceInformation( "Start Add Button Template Message" );
+			Trace.TraceInformation( "Start" );
 
 			if( !this.RegulateMessageArray() ) {
 				Trace.TraceWarning( "Regulate Message Array is False" );
+				Trace.TraceInformation( "End" );
 				return this;
 			}
 
@@ -294,6 +321,8 @@ namespace MessagingApiTemplate.Services {
 			};
 			this.Messages[ this.Messages.Length - 1 ] = templateMessage;
 
+			Trace.TraceInformation( "End" );
+
 			return this;
 		}
 
@@ -307,10 +336,11 @@ namespace MessagingApiTemplate.Services {
 			TemplateActionFactoryService templateActionFactoryService
 		) {
 
-			Trace.TraceInformation( "Start Add Confirm Template Message" );
+			Trace.TraceInformation( "Start" );
 
 			if( !this.RegulateMessageArray() ) {
 				Trace.TraceWarning( "Regulate Message Array is False" );
+				Trace.TraceInformation( "End" );
 				return this;
 			}
 
@@ -322,6 +352,8 @@ namespace MessagingApiTemplate.Services {
 				}
 			};
 			this.Messages[ this.Messages.Length - 1 ] = templateMessage;
+
+			Trace.TraceInformation( "End" );
 
 			return this;
 		}
@@ -338,10 +370,11 @@ namespace MessagingApiTemplate.Services {
 			bool isImageSizeCover = true
 		) {
 
-			Trace.TraceInformation( "Start Add Carousel Template Message" );
+			Trace.TraceInformation( "Start" );
 
 			if( !this.RegulateMessageArray() ) {
 				Trace.TraceWarning( "Regulate Message Array is False" );
+				Trace.TraceInformation( "End" );
 				return this;
 			}
 
@@ -354,6 +387,8 @@ namespace MessagingApiTemplate.Services {
 				}
 			};
 			this.Messages[ this.Messages.Length - 1 ] = templateMessage;
+
+			Trace.TraceInformation( "End" );
 
 			return this;
 
@@ -369,10 +404,11 @@ namespace MessagingApiTemplate.Services {
 			string altText
 		) {
 
-			Trace.TraceInformation( "Start Add Image Carousel Template Message" );
+			Trace.TraceInformation( "Start" );
 
 			if( !this.RegulateMessageArray() ) {
 				Trace.TraceWarning( "Regulate Message Array is False" );
+				Trace.TraceInformation( "End" );
 				return this;
 			}
 
@@ -383,6 +419,8 @@ namespace MessagingApiTemplate.Services {
 				}
 			};
 			this.Messages[ this.Messages.Length - 1 ] = templateMessage;
+
+			Trace.TraceInformation( "End" );
 
 			return this;
 

@@ -79,7 +79,7 @@ namespace MessagingApiTemplate.Services.Room {
 				return null;
 			}
 			if( roomId == null ) {
-				Trace.TraceWarning( "Group Id is Null" );
+				Trace.TraceWarning( "Room Id is Null" );
 				return null;
 			}
 			
@@ -101,7 +101,6 @@ namespace MessagingApiTemplate.Services.Room {
 
 		}
 
-		// TODO 未確認
 		/// <summary>
 		/// トークルームから退出する
 		/// </summary>
@@ -119,7 +118,7 @@ namespace MessagingApiTemplate.Services.Room {
 				Trace.TraceWarning( "Channel Access Token is Null" );
 			}
 			if( roomId == null ) {
-				Trace.TraceWarning( "Group Id is Null" );
+				Trace.TraceWarning( "Room Id is Null" );
 			}
 			
 			string requestUrl =
@@ -131,7 +130,7 @@ namespace MessagingApiTemplate.Services.Room {
 				channelAccessToken ,
 				requestUrl ,
 				null ,
-				false
+				"post"
 			).ConfigureAwait( false );
 
 			Trace.TraceInformation( "End" );

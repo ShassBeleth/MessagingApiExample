@@ -127,7 +127,7 @@ namespace MessagingApiTemplate.Services.Group {
 				channelAccessToken ,
 				requestUrl ,
 				null ,
-				false
+				"post"
 			).ConfigureAwait( false );
 
 			Trace.TraceInformation( "End" );

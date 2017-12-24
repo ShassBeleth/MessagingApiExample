@@ -33,7 +33,7 @@ namespace MessagingApiTemplate.Services.Message {
 				channelAccessToken ,
 				requestUrl ,
 				request ,
-				false
+				"post"
 			).ConfigureAwait( false );
 
 			Trace.TraceInformation( "End" );

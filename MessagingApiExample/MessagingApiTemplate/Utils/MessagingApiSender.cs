@@ -18,14 +18,14 @@ namespace MessagingApiTemplate.Utils {
 		/// <param name="channelAccessToken">チャンネルアクセストークン</param>
 		/// <param name="url">URL</param>
 		/// <param name="request">リクエスト</param>
-		/// <param name="isGetRequest">GETリクエストかどうか</param>
+		/// <param name="methodType">リクエストの種類</param>
 		/// <param name="contentType">Content-Type</param>
 		/// <returns>バイナリ</returns>
 		internal static async Task<byte[]> SendMessagingApi<RequestT>(
 			string channelAccessToken ,
 			string url ,
 			RequestT request = default(RequestT) ,
-			bool isGetRequest = true ,
+			string methodType = "get" ,
 			string contentType = "application/json"
 		)
 			where RequestT : class
@@ -46,7 +46,7 @@ namespace MessagingApiTemplate.Utils {
 			Trace.TraceInformation( "Channel Access Token is " + channelAccessToken );
 			Trace.TraceInformation( "Url is " + url );
 			Trace.TraceInformation( "Request is " + ( request == null ? "Null" : "Not Null" ) );
-			Trace.TraceInformation( "Get Request is " + isGetRequest );
+			Trace.TraceInformation( "Get Request is " + methodType );
 			Trace.TraceInformation( "Content Type is " + contentType );
 
 			// リクエストがあればcontentを作成
@@ -69,7 +69,7 @@ namespace MessagingApiTemplate.Utils {
 			try {
 
 				HttpResponseMessage response = (
-					isGetRequest ?
+					"get".Equals( methodType ) ?
 					await client.GetAsync( url ).ConfigureAwait( false ) :
 					await client.PostAsync( url , content ).ConfigureAwait( false )
 				);
@@ -110,14 +110,14 @@ namespace MessagingApiTemplate.Utils {
 		/// <param name="channelAccessToken">チャンネルアクセストークン</param>
 		/// <param name="url">URL</param>
 		/// <param name="request">リクエスト</param>
-		/// <param name="isGetRequest">GETリクエストかどうか</param>
+		/// <param name="methodType">GETリクエストかどうか</param>
 		/// <param name="contentType">Content-Type</param>
 		/// <returns>レスポンス</returns>
 		internal static async Task<ResponseT> SendMessagingApi<RequestT, ResponseT>(
 			string channelAccessToken ,
 			string url ,
 			RequestT request = default( RequestT ) ,
-			bool isGetRequest = true ,
+			string methodType = "get" ,
 			string contentType = "application/json" ,
 			bool isAuthenticationApi = false
 		)
@@ -139,7 +139,7 @@ namespace MessagingApiTemplate.Utils {
 			}
 
 			Trace.TraceInformation( "Request is " + ( request == null ? "Null" : "Not Null" ) );
-			Trace.TraceInformation( "Get Request is " + isGetRequest );
+			Trace.TraceInformation( "Get Request is " + methodType );
 			Trace.TraceInformation( "Content Type is " + contentType );
 			Trace.TraceInformation( "Url is " + url );
 
@@ -162,9 +162,11 @@ namespace MessagingApiTemplate.Utils {
 			try {
 
 				HttpResponseMessage response =
-					isGetRequest ?
+					"get".Equals( methodType ) ?
 					await client.GetAsync( url ).ConfigureAwait( false ) :
-					await client.PostAsync( url , content ).ConfigureAwait( false );
+					"post".Equals( methodType ) ?
+					await client.PostAsync( url , content ).ConfigureAwait( false ) :
+					await client.DeleteAsync( url ).ConfigureAwait( false );
 
 				string resultAsString = await response?.Content.ReadAsStringAsync();
 				Trace.TraceInformation( "Response is " + resultAsString );

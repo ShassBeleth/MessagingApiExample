@@ -2,6 +2,7 @@
 using MessagingApiTemplate.Utils;
 using System.Configuration;
 using System.Threading.Tasks;
+using MessagingApiTemplate.Services.Message.Factory;
 
 namespace MessagingApiTemplate.Services.Message {
 
@@ -30,7 +31,7 @@ namespace MessagingApiTemplate.Services.Message {
 				channelAccessToken ,
 				requestUrl ,
 				request ,
-				false
+				"post"
 			).ConfigureAwait( false );
 
 			Trace.TraceInformation( "End" );
@@ -57,7 +58,7 @@ namespace MessagingApiTemplate.Services.Message {
 				channelAccessToken ,
 				requestUrl ,
 				request ,
-				false
+				"post"
 			).ConfigureAwait( false );
 
 			Trace.TraceInformation( "End" );

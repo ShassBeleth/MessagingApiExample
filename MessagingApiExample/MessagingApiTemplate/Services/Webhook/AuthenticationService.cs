@@ -90,7 +90,7 @@ namespace MessagingApiTemplate.Services.Webhook {
 				null ,
 				requestUrl ,
 				request ,
-				false ,
+				"post" ,
 				"application/x-www-form-urlencoded"
 			).ConfigureAwait( false );
 
@@ -127,7 +127,7 @@ namespace MessagingApiTemplate.Services.Webhook {
 				null ,
 				requestUrl ,
 				request ,
-				false ,
+				"post" ,
 				"application/x-www-form-urlencoded"
 			).ConfigureAwait( false );
 
